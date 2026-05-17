@@ -28,16 +28,48 @@ import init, {
     get_references_json_by_index
 } from "./pkg/lern.js";
 
+// Global error handling
+window.onerror = function(msg, url, line, col, error) {
+    console.error("Global Error:", msg, "at", url, ":", line);
+    const status = document.getElementById("loading-status");
+    if (status) {
+        status.innerText = "Error: " + msg;
+        status.style.color = "#ff4444";
+        status.style.opacity = "1";
+    }
+    return false;
+};
+
+function updateLoadingStatus(message) {
+    const status = document.getElementById("loading-status");
+    if (status) status.innerText = message;
+}
+
+function hideLoading() {
+    const overlay = document.getElementById("loading-overlay");
+    if (overlay) {
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, 500);
+    }
+}
+
 let coursesData = null;
 let currentCourse = null;
 
 async function run() {
     try {
         setupTheme();
+        updateLoadingStatus("Initializing WASM core...");
         await init();
 
-        const response = await fetch("./questions.json");
+        updateLoadingStatus("Fetching question database (this may take a moment)...");
+        // Add cache busting to ensure we don't load stale data from CDN
+        const response = await fetch(`./questions.json?v=${Date.now()}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        updateLoadingStatus("Parsing database...");
         coursesData = await response.json();
         
         const lastCourse = localStorage.getItem("lern_last_course");
@@ -60,8 +92,11 @@ async function run() {
         } else {
             showMenu();
         }
+        
+        hideLoading();
     } catch (err) {
         console.error("Critical error during initialization:", err);
+        updateLoadingStatus(`Error: ${err.message}`);
         const appDiv = document.getElementById("app");
         if (appDiv) {
             appDiv.innerHTML = `
@@ -265,6 +300,8 @@ function showMenu() {
     currentSavedState = null;
     if (examTimerInterval) clearInterval(examTimerInterval);
     localStorage.removeItem("lern_last_course");
+    
+    document.getElementById("app-content").style.display = "block";
     document.getElementById("menu").style.display = "flex";
     document.getElementById("mode-selection").style.display = "none";
     document.getElementById("topic-selection").style.display = "none";
@@ -388,6 +425,8 @@ function showMenu() {
 function showModeSelection(courseName) {
     console.log(`showModeSelection called for: ${courseName}`);
     try {
+        currentCourse = courseName;
+        document.getElementById("app-content").style.display = "block";
         document.getElementById("menu").style.display = "none";
         document.getElementById("mode-selection").style.display = "block";
         document.getElementById("topic-selection").style.display = "none";
@@ -414,6 +453,7 @@ function showModeSelection(courseName) {
 }
 
 function showTopicSelection(courseName) {
+    document.getElementById("app-content").style.display = "block";
     document.getElementById("menu").style.display = "none";
     document.getElementById("mode-selection").style.display = "none";
     document.getElementById("topic-selection").style.display = "block";
@@ -493,9 +533,7 @@ function startQuiz(courseName, mode, state = null) {
     currentMode = mode;
     currentSavedState = state;
     localStorage.setItem("lern_last_course", courseName);
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("mode-selection").style.display = "none";
-    document.getElementById("topic-selection").style.display = "none";
+    document.getElementById("app-content").style.display = "none";
     document.getElementById("quiz").style.display = "block";
 
     let questions = coursesData[courseName];
