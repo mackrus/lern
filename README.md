@@ -6,7 +6,7 @@ Interactive math and physics learning platform. Minimalist, high-fidelity, and p
 
 **Lern** is a modern web application for practicing physics and mathematics through interactive quizzes. It combines the high-fidelity typesetting of **Typst** with the performance of **Rust** and **WebAssembly** to deliver a "crisp" and professional learning experience.
 
-Inspired by platforms like Brilliant.com, Lern focuses on a "Modern Quant" aesthetic: monospace fonts, sharp edges, and zero-distraction layouts.
+Inspired by platforms like Brilliant.com, Lern focuses on a modern aesthetic: monospace fonts, sharp edges, and zero-distraction layouts.
 
 ## Tech Stack
 
@@ -37,21 +37,25 @@ Inspired by platforms like Brilliant.com, Lern focuses on a "Modern Quant" aesth
 ### Build and Run
 
 1. **Clone the repository**:
+
    ```bash
-   git clone https://github.com/yourusername/lern.git
+   git clone https://github.com/mackrus/lern.git
    cd lern
    ```
 
 2. **Build the project**:
    This script compiles Typst content to SVG, builds the Rust WASM module, and aggregates question metadata.
+
    ```bash
    ./build.sh
    ```
 
 3. **Serve locally**:
+
    ```bash
    uv run serve.py
    ```
+
    Open your browser at `http://localhost:8000`.
 
 ## Repository Structure
