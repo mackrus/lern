@@ -111,7 +111,7 @@ function saveState() {
         graded: is_graded(),
         showPrereqs: prereqDiv.style.display === "block",
         showAlts: toggleAltBtn.dataset.state === "shown",
-        questionsList: window.currentQuestionsList,
+        // Do not save full questionsList (SVG HTML) to localStorage
         selectedTopics: currentSavedState ? currentSavedState.selectedTopics : null,
         examEndTime: currentExamEndTime
     };
@@ -300,9 +300,18 @@ function startQuiz(courseName, mode, state = null) {
 
     let questions = coursesData[courseName];
     
-    if (state && state.questionsList && state.mode === mode) {
-        questions = state.questionsList;
-        if (mode === "exam" && state.examEndTime) {
+    // Reconstruct the pool based on mode if state exists
+    if (state && state.mode === mode) {
+        if (mode === "topic" && state.selectedTopics) {
+            questions = questions.filter(q => 
+                q.topics && q.topics.some(t => state.selectedTopics.includes(t))
+            );
+        } else if (mode === "practice") {
+            questions = questions.filter(q => q.label === "practice");
+            // Note: This won't perfectly recreate the randomized 10 if it was shuffled,
+            // but it's a necessary compromise to fit in storage.
+        } else if (mode === "exam") {
+            questions = questions.filter(q => q.label === "exam");
             currentExamEndTime = state.examEndTime;
         }
     } else {
