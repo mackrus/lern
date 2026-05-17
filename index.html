@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lern</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --surface-color: #000000;
+            --hover-color: #111111;
+            --border-color: #222222;
+            --prereq-bg: #000000;
+            --prereq-border: #222222;
+            --svg-filter: invert(1) hue-rotate(180deg);
+            --header-color: #ffffff;
+            --accent-color: #ffffff;
+        }
+
+        body.light-mode {
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --surface-color: #f5f5f5;
+            --hover-color: #e5e5e5;
+            --border-color: #d0d0d0;
+            --prereq-bg: #fafafa;
+            --prereq-border: #e0e0e0;
+            --svg-filter: none;
+            --header-color: #000000;
+            --accent-color: #000000;
+        }
+
+        body {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            max-width: 1150px; /* Increased to accommodate sidebar */
+            margin: 4rem auto;
+            padding: 0 1rem;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        #app-content {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        
+        #app-with-sidebar {
+            display: flex;
+            gap: 4rem;
+            align-items: flex-start;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #main-column {
+            flex: 0 1 750px;
+            min-width: 0;
+        }
+
+        #sidebar-column {
+            flex: 0 0 320px;
+            position: sticky;
+            top: 4rem;
+            height: fit-content;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--header-color);
+            font-weight: normal;
+            letter-spacing: -0.02em;
+        }
+
+        #menu {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 65vh;
+        }
+
+        #menu h1, #topic-selection h1, #topic-selection h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        /* Clean Text Buttons with Underscore Animation */
+        button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            margin: 0 0.5rem;
+            position: relative;
+            transition: color 0.2s;
+            display: inline-block;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--text-color);
+            transition: width 0.2s ease-out;
+        }
+
+        button:hover {
+            color: var(--accent-color);
+        }
+
+        button:hover::after {
+            width: 100%;
+        }
+
+        #theme-toggle {
+            font-size: 1.5rem;
+            padding: 0.2rem;
+            margin: 0;
+        }
+        #theme-toggle::after {
+            display: none; /* No underscore for icon button */
+        }
+        #theme-toggle:hover {
+            transform: scale(1.1);
+            transition: transform 0.2s;
+        }
+
+        #question-number {
+            display: none; /* Hidden as we now use the nav bar */
+        }
+
+        #question-nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-num {
+            width: 2.2rem;
+            height: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .nav-num:hover {
+            border-color: var(--text-color);
+            opacity: 1;
+        }
+
+        .nav-num.current {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        .nav-num.answered {
+            opacity: 1;
+            border-color: var(--text-color);
+            background-color: var(--hover-color);
+        }
+
+        #question {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+            background: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: 0px; /* Minimalist sharp edges or subtle radius */
+            transition: background-color 0.3s;
+        }
+
+        .alternative {
+            display: block;
+            width: 100%;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0px; /* Sharp edges */
+            cursor: pointer;
+            text-align: left;
+            background: var(--surface-color);
+            color: var(--text-color);
+            font-size: 1.2rem;
+            font-family: inherit;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .alternative::after {
+            display: none; /* Override global button style if applied */
+        }
+
+        .alternative:hover {
+            background: var(--hover-color);
+            border-color: var(--text-color);
+            transform: translateX(6px);
+        }
+
+        .alternative.selected {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--text-color);
+        }
+
+        .topic-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0px;
+            cursor: pointer;
+            text-align: left;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .topic-btn:hover {
+            background: var(--hover-color);
+            border-color: var(--text-color);
+            transform: translateX(4px);
+        }
+
+        .topic-btn.selected {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--text-color);
+        }
+
+        .topic-btn input {
+            cursor: pointer;
+            accent-color: var(--bg-color);
+        }
+
+        svg {
+            display: block;
+            filter: var(--svg-filter);
+            max-width: 100%;
+            height: auto;
+        }
+
+        #prerequisites, #explanation {
+            background: var(--prereq-bg);
+            padding: 2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        #result {
+            margin-top: 1.5rem;
+            font-weight: normal;
+        }
+
+        #navigation-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 2rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        #start-quiz-btn {
+            width: 100%;
+            margin: 2rem 0 0 0;
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+
+        #grade-btn {
+            margin-left: auto;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 1100px) {
+            #app-with-sidebar {
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+            }
+            #sidebar-column {
+                position: static;
+                width: 100%;
+                flex: none;
+                margin-top: 3rem;
+            }
+            #main-column {
+                width: 100%;
+                flex: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 1rem auto;
+                padding: 0 1rem;
+                font-size: 1.1rem;
+            }
+            #question {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .alternative {
+                padding: 1.2rem;
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+            #navigation-btns {
+                gap: 1.5rem;
+            }
+            #grade-btn {
+                margin-left: 0 !important;
+                width: 100%;
+                text-align: left;
+                padding-top: 1rem;
+                border-top: 1px solid var(--border-color);
+            }
+            #prerequisites, #explanation {
+                padding: 1.5rem;
+            }
+        }
+
+        .lern-anim {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 4ch;
+        }
+
+        .stat-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+        }
+        .stat-bar-bg {
+            height: 8px;
+            background: var(--border-color);
+            width: 100%;
+        }
+        .stat-bar-fill {
+            height: 100%;
+            background: var(--text-color);
+            transition: width 0.6s ease-out;
+        }
+        .strength { color: #44ff44; }
+        .weakness { color: #ff4444; }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <button id="theme-toggle" title="Toggle Light/Dark Mode">
+            <span id="theme-icon">🌙</span>
+        </button>
+    </div>
+    <div id="app">
+        <div id="app-content">
+            <div id="menu">
+                <h1>what do you want to <span class="lern-anim">lern</span>?</h1>
+                <div id="course-list"></div>
+                <div id="storage-management" style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span id="storage-usage">Usage: 0 KB</span>
+                        <button id="purge-storage-btn" style="font-size: 0.9rem; color: #ff4444;">Purge All Data</button>
+                    </div>
+                </div>
+            </div>
+            <div id="mode-selection" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <button id="back-to-courses-from-mode">← Back to Courses</button>
+                    <h1 id="selected-course-title-mode" style="margin: 0; padding-left: 1rem;"></h1>
+                </div>
+                <h2>Select Mode:</h2>
+                <div id="mode-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                    <button id="mode-topic" class="alternative" style="text-align: center;">Topic Traversal</button>
+                    <button id="mode-practice" class="alternative" style="text-align: center;">Practice Mode</button>
+                    <button id="mode-exam" class="alternative" style="text-align: center;">Exam Mode</button>
+                </div>
+            </div>
+            <div id="topic-selection" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <button id="back-to-courses">← Back to Courses</button>
+                    <h1 id="selected-course-title" style="margin: 0; padding-left: 1rem;"></h1>
+                </div>
+                <h2>Select Topics:</h2>
+                <div id="topic-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;"></div>
+                <button id="start-quiz-btn">Start Quiz</button>
+            </div>
+        </div>
+
+        <div id="quiz" style="display: none;">
+            <div id="app-with-sidebar">
+                <div id="main-column">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <button id="back-to-menu">← Back to Menu</button>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div id="exam-timer" style="display: none; background: var(--text-color); color: var(--bg-color); padding: 0.2rem 0.5rem; font-size: 0.9rem; font-weight: bold; letter-spacing: 0.05em;"></div>
+                            <div id="question-label" style="display: none; background: var(--text-color); color: var(--bg-color); padding: 0.2rem 0.5rem; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;"></div>
+                            <div id="question-number" style="color: var(--text-color);"></div>
+                        </div>
+                    </div>
+                    <div id="question-nav-bar"></div>
+                    <div id="question">Loading...</div>
+                    
+                    <div class="controls-container" style="display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-bottom: 2rem; align-items: center;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center;">
+                            <button id="prereq-btn" style="display: none; margin: 0;">Show Prerequisites</button>
+                            <button id="toggle-alt-btn" style="margin: 0;">Hide Alternatives</button>
+                        </div>
+                        <button id="copy-prompt-btn" style="margin: 0; margin-left: auto; font-size: 0.85rem; opacity: 0.6; letter-spacing: 0.02em;">Copy as Prompt</button>
+                    </div>
+                    <div id="prerequisites" style="display: none;"></div>
+                    <div id="alternatives"></div>
+                    <div id="explanation" style="display: none;"></div>
+                    <div id="result"></div>
+
+                    <div id="navigation-btns">
+                        <button id="prev-btn" style="display: none; margin: 0;">← Previous</button>
+                        <button id="next-btn" style="display: none; margin: 0;">Next Question →</button>
+                        <button id="grade-btn" style="margin-left: auto; margin-right: 0;">Grade Quiz</button>
+                    </div>
+
+                    <div id="final-results" style="display: none; margin-top: 3rem;">
+                        <h2 style="text-align: center;">Quiz Results</h2>
+                        <div id="score-container" style="text-align: center; margin-bottom: 3rem;">
+                            <p id="final-score" style="font-size: 2.5rem; margin-bottom: 0.5rem;"></p>
+                            <p id="percentage-score" style="font-size: 1.5rem;"></p>
+                        </div>
+
+                        <div id="topic-stats" style="margin-bottom: 3rem;">
+                            <h3>Topic Analysis:</h3>
+                            <div id="topic-stats-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                        </div>
+
+                        <div id="recommendations" style="margin-bottom: 3rem; background: var(--surface-color); padding: 2rem; border: 1px solid var(--border-color); display: none;">
+                            <h3 style="margin-top: 0;">Next Steps:</h3>
+                            <div id="recommendations-list" style="font-size: 1.1rem; line-height: 1.8;"></div>
+                        </div>
+
+                        <div id="incorrect-review" style="display: none;">
+                            <h3>Review Incorrect Answers:</h3>
+                            <div id="incorrect-list" style="margin-bottom: 2rem;"></div>
+                        </div>
+                        <div style="text-align: center;">
+                            <button id="restart-btn">Back to Menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sidebar-column">
+                    <button id="refs-btn" style="display: none; margin: 0 0 1.5rem 0; width: 100%; text-align: left; font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Where do i read about this?</button>
+                    <aside id="references" style="display: none; width: 100%; background: var(--surface-color); padding: 1.5rem; border: 1px solid var(--border-color); font-size: 0.95rem;">
+                        <!-- References injected here -->
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cumulative Stats Modal -->
+    <div id="stats-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; overflow-y: auto; padding: 2rem 1rem;">
+        <div style="max-width: 750px; margin: 0 auto; background: var(--bg-color); border: 1px solid var(--border-color); padding: 2.5rem; position: relative;">
+            <button id="close-stats-btn" style="position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem;">✕</button>
+            <h1 id="stats-course-title" style="text-align: center; margin-top: 0;">Course Stats</h1>
+            <div id="cumulative-topic-list" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem;"></div>
+            <div style="margin-top: 3rem; text-align: center;">
+                <button id="reset-stats-btn" style="color: #ff4444; font-size: 0.9rem;">Reset All Stats for this Course</button>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; margin-top: 4rem; padding-bottom: 4rem; font-size: 0.9rem; opacity: 0.5; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+        Cookies? Don't worry, everything is stored locally. We don't track anything.
+    </footer>
+
+    <script type="module" src="./app.js?v=5"></script>
+</body>
+</html>
