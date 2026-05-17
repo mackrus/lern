@@ -60,7 +60,12 @@
 ### Phase 14: Mode Selection (Completed)
 1. Implement Topic Traversal, Practice Mode, and Exam Mode UIs.
 
-### Phase 15: Automated Deployment
+### Phase 15: Thermodynamics Course Expansion
+1. **Course Scaffolding**: Create the `content/thermodynamics` directory structure.
+2. **Content Development**: Draft Typst content for core thermodynamics topics (e.g., Entropy, Laws of Thermodynamics).
+3. **Metadata Aggregation**: Create corresponding JSON metadata for thermodynamics questions and ensure they are recognized by the build aggregator.
+
+### Phase 16: Automated Deployment
 1. **Build Automation**: Implement GitHub Actions workflow to automate compilation (Typst to SVG, WASM build) on each push.
 2. **Environment Configuration**: Configure the GitHub Pages hosting settings in the repository to serve the contents of the `dist/` folder.
 3. **Domain & Routing**: Validate site accessibility and verify that relative asset paths function correctly across browser environments.
