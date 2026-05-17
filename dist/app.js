@@ -3,9 +3,11 @@ import init, {
     restore_quiz_state,
     get_selections_json,
     get_current_question_html, 
+    get_current_question_raw,
     get_current_question_label,
     get_current_question_prerequisites_html,
     get_current_question_explanation_html,
+    get_current_question_explanation_raw,
     get_alternatives_count, 
     get_alternative_html, 
     select_answer, 
@@ -33,31 +35,87 @@ async function run() {
     coursesData = await response.json();
     
     const lastCourse = localStorage.getItem("lern_last_course");
-    console.log("Run: lastCourse =", lastCourse);
     if (lastCourse && coursesData[lastCourse]) {
-        console.log("Resuming course:", lastCourse);
-        startQuiz(lastCourse);
+        const hasProgress = localStorage.getItem(`lern_progress_${lastCourse}`);
+        let state = null;
+        if (hasProgress) {
+            try {
+                state = JSON.parse(hasProgress);
+            } catch (e) {}
+        }
+        if (state) {
+            console.log("Resuming course:", lastCourse, "mode:", state.mode);
+            startQuiz(lastCourse, state.mode || "topic", state);
+        } else {
+            showMenu();
+        }
     } else {
         showMenu();
     }
 }
 
+let currentMode = null;
+let currentExamEndTime = null;
+let examTimerInterval = null;
+let currentSavedState = null;
+
+function startExamTimer() {
+    const timerDiv = document.getElementById("exam-timer");
+    if (!currentExamEndTime) {
+        timerDiv.style.display = "none";
+        return;
+    }
+    timerDiv.style.display = "block";
+    
+    if (examTimerInterval) clearInterval(examTimerInterval);
+    
+    const updateTimer = () => {
+        const now = Date.now();
+        const diff = currentExamEndTime - now;
+        
+        if (diff <= 0) {
+            clearInterval(examTimerInterval);
+            timerDiv.innerText = "00:00:00";
+            if (!is_graded()) {
+                alert("Time is up! Submitting exam.");
+                grade_quiz();
+                saveState();
+                render();
+            }
+            return;
+        }
+        
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        timerDiv.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+    
+    updateTimer(); // run once immediately
+    examTimerInterval = setInterval(updateTimer, 1000);
+}
+
 function saveState() {
     if (!currentCourse) return;
     const selections = get_selections_json();
-    console.log("Saving state for", currentCourse, "selections:", selections);
     if (!selections) return;
 
     const prereqDiv = document.getElementById("prerequisites");
     const toggleAltBtn = document.getElementById("toggle-alt-btn");
 
     const state = {
+        mode: currentMode,
         index: get_current_question_index(),
         selections: selections,
         graded: is_graded(),
         showPrereqs: prereqDiv.style.display === "block",
-        showAlts: toggleAltBtn.dataset.state === "shown"
+        showAlts: toggleAltBtn.dataset.state === "shown",
+        questionsList: window.currentQuestionsList,
+        selectedTopics: currentSavedState ? currentSavedState.selectedTopics : null,
+        examEndTime: currentExamEndTime
     };
+    currentSavedState = state;
     localStorage.setItem(`lern_progress_${currentCourse}`, JSON.stringify(state));
 }
 
@@ -84,8 +142,12 @@ function setupTheme() {
 
 function showMenu() {
     currentCourse = null;
+    currentMode = null;
+    currentSavedState = null;
+    if (examTimerInterval) clearInterval(examTimerInterval);
     localStorage.removeItem("lern_last_course");
-    document.getElementById("menu").style.display = "block";
+    document.getElementById("menu").style.display = "flex";
+    document.getElementById("topic-selection").style.display = "none";
     document.getElementById("quiz").style.display = "none";
 
     const list = document.getElementById("course-list");
@@ -105,7 +167,14 @@ function showMenu() {
         const hasProgress = localStorage.getItem(`lern_progress_${courseName}`);
         btn.innerText = (courseName.charAt(0).toUpperCase() + courseName.slice(1)) + (hasProgress ? " (In Progress)" : "");
         
-        btn.onclick = () => startQuiz(courseName);
+        btn.onclick = () => {
+            if (hasProgress) {
+                const state = JSON.parse(hasProgress);
+                startQuiz(courseName, state.mode || "topic", state);
+            } else {
+                showModeSelection(courseName);
+            }
+        };
         
         container.appendChild(btn);
 
@@ -130,46 +199,163 @@ function showMenu() {
     }
 }
 
-function startQuiz(courseName) {
-    console.log("Starting quiz:", courseName);
+function showModeSelection(courseName) {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("mode-selection").style.display = "block";
+    document.getElementById("topic-selection").style.display = "none";
+    document.getElementById("quiz").style.display = "none";
+    
+    document.getElementById("selected-course-title-mode").innerText = courseName;
+    document.getElementById("back-to-courses-from-mode").onclick = showMenu;
+
+    document.getElementById("mode-topic").onclick = () => showTopicSelection(courseName);
+    document.getElementById("mode-practice").onclick = () => startQuiz(courseName, "practice");
+    document.getElementById("mode-exam").onclick = () => startQuiz(courseName, "exam");
+}
+
+function showTopicSelection(courseName) {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("mode-selection").style.display = "none";
+    document.getElementById("topic-selection").style.display = "block";
+    document.getElementById("quiz").style.display = "none";
+    
+    document.getElementById("selected-course-title").innerText = courseName;
+    document.getElementById("back-to-courses").onclick = () => showModeSelection(courseName);
+
+    const questions = coursesData[courseName];
+    const topics = new Set();
+    questions.forEach(q => {
+        if (q.topics) {
+            q.topics.forEach(t => topics.add(t));
+        }
+    });
+
+    const topicList = document.getElementById("topic-list");
+    topicList.innerHTML = "";
+
+    const sortedTopics = Array.from(topics).sort();
+    const selectedTopics = new Set(); // Empty by default
+
+    // Create Select All Button
+    const selectAllContainer = document.createElement("div");
+    selectAllContainer.style.marginBottom = "1rem";
+    selectAllContainer.style.gridColumn = "1 / -1";
+    
+    const selectAllBtn = document.createElement("button");
+    selectAllBtn.innerText = "Select All Topics";
+    selectAllBtn.className = "alternative";
+    selectAllBtn.style.width = "auto";
+    selectAllBtn.style.margin = "0";
+    selectAllBtn.onclick = () => {
+        const checkboxes = topicList.querySelectorAll("input[type='checkbox']");
+        checkboxes.forEach(cb => {
+            cb.checked = true;
+            cb.dispatchEvent(new Event('change'));
+        });
+    };
+    selectAllContainer.appendChild(selectAllBtn);
+    topicList.appendChild(selectAllContainer);
+
+    sortedTopics.forEach(topic => {
+        const label = document.createElement("label");
+        label.className = "topic-btn";
+        
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = false;
+        checkbox.onchange = () => {
+            if (checkbox.checked) {
+                selectedTopics.add(topic);
+                label.classList.add("selected");
+            } else {
+                selectedTopics.delete(topic);
+                label.classList.remove("selected");
+            }
+        };
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(topic));
+        topicList.appendChild(label);
+    });
+
+    document.getElementById("start-quiz-btn").onclick = () => {
+        if (selectedTopics.size === 0) {
+            alert("Please select at least one topic.");
+            return;
+        }
+        startQuiz(courseName, "topic", { selectedTopics: Array.from(selectedTopics) });
+    };
+}
+
+function startQuiz(courseName, mode, state = null) {
+    console.log("Starting quiz:", courseName, "Mode:", mode, "State:", state);
     currentCourse = courseName;
+    currentMode = mode;
+    currentSavedState = state;
     localStorage.setItem("lern_last_course", courseName);
     document.getElementById("menu").style.display = "none";
+    document.getElementById("mode-selection").style.display = "none";
+    document.getElementById("topic-selection").style.display = "none";
     document.getElementById("quiz").style.display = "block";
 
+    let questions = coursesData[courseName];
+    
+    if (state && state.questionsList && state.mode === mode) {
+        questions = state.questionsList;
+        if (mode === "exam" && state.examEndTime) {
+            currentExamEndTime = state.examEndTime;
+        }
+    } else {
+        if (mode === "topic" && state && state.selectedTopics) {
+            questions = questions.filter(q => 
+                q.topics && q.topics.some(t => state.selectedTopics.includes(t))
+            );
+        } else if (mode === "practice") {
+            let practiceQuestions = questions.filter(q => q.label === "practice");
+            if (practiceQuestions.length > 0) {
+                questions = practiceQuestions;
+            }
+            questions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+        } else if (mode === "exam") {
+            questions = questions.filter(q => q.label === "exam");
+            currentExamEndTime = Date.now() + 5 * 60 * 60 * 1000;
+        }
+    }
+
+    if (questions.length === 0) {
+        alert("No questions found for the selected mode.");
+        showModeSelection(courseName);
+        return;
+    }
+
+    window.currentQuestionsList = questions;
+
     try {
-        console.log("Initializing quiz WASM with data for", courseName);
-        init_quiz(JSON.stringify(coursesData[courseName]));
+        console.log("Initializing quiz WASM with", questions.length, "questions");
+        init_quiz(JSON.stringify(questions));
     } catch (err) {
         console.error("Failed to initialize quiz WASM:", err);
         return;
     }
     
-    const saved = localStorage.getItem(`lern_progress_${courseName}`);
-    if (saved) {
-        console.log("Found saved progress for", courseName, ":", saved);
+    if (state && state.mode === mode && state.selections) {
+        console.log("Restoring saved progress for", courseName);
         try {
-            const state = JSON.parse(saved);
-            if (state && state.selections) {
-                restore_quiz_state(state.index, state.selections, state.graded);
-                
-                // Restore UI toggle states
-                const prereqDiv = document.getElementById("prerequisites");
-                const prereqBtn = document.getElementById("prereq-btn");
-                const toggleAltBtn = document.getElementById("toggle-alt-btn");
-                
-                if (state.showPrereqs) {
-                    prereqDiv.style.display = "block";
-                    prereqBtn.innerText = "Hide Prerequisites";
-                }
-                
-                if (state.showAlts) {
-                    toggleAltBtn.dataset.state = "shown";
-                } else {
-                    toggleAltBtn.dataset.state = "hidden";
-                }
-                
-                console.log("State restored successfully");
+            restore_quiz_state(state.index, state.selections, state.graded);
+            
+            const prereqDiv = document.getElementById("prerequisites");
+            const prereqBtn = document.getElementById("prereq-btn");
+            const toggleAltBtn = document.getElementById("toggle-alt-btn");
+            
+            if (state.showPrereqs) {
+                prereqDiv.style.display = "block";
+                prereqBtn.innerText = "Hide Prerequisites";
+            }
+            
+            if (state.showAlts) {
+                toggleAltBtn.dataset.state = "shown";
+            } else {
+                toggleAltBtn.dataset.state = "hidden";
             }
         } catch (e) {
             console.error("Failed to restore state", e);
@@ -177,7 +363,15 @@ function startQuiz(courseName) {
         }
     }
 
-    saveState(); // Ensure we save the fact that we started this quiz
+    if (mode === "exam") {
+        startExamTimer();
+    } else {
+        const timerDiv = document.getElementById("exam-timer");
+        timerDiv.style.display = "none";
+        if (examTimerInterval) clearInterval(examTimerInterval);
+    }
+
+    saveState(); 
     render();
 }
 
@@ -197,9 +391,9 @@ function fixSvgs() {
             svg.removeAttribute("width");
             svg.removeAttribute("height");
             svg.style.width = "100%";
-            svg.style.maxWidth = "1000px"; // Cap at project max-width
+            svg.style.maxWidth = "750px"; // Cap at project max-width
             svg.style.height = "auto";
-            svg.style.margin = "0";
+            svg.style.margin = "0 auto";
         } else {
             // Alternatives should be natural size but responsive
             // We keep the width/height attributes from Typst for tight cropping
@@ -263,9 +457,35 @@ function render() {
     nextBtn.style.display = "block";
     nextBtn.onclick = (e) => {
         e.preventDefault();
-        next_question();
-        saveState();
-        render();
+        const total = get_total_questions();
+        if (total > 1) {
+            next_question();
+            saveState();
+            render();
+        } else {
+            alert("Only one question available.");
+        }
+    };
+
+    const copyPromptBtn = document.getElementById("copy-prompt-btn");
+    copyPromptBtn.onclick = async (e) => {
+        e.preventDefault();
+        
+        const questionRaw = get_current_question_raw() || "Question data missing.";
+        const explanationRaw = get_current_question_explanation_raw() || "No explanation provided in the source.";
+        const courseName = currentCourse || "physics";
+        
+        const prompt = `Please further explain the following ${courseName} problem and its solution, use simple language and don't make things more complicated than they need to be:\n\nQuestion:\n${questionRaw}\n\nExplanation:\n${explanationRaw}`;
+        
+        try {
+            await navigator.clipboard.writeText(prompt);
+            const originalText = copyPromptBtn.innerText;
+            copyPromptBtn.innerText = "Copied!";
+            setTimeout(() => copyPromptBtn.innerText = originalText, 2000);
+        } catch (err) {
+            console.error("Failed to copy:", err);
+            alert("Could not copy to clipboard.");
+        }
     };
 
     gradeBtn.onclick = (e) => {
@@ -299,18 +519,18 @@ function render() {
             incorrectIndices.forEach(idx => {
                 const item = document.createElement("div");
                 item.style.marginBottom = "2rem";
-                item.style.padding = "1rem";
+                item.style.padding = "2rem";
                 item.style.border = "1px solid var(--border-color)";
-                item.style.borderRadius = "8px";
+                item.style.borderRadius = "0px";
                 item.style.background = "var(--surface-color)";
                 
                 const qHtml = get_question_html_by_index(idx);
                 const eHtml = get_explanation_html_by_index(idx);
                 
                 item.innerHTML = `
-                    <div style="font-weight: bold; margin-bottom: 0.5rem; color: #e53e3e;">Question ${idx + 1}:</div>
-                    <div style="margin-bottom: 1rem;">${qHtml}</div>
-                    <div style="background: var(--prereq-bg); padding: 1rem; border-radius: 4px; border-left: 4px solid #3182ce;">
+                    <div style="font-weight: bold; margin-bottom: 1rem; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Question ${idx + 1}:</div>
+                    <div style="margin-bottom: 1.5rem;">${qHtml}</div>
+                    <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
                         <strong>Explanation:</strong><br>${eHtml || "No explanation available."}
                     </div>
                 `;
@@ -421,3 +641,44 @@ function getRank(percentage) {
 }
 
 run();
+
+function startLernGlitch() {
+    const lernSpan = document.querySelector('.lern-anim');
+    if (!lernSpan) return;
+    
+    const originalText = "lern";
+    const symbols = "■▇▆▅▄▃▃▁▉▊▌▍▎▏";
+    
+    function triggerGlitch() {
+        let cycles = 15;
+        let currentCycle = 0;
+        
+        const glitchInterval = setInterval(() => {
+            if (currentCycle >= cycles) {
+                clearInterval(glitchInterval);
+                lernSpan.innerText = originalText;
+                
+                // Schedule next glitch randomly between 2 and 6 seconds
+                setTimeout(triggerGlitch, Math.random() * 4000 + 2000);
+                return;
+            }
+            
+            let glitchedText = "";
+            for (let i = 0; i < originalText.length; i++) {
+                // 60% chance to glitch a character
+                if (Math.random() < 0.6) {
+                    glitchedText += symbols[Math.floor(Math.random() * symbols.length)];
+                } else {
+                    glitchedText += originalText[i];
+                }
+            }
+            lernSpan.innerText = glitchedText;
+            currentCycle++;
+        }, 50); // 50ms per cycle frame
+    }
+    
+    // Start first glitch after a short delay
+    setTimeout(triggerGlitch, 1500);
+}
+
+startLernGlitch();

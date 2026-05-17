@@ -1,0 +1,11 @@
+{
+    "correct_index": 1,
+    "label": "practice",
+    "num_alternatives": 2,
+    "has_explanation": true,
+    "topics": [
+        "Conceptual",
+        "Foundations",
+        "Practice"
+    ]
+}

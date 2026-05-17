@@ -10,9 +10,12 @@ pub struct Alternative {
 pub struct Question {
     pub id: String,
     pub label: Option<String>,
+    pub topics: Vec<String>,
     pub question_html: String,
+    pub question_raw: Option<String>,
     pub prerequisites_html: Option<String>,
     pub explanation_html: Option<String>,
+    pub explanation_raw: Option<String>,
     pub alternatives: Vec<Alternative>,
 }
 
@@ -23,8 +26,28 @@ pub struct Quiz {
     pub is_graded: bool,
 }
 
+fn deterministic_shuffle<T>(slice: &mut [T], mut seed: u64) {
+    if slice.is_empty() {
+        return;
+    }
+    for i in (1..slice.len()).rev() {
+        seed = seed
+            .wrapping_mul(6364136223846793005)
+            .wrapping_add(1442695040888963407);
+        let j = (seed >> 32) as usize % (i + 1);
+        slice.swap(i, j);
+    }
+}
+
 impl Quiz {
-    pub fn new(questions: Vec<Question>) -> Self {
+    pub fn new(mut questions: Vec<Question>) -> Self {
+        for q in &mut questions {
+            let mut seed = 0u64;
+            for b in q.id.bytes() {
+                seed = seed.wrapping_mul(31).wrapping_add(b as u64);
+            }
+            deterministic_shuffle(&mut q.alternatives, seed);
+        }
         let len = questions.len();
         Self {
             questions,
@@ -34,7 +57,12 @@ impl Quiz {
         }
     }
 
-    pub fn restore_state(&mut self, current_index: usize, selections: Vec<Option<usize>>, is_graded: bool) {
+    pub fn restore_state(
+        &mut self,
+        current_index: usize,
+        selections: Vec<Option<usize>>,
+        is_graded: bool,
+    ) {
         if current_index < self.questions.len() {
             self.current_question_index = current_index;
         }
@@ -58,7 +86,9 @@ impl Quiz {
     }
 
     pub fn get_current_selection(&self) -> Option<usize> {
-        self.selections.get(self.current_question_index).and_then(|&s| s)
+        self.selections
+            .get(self.current_question_index)
+            .and_then(|&s| s)
     }
 
     pub fn next_question(&mut self) {
@@ -112,7 +142,10 @@ impl Quiz {
         let mut indices = Vec::new();
         for (i, question) in self.questions.iter().enumerate() {
             let selected = self.selections.get(i).and_then(|&s| s);
-            let is_correct = selected.and_then(|idx| question.alternatives.get(idx)).map(|a| a.is_correct).unwrap_or(false);
+            let is_correct = selected
+                .and_then(|idx| question.alternatives.get(idx))
+                .map(|a| a.is_correct)
+                .unwrap_or(false);
             if !is_correct {
                 indices.push(i);
             }
@@ -133,12 +166,19 @@ mod tests {
         let q1 = Question {
             id: "q1".to_string(),
             label: None,
+            topics: vec!["Math".to_string()],
             question_html: "<p>What is 1+1?</p>".to_string(),
             prerequisites_html: Some("<p>Addition</p>".to_string()),
             explanation_html: Some("<p>Because 1+1=2</p>".to_string()),
             alternatives: vec![
-                Alternative { content_html: "1".to_string(), is_correct: false },
-                Alternative { content_html: "2".to_string(), is_correct: true },
+                Alternative {
+                    content_html: "1".to_string(),
+                    is_correct: false,
+                },
+                Alternative {
+                    content_html: "2".to_string(),
+                    is_correct: true,
+                },
             ],
         };
         Quiz::new(vec![q1])
@@ -150,8 +190,13 @@ mod tests {
         assert_eq!(quiz.current_question_index, 0);
         assert!(!quiz.is_graded);
 
-        quiz.select_answer(1);
-        assert_eq!(quiz.get_current_selection(), Some(1));
+        let correct_idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(correct_idx);
+        assert_eq!(quiz.get_current_selection(), Some(correct_idx));
         assert_eq!(quiz.get_score(), 1);
         assert!(!quiz.is_graded);
 
@@ -163,9 +208,72 @@ mod tests {
     #[test]
     fn test_quiz_wrong_answer() {
         let mut quiz = sample_quiz();
-        quiz.select_answer(0);
+        // Option 0 in sample_quiz before shuffle is "1" (false)
+        // Option 1 in sample_quiz before shuffle is "2" (true)
+        // We must find the index of the correct alternative after shuffle to select the wrong one
+        let wrong_idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| !a.is_correct)
+            .unwrap();
+        quiz.select_answer(wrong_idx);
         assert_eq!(quiz.get_score(), 0);
         quiz.grade();
         assert_eq!(quiz.incorrect_question_indices(), vec![0]);
+    }
+
+    #[test]
+    fn test_shuffled_grading_consistency() {
+        let mut q1 = Question {
+            id: "test_consistency_id_1".to_string(),
+            label: None,
+            topics: vec![],
+            question_html: "Q".to_string(),
+            question_raw: Some("Q".to_string()),
+            prerequisites_html: None,
+            explanation_html: None,
+            explanation_raw: None,
+            alternatives: vec![
+                Alternative {
+                    content_html: "A".to_string(),
+                    is_correct: false,
+                },
+                Alternative {
+                    content_html: "B".to_string(),
+                    is_correct: false,
+                },
+                Alternative {
+                    content_html: "C".to_string(),
+                    is_correct: true,
+                },
+                Alternative {
+                    content_html: "D".to_string(),
+                    is_correct: false,
+                },
+            ],
+        };
+
+        let mut quiz = Quiz::new(vec![q1.clone()]);
+
+        // Find the index of the correct answer after shuffling
+        let correct_idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+
+        quiz.select_answer(correct_idx);
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 1);
+        assert!(quiz.incorrect_question_indices().is_empty());
+
+        // Verify deterministic shuffle consistency (same ID -> same correct_idx)
+        let quiz2 = Quiz::new(vec![q1.clone()]);
+        let correct_idx2 = quiz2.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        assert_eq!(correct_idx, correct_idx2);
     }
 }

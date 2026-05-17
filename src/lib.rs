@@ -54,6 +54,18 @@ pub fn get_current_question_html() -> Option<String> {
 }
 
 #[wasm_bindgen]
+pub fn get_current_question_raw() -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()?.current_question().and_then(|q| q.question_raw.clone())
+}
+
+#[wasm_bindgen]
+pub fn get_current_question_explanation_raw() -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()?.current_question().and_then(|q| q.explanation_raw.clone())
+}
+
+#[wasm_bindgen]
 pub fn get_current_question_prerequisites_html() -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref()?.current_question().and_then(|q| q.prerequisites_html.clone())

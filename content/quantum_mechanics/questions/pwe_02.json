@@ -1,0 +1,11 @@
+{
+    "correct_index": 0,
+    "label": "exam",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "topics": [
+        "Potential Well",
+        "Practice",
+        "Schr\u00f6dinger Equation"
+    ]
+}

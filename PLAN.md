@@ -3,6 +3,7 @@
 **Objective**: Build a functional prototype of "lern", a Rust and WebAssembly webapp for math and physics quizzes, rendering questions and alternatives using native Typst (to SVG).
 
 ## Key Files & Context
+
 - `src/lib.rs` & `src/quiz.rs`: Core Rust logic and WASM bindings.
 - `generate_questions.py`: Aggregator for Typst SVGs and question metadata.
 - `build.sh`: Orchestrates compilation and WASM building.
@@ -11,33 +12,59 @@
 ## Future Implementation Steps
 
 ### Phase 8: Responsive Polish & Content Expansion
-1. **Mobile Scaling**: 
+
+1. **Mobile Scaling**:
     - Implement dynamic SVG scaling in `app.js` to ensure equations and large questions fit perfectly on small screens.
     - Optimize UI layouts (buttons, containers) for touch targets and mobile viewport widths.
 2. **Module Variety**: Add more courses (e.g., Statistical Mechanics, Electromagnetism) and diversify question types.
 
-### Phase 9: Progress Persistence
-1. **State Saving**:
-    - Use `localStorage` to save user selections for each course.
-    - Ensure progress is restored when the user returns to a course or refreshes the page.
-2. **Clear Progress**:
-    - Add a "Reset Progress" option in the menu or quiz settings.
+### Phase 9: Progress Persistence (Completed)
 
-### Phase 10: Content Consistency & Standardization
-1. **UI Alignment**:
-    - Ensure every enum choice in the Typst source (a, b, c, etc.) corresponds to a selectable alternative in the UI.
-    - Standardize the mapping between Typst pages and UI alternatives to prevent "missing" or "extra" options.
-2. **Typography Standardization**:
-    - Audit and unify text sizes (`40pt` for questions, `25pt` for alternatives) across all `.typ` files.
-    - Ensure font consistency and responsive behavior across all modules for a cohesive look.
+1. **State Saving**: Used `localStorage` to save user selections, current question index, and active topic filter for each course.
+2. **Persistence**: Ensures progress is automatically restored when returning to a course.
+3. **Reset**: Added a "Reset Progress" option in the course menu.
 
-### Phase 11: Quantum Mechanics Content Refinement
-1. **Question Splitting**:
-    - Review all questions in `content/quantum_mechanics/`.
-    - Identify multi-part or overly long questions and divide them into distinct, focused quiz items.
-2. **Explanatory Depth**:
-    - Ensure each new question has a specific explanation and prerequisite summary relevant to its narrowed scope.
+### Phase 10: Content Consistency & Standardization (Completed)
 
-## Verification & Testing
-- **Continuous Validation**: Re-run `./build.sh` after all changes to ensure SVG rendering and WASM bindings remain synchronized.
-- **Modularity Check**: Ensure that moving files into course-specific subdirectories doesn't break the aggregation logic or SVG paths.
+1. **UI Alignment**: Standardized mapping between Typst pages and UI alternatives using metadata JSONs.
+2. **Typography Standardization**: Unified text sizes (32pt for questions, 25pt for alternatives) via a global `template.typ`.
+
+### Phase 11: Quantum Mechanics Content Refinement (Completed)
+
+1. **Question Splitting**: Decomposed multi-part problems into 62 individual, gradable quiz items.
+2. **Explanatory Depth**: Added context-aware setup and detailed explanations to every split item.
+
+### Phase 12: Topic-Based Learning
+
+1. **Topic Metadata**:
+    - Add a `topics` field (array of strings) to all question metadata JSONs.
+    - Tag questions with granular topics (e.g., "Spin", "Harmonic Oscillator", "Perturbation Theory").
+2. **Multi-Topic Selection UI**:
+    - Implement a topic selection screen that appears after selecting a course.
+    - Allow users to multi-select topics to create a custom, focused quiz session.
+3. **Filtering Logic**:
+    - Update `app.js` and `src/lib.rs` to filter the question pool based on selected topics before initializing the quiz.
+    - Ensure progress persistence still works correctly with filtered question sets.
+
+### Phase 13: UI Overhaul (Completed)
+
+1. **Aesthetic Design**:
+   - Adopt a "Modern Quant" minimalist aesthetic.
+   - Use monospace fonts for all non-Typst text (UI labels, buttons, menus).
+   - Redesign buttons as clean text elements.
+2. **Interactive Feedback**:
+   - Implement underscore emergence animation for all buttons on hover.
+   - Add hover-based highlighting for selectable alternatives.
+   - Refine spacing and transitions to feel "crisp" and professional.
+
+### Phase 14: Mode Selection
+1. **Mode Selection UI**:
+    - After selecting a course, present a UI for the user to select one of three modes: Topic Traversal, Practice Mode, or Exam Mode.
+2. **Topic Traversal Mode**:
+    - Retain the current functionality: users are presented with the topic selection screen and can choose specific topics to practice.
+3. **Practice Mode**:
+    - Randomly select up to 10 questions from the chosen course.
+    - If questions have a "practice" label, restrict selection strictly to those.
+4. **Exam Mode**:
+    - Display all questions within the selected course that have the "exam" label.
+    - Implement an active countdown clock displaying 5 hours starting from the moment Exam Mode is initiated.
