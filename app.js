@@ -62,7 +62,8 @@ async function run() {
     try {
         setupTheme();
         updateLoadingStatus("Initializing WASM core...");
-        await init();
+        // Explicitly point to the .wasm file to ensure it loads correctly in subpaths
+        await init("./pkg/lern_bg.wasm");
 
         updateLoadingStatus("Fetching question database (this may take a moment)...");
         // Add cache busting to ensure we don't load stale data from CDN
