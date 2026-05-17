@@ -78,6 +78,12 @@ pub fn get_current_question_explanation_html() -> Option<String> {
 }
 
 #[wasm_bindgen]
+pub fn get_current_question_references_json() -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()?.current_question().map(|q| serde_json::to_string(&q.references).unwrap())
+}
+
+#[wasm_bindgen]
 pub fn is_graded() -> bool {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref().map(|s| s.is_graded).unwrap_or(false)
@@ -181,6 +187,12 @@ pub fn get_question_html_by_index(index: usize) -> Option<String> {
 pub fn get_explanation_html_by_index(index: usize) -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref()?.questions.get(index).and_then(|q| q.explanation_html.clone())
+}
+
+#[wasm_bindgen]
+pub fn get_references_json_by_index(index: usize) -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()?.questions.get(index).map(|q| serde_json::to_string(&q.references).unwrap())
 }
 
 #[wasm_bindgen]

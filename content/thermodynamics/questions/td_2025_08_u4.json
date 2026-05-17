@@ -6,5 +6,12 @@
     "topics": [
         "Entropy of Mixing",
         "Specific Heat"
+    ],
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "1",
+            "topic": "Basic Concepts"
+        }
     ]
 }

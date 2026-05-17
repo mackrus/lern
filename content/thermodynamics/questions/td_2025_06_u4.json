@@ -7,5 +7,12 @@
         "Entropy",
         "Reversible Expansion",
         "State Reconstructions"
+    ],
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "5",
+            "topic": "Entropy"
+        }
     ]
 }

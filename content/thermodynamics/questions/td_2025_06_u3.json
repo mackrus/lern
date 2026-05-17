@@ -7,5 +7,12 @@
         "Entropy",
         "Ideal Gas",
         "State Processes"
+    ],
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "5",
+            "topic": "Entropy"
+        }
     ]
 }

@@ -7,5 +7,12 @@
         "Net Work",
         "Cyclic Processes",
         "PV-Diagrams"
+    ],
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "3.5",
+            "topic": "Ideal Gases and the First Law"
+        }
     ]
 }

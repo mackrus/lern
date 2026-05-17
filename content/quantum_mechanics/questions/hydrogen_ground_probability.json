@@ -8,5 +8,12 @@
         "Exam",
         "Hydrogen",
         "Wavefunctions"
+    ],
+    "references": [
+        {
+            "book": "Griffiths",
+            "chapter": "4.2",
+            "topic": "The Hydrogen Atom"
+        }
     ]
 }

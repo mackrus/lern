@@ -7,10 +7,18 @@ pub struct Alternative {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Reference {
+    pub book: String,
+    pub chapter: String,
+    pub topic: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Question {
     pub id: String,
     pub label: Option<String>,
     pub topics: Vec<String>,
+    pub references: Vec<Reference>,
     pub question_html: String,
     pub question_raw: Option<String>,
     pub prerequisites_html: Option<String>,
@@ -213,6 +221,7 @@ mod tests {
             id: "q1".to_string(),
             label: None,
             topics: vec!["Math".to_string()],
+            references: vec![],
             question_html: "<p>What is 1+1?</p>".to_string(),
             question_raw: Some("What is 1+1?".to_string()),
             prerequisites_html: Some("<p>Addition</p>".to_string()),
@@ -276,6 +285,7 @@ mod tests {
             id: "test_consistency_id_1".to_string(),
             label: None,
             topics: vec![],
+            references: vec![],
             question_html: "Q".to_string(),
             question_raw: Some("Q".to_string()),
             prerequisites_html: None,
@@ -331,6 +341,7 @@ mod tests {
             id: "q1".to_string(),
             label: None,
             topics: vec![],
+            references: vec![],
             question_html: "Q1".to_string(),
             question_raw: None,
             prerequisites_html: None,

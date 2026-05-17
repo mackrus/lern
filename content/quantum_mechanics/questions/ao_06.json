@@ -8,5 +8,12 @@
         "Central Potentials",
         "Orbitals",
         "Practice"
+    ],
+    "references": [
+        {
+            "book": "Griffiths",
+            "chapter": "5",
+            "topic": "Identical Particles"
+        }
     ]
 }

@@ -7,5 +7,12 @@
         "Energy",
         "Potential Well",
         "Practice"
+    ],
+    "references": [
+        {
+            "book": "Griffiths",
+            "chapter": "2.1",
+            "topic": "Stationary States"
+        }
     ]
 }

@@ -11,7 +11,7 @@
 
 ## Future Implementation Steps
 
-### Phase 8: Responsive Polish & Content Expansion
+### Phase 8: Responsive Polish & Content Expansion (Completed)
 
 1. **Mobile Scaling**:
     - Implement dynamic SVG scaling in `app.js` to ensure equations and large questions fit perfectly on small screens.
@@ -34,7 +34,7 @@
 1. **Question Splitting**: Decomposed multi-part problems into 62 individual, gradable quiz items.
 2. **Explanatory Depth**: Added context-aware setup and detailed explanations to every split item.
 
-### Phase 12: Topic-Based Learning
+### Phase 12: Topic-Based Learning (Completed)
 
 1. **Topic Metadata**:
     - Add a `topics` field (array of strings) to all question metadata JSONs.
@@ -94,7 +94,7 @@
     - Generate automated recommendations for "Next Steps" based on weaknesses (e.g., "Recommended: 10 more questions on Spin Angular Momentum").
     - Add a "Quick Start Practice" button that pre-filters the next session based on identified weak areas.
 
-### Phase 19: References
+### Phase 19: References (Completed)
 
 1. **Metadata Integration**:
     - Add a `references` field to question metadata JSONs (e.g., `[{"book": "Sakurai", "chapter": "3.1", "topic": "Rotations"}]`).
@@ -105,7 +105,7 @@
 3. **Source Enrichment**:
     - Update `generate_questions.py` and the Rust WASM module to pass this new field through to the frontend.
 
-### Phase 20: Automated Deployment
+### Phase 20: Automated Deployment (Completed)
 
 1. **Build Automation**: Implement GitHub Actions workflow to automate compilation (Typst to SVG, WASM build) on each push.
 2. **Environment Configuration**: Configure the GitHub Pages hosting settings in the repository to serve the contents of the `dist/` folder.

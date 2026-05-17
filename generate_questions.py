@@ -117,6 +117,7 @@ for course_dir in os.listdir(content_root):
                 "id": base,
                 "label": metadata.get("label"),
                 "topics": metadata.get("topics", []),
+                "references": metadata.get("references", []),
                 "question_html": question_html,
                 "question_raw": question_raw,
                 "prerequisites_html": prerequisites_html,

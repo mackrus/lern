@@ -6,5 +6,12 @@
     "topics": [
         "Practice",
         "Spin"
+    ],
+    "references": [
+        {
+            "book": "Griffiths",
+            "chapter": "4.4",
+            "topic": "Spin"
+        }
     ]
 }

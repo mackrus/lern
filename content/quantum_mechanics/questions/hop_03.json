@@ -7,5 +7,12 @@
         "Harmonic Oscillator",
         "Perturbation Theory",
         "Practice"
+    ],
+    "references": [
+        {
+            "book": "Griffiths",
+            "chapter": "7",
+            "topic": "Time-Independent Perturbation Theory"
+        }
     ]
 }

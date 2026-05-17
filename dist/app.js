@@ -8,6 +8,7 @@ import init, {
     get_current_question_prerequisites_html,
     get_current_question_explanation_html,
     get_current_question_explanation_raw,
+    get_current_question_references_json,
     get_alternatives_count, 
     get_alternative_html, 
     select_answer, 
@@ -23,7 +24,8 @@ import init, {
     get_total_questions,
     get_incorrect_indices,
     get_question_html_by_index,
-    get_explanation_html_by_index
+    get_explanation_html_by_index,
+    get_references_json_by_index
 } from "./pkg/lern.js";
 
 let coursesData = null;
@@ -121,6 +123,7 @@ function saveState() {
     if (!selections) return;
 
     const prereqDiv = document.getElementById("prerequisites");
+    const refsDiv = document.getElementById("references");
     const toggleAltBtn = document.getElementById("toggle-alt-btn");
 
     const state = {
@@ -128,8 +131,9 @@ function saveState() {
         index: get_current_question_index(),
         selections: selections,
         graded: is_graded(),
-        showPrereqs: prereqDiv.style.display === "block",
-        showAlts: toggleAltBtn.dataset.state === "shown",
+        showPrereqs: prereqDiv && prereqDiv.style.display === "block",
+        showRefs: refsDiv && refsDiv.style.display === "block",
+        showAlts: toggleAltBtn && toggleAltBtn.dataset.state === "shown",
         // Do not save full questionsList (SVG HTML) to localStorage
         selectedTopics: currentSavedState ? currentSavedState.selectedTopics : null,
         examEndTime: currentExamEndTime
@@ -550,11 +554,18 @@ function startQuiz(courseName, mode, state = null) {
             
             const prereqDiv = document.getElementById("prerequisites");
             const prereqBtn = document.getElementById("prereq-btn");
+            const refsDiv = document.getElementById("references");
+            const refsBtn = document.getElementById("refs-btn");
             const toggleAltBtn = document.getElementById("toggle-alt-btn");
             
             if (state.showPrereqs) {
                 prereqDiv.style.display = "block";
                 prereqBtn.innerText = "Hide Prerequisites";
+            }
+
+            if (state.showRefs) {
+                refsDiv.style.display = "block";
+                refsBtn.innerText = "Hide References";
             }
             
             if (state.showAlts) {
@@ -617,7 +628,9 @@ function render() {
     const resultDiv = document.getElementById("result");
     const prereqBtn = document.getElementById("prereq-btn");
     const prereqDiv = document.getElementById("prerequisites");
+    const refsBtn = document.getElementById("refs-btn");
     const explanationDiv = document.getElementById("explanation");
+    const referencesDiv = document.getElementById("references");
     const nextBtn = document.getElementById("next-btn");
     const prevBtn = document.getElementById("prev-btn");
     const toggleAltBtn = document.getElementById("toggle-alt-btn");
@@ -641,6 +654,8 @@ function render() {
     copyPromptBtn.style.display = "block";
 
     const currentIndex = get_current_question_index();
+    const currentQuestion = window.currentQuestionsList[currentIndex];
+    console.log("Current Question ID:", currentQuestion ? currentQuestion.id : "unknown");
     const totalCount = get_total_questions();
     questionNumber.innerText = `Question ${currentIndex + 1} of ${totalCount}`;
 
@@ -825,12 +840,22 @@ function render() {
                 
                 const qHtml = get_question_html_by_index(idx);
                 const eHtml = get_explanation_html_by_index(idx);
+                const rJson = get_references_json_by_index(idx);
+                const refs = rJson ? JSON.parse(rJson) : [];
                 
+                let refsHtml = "";
+                if (refs.length > 0) {
+                    refsHtml = `<div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; opacity: 0.8;">
+                        <strong>References:</strong> ${refs.map(r => `${r.book}, Ch. ${r.chapter}${r.topic ? ` (${r.topic})` : ""}`).join("; ")}
+                    </div>`;
+                }
+
                 item.innerHTML = `
                     <div style="font-weight: bold; margin-bottom: 1rem; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Question ${idx + 1}:</div>
                     <div style="margin-bottom: 1.5rem;">${qHtml}</div>
                     <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
                         <strong>Explanation:</strong><br>${eHtml || "No explanation available."}
+                        ${refsHtml}
                     </div>
                 `;
                 incorrectList.appendChild(item);
@@ -849,23 +874,52 @@ function render() {
     // Reset visibility if not graded
     if (!graded) {
         explanationDiv.style.display = "none";
+        // Do not force referencesDiv.style.display = "none" if it was toggled by button
     }
 
-    if (graded) {
-        const explHtml = get_current_question_explanation_html();
-        if (explHtml) {
-            explanationDiv.innerHTML = "<h3>Explanation:</h3>" + explHtml;
-            explanationDiv.style.display = "block";
+    const refsJson = get_current_question_references_json();
+    const refs = refsJson ? JSON.parse(refsJson) : [];
+    
+    if (refs && refs.length > 0) {
+        refsBtn.style.display = "block";
+        let refsHtml = "<h4 style='margin-top: 0; opacity: 0.8;'>Where do i read about this?</h4><ul style='margin-bottom: 0; padding-left: 1.5rem;'>";
+        refs.forEach(ref => {
+            refsHtml += `<li><strong>${ref.book}</strong>, Chapter ${ref.chapter}${ref.topic ? ` (${ref.topic})` : ""}</li>`;
+        });
+        refsHtml += "</ul>";
+        referencesDiv.innerHTML = refsHtml;
+        
+        if (referencesDiv.style.display === "block") {
+            refsBtn.innerText = "Hide References";
+        } else {
+            refsBtn.innerText = "Where do i read about this?";
         }
-        alternativesDiv.style.display = "none";
-        toggleAltBtn.style.display = "none";
+    } else {
+        refsBtn.style.display = "none";
+        referencesDiv.style.display = "none";
     }
+
+    refsBtn.onclick = () => {
+        if (referencesDiv.style.display === "none") {
+            referencesDiv.style.display = "block";
+            refsBtn.innerText = "Hide References";
+        } else {
+            referencesDiv.style.display = "none";
+            refsBtn.innerText = "Where do i read about this?";
+        }
+        saveState();
+    };
 
     // Prerequisites toggle
     const prereqHtml = get_current_question_prerequisites_html();
     if (prereqHtml) {
         prereqBtn.style.display = "block";
         prereqDiv.innerHTML = prereqHtml;
+        if (prereqDiv.style.display === "block") {
+            prereqBtn.innerText = "Hide Prerequisites";
+        } else {
+            prereqBtn.innerText = "Show Prerequisites";
+        }
     } else {
         prereqBtn.style.display = "none";
     }
@@ -881,6 +935,13 @@ function render() {
         saveState();
         fixSvgs();
     };
+
+    // Force copyPromptBtn visibility and ensure container wrap behavior
+    copyPromptBtn.style.display = "block";
+    const controlsContainer = document.querySelector(".controls-container");
+    if (controlsContainer) {
+        controlsContainer.style.display = "flex";
+    }
 
     // Navigation and Render state for alternatives
     if (!toggleAltBtn.dataset.state) {

@@ -7,5 +7,12 @@
         "First Law",
         "Calorimetry",
         "Kinetic Theory"
+    ],
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "3",
+            "topic": "The First Law of Thermodynamics"
+        }
     ]
 }

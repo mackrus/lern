@@ -3,7 +3,7 @@
 #set text(size: q_size)
 #set list(..list_style)
 #set enum(numbering: "a)", ..list_style)
-An unpolarised light beam of intensity I passes through a vertically-aligned polariser, then through a polariser tilted at 45 degrees, and finally through a horisontally-aligned polariser. What is the resulting intensity?
+An unpolarised light beam of intensity I passes through a vertically-aligned polariser, then through a polariser tilted at 45 degrees, and finally through a horizontally-aligned polariser. What is the resulting intensity?
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
