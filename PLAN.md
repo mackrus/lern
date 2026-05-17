@@ -82,7 +82,30 @@
     - **High Contrast/Secondary**: Already answered questions.
 3. **Interactive Navigation**: Enable direct jumping to any question in the current set by clicking its number.
 
-### Phase 18: Automated Deployment
+### Phase 18: Performance Analytics (Stats) (Completed)
+
+1. **Results Summary**:
+    - Implement a post-grading "Stats" screen that breaks down performance by topic.
+    - Calculate and display accuracy percentages for each selected topic.
+2. **Weakness & Strength Identification**:
+    - Automatically identify "Strengths" (topics with >80% accuracy) and "Weaknesses" (topics with <50% accuracy).
+    - Provide a visual summary (e.g., color-coded bars or simple text-based metrics).
+3. **Proposed Practice**:
+    - Generate automated recommendations for "Next Steps" based on weaknesses (e.g., "Recommended: 10 more questions on Spin Angular Momentum").
+    - Add a "Quick Start Practice" button that pre-filters the next session based on identified weak areas.
+
+### Phase 19: References
+
+1. **Metadata Integration**:
+    - Add a `references` field to question metadata JSONs (e.g., `[{"book": "Sakurai", "chapter": "3.1", "topic": "Rotations"}]`).
+    - Tag questions using provided textbook Table of Contents to create a direct link between problems and theory.
+2. **UI Implementation**:
+    - Add a "Where to read about this" section in the quiz interface (e.g., below the explanation).
+    - Implement conditional rendering to ensure the section is only visible if the `references` metadata exists for the current question.
+3. **Source Enrichment**:
+    - Update `generate_questions.py` and the Rust WASM module to pass this new field through to the frontend.
+
+### Phase 20: Automated Deployment
 
 1. **Build Automation**: Implement GitHub Actions workflow to automate compilation (Typst to SVG, WASM build) on each push.
 2. **Environment Configuration**: Configure the GitHub Pages hosting settings in the repository to serve the contents of the `dist/` folder.

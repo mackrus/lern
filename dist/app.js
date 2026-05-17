@@ -18,6 +18,7 @@ import init, {
     previous_question,
     set_question_index,
     get_score,
+    get_topic_stats_json,
     get_current_question_index,
     get_total_questions,
     get_incorrect_indices,
@@ -29,29 +30,46 @@ let coursesData = null;
 let currentCourse = null;
 
 async function run() {
-    setupTheme();
-    await init();
+    try {
+        setupTheme();
+        await init();
 
-    const response = await fetch("./questions.json");
-    coursesData = await response.json();
-    
-    const lastCourse = localStorage.getItem("lern_last_course");
-    if (lastCourse && coursesData[lastCourse]) {
-        const hasProgress = localStorage.getItem(`lern_progress_${lastCourse}`);
-        let state = null;
-        if (hasProgress) {
-            try {
-                state = JSON.parse(hasProgress);
-            } catch (e) {}
-        }
-        if (state) {
-            console.log("Resuming course:", lastCourse, "mode:", state.mode);
-            startQuiz(lastCourse, state.mode || "topic", state);
+        const response = await fetch("./questions.json");
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        coursesData = await response.json();
+        
+        const lastCourse = localStorage.getItem("lern_last_course");
+        if (lastCourse && coursesData[lastCourse]) {
+            const hasProgress = localStorage.getItem(`lern_progress_${lastCourse}`);
+            let state = null;
+            if (hasProgress) {
+                try {
+                    state = JSON.parse(hasProgress);
+                } catch (e) {
+                    console.error("Failed to parse progress state", e);
+                }
+            }
+            if (state) {
+                console.log("Resuming course:", lastCourse, "mode:", state.mode);
+                startQuiz(lastCourse, state.mode || "topic", state);
+            } else {
+                showMenu();
+            }
         } else {
             showMenu();
         }
-    } else {
-        showMenu();
+    } catch (err) {
+        console.error("Critical error during initialization:", err);
+        const appDiv = document.getElementById("app");
+        if (appDiv) {
+            appDiv.innerHTML = `
+                <div style="padding: 2rem; text-align: center; color: #ff4444;">
+                    <h2>Initialization Error</h2>
+                    <p>${err.message}</p>
+                    <button onclick="location.reload()" class="alternative" style="width: auto;">Retry</button>
+                </div>
+            `;
+        }
     }
 }
 
@@ -143,10 +161,16 @@ function setupTheme() {
 
 function updateStorageUsage() {
     let total = 0;
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const value = localStorage.getItem(key);
-        total += (key.length + value.length) * 2; // Roughly 2 bytes per character for UTF-16
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+            if (key && value) {
+                total += (key.length + value.length) * 2;
+            }
+        }
+    } catch (e) {
+        console.warn("Failed to calculate storage usage", e);
     }
     
     const usageSpan = document.getElementById("storage-usage");
@@ -159,7 +183,79 @@ function updateStorageUsage() {
     }
 }
 
+function updateCumulativeStats(courseName, sessionStats) {
+    if (!courseName || !sessionStats) return;
+    console.log(`Updating cumulative stats for ${courseName}`);
+    const key = `lern_cumulative_stats_${courseName}`;
+    const stored = localStorage.getItem(key);
+    let cumulative = stored ? JSON.parse(stored) : {};
+
+    sessionStats.forEach(stat => {
+        if (!cumulative[stat.topic]) {
+            cumulative[stat.topic] = { correct: 0, total: 0 };
+        }
+        cumulative[stat.topic].correct += stat.correct;
+        cumulative[stat.topic].total += stat.total;
+    });
+
+    localStorage.setItem(key, JSON.stringify(cumulative));
+}
+
+function showCumulativeStatsView(courseName) {
+    const modal = document.getElementById("stats-modal");
+    const title = document.getElementById("stats-course-title");
+    const list = document.getElementById("cumulative-topic-list");
+    const closeBtn = document.getElementById("close-stats-btn");
+    const resetBtn = document.getElementById("reset-stats-btn");
+
+    title.innerText = `${courseName} - Overall Progress`;
+    list.innerHTML = "";
+
+    const key = `lern_cumulative_stats_${courseName}`;
+    const stored = localStorage.getItem(key);
+    if (!stored) {
+        list.innerHTML = "<p style='text-align: center; opacity: 0.7;'>No stats recorded yet.</p>";
+    } else {
+        const stats = JSON.parse(stored);
+        const sortedTopics = Object.keys(stats).sort();
+
+        sortedTopics.forEach(topic => {
+            const data = stats[topic];
+            const p = Math.round((data.correct / data.total) * 100);
+            
+            const row = document.createElement("div");
+            row.className = "stat-row";
+            row.innerHTML = `
+                <div class="stat-header">
+                    <span>${topic}</span>
+                    <span>${data.correct}/${data.total} (${p}%)</span>
+                </div>
+                <div class="stat-bar-bg">
+                    <div class="stat-bar-fill" style="width: ${p}%"></div>
+                </div>
+            `;
+            list.appendChild(row);
+        });
+    }
+
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden"; // Prevent background scroll
+
+    closeBtn.onclick = () => {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+    };
+
+    resetBtn.onclick = () => {
+        if (confirm(`Are you sure you want to reset ALL stats for ${courseName}?`)) {
+            localStorage.removeItem(key);
+            showCumulativeStatsView(courseName);
+        }
+    };
+}
+
 function showMenu() {
+    console.log("showMenu called");
     currentCourse = null;
     currentMode = null;
     currentSavedState = null;
@@ -173,74 +269,144 @@ function showMenu() {
     updateStorageUsage();
 
     const purgeBtn = document.getElementById("purge-storage-btn");
-    purgeBtn.onclick = () => {
-        if (confirm("Are you sure you want to purge ALL local storage data? This will reset all progress and settings.")) {
-            localStorage.clear();
-            showMenu();
-        }
-    };
-
-    const list = document.getElementById("course-list");
-    list.innerHTML = "";
-
-    for (const courseName in coursesData) {
-        const container = document.createElement("div");
-        container.style.display = "flex";
-        container.style.gap = "0.5rem";
-        container.style.marginBottom = "0.75rem";
-
-        const btn = document.createElement("button");
-        btn.className = "alternative";
-        btn.style.margin = "0";
-        btn.style.flex = "1";
-        
-        const hasProgress = localStorage.getItem(`lern_progress_${courseName}`);
-        btn.innerText = (courseName.charAt(0).toUpperCase() + courseName.slice(1)) + (hasProgress ? " (In Progress)" : "");
-        
-        btn.onclick = () => {
-            if (hasProgress) {
-                const state = JSON.parse(hasProgress);
-                startQuiz(courseName, state.mode || "topic", state);
-            } else {
-                showModeSelection(courseName);
+    if (purgeBtn) {
+        purgeBtn.onclick = () => {
+            if (confirm("Are you sure you want to purge ALL local storage data? This will reset all progress and settings.")) {
+                localStorage.clear();
+                showMenu();
             }
         };
-        
-        container.appendChild(btn);
+    }
 
-        if (hasProgress) {
-            const resetBtn = document.createElement("button");
-            resetBtn.className = "alternative";
-            resetBtn.style.margin = "0";
-            resetBtn.style.width = "auto";
-            resetBtn.innerHTML = "↺";
-            resetBtn.title = "Reset Progress";
-            resetBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (confirm(`Reset progress for ${courseName}?`)) {
-                    localStorage.removeItem(`lern_progress_${courseName}`);
-                    showMenu();
+    const list = document.getElementById("course-list");
+    if (!list) {
+        console.error("course-list element not found");
+        return;
+    }
+    list.innerHTML = "";
+
+    if (!coursesData) {
+        console.error("coursesData is null in showMenu");
+        list.innerHTML = "<p>Error: No course data loaded. Please try refreshing.</p>";
+        return;
+    }
+
+    console.log("Rendering courses:", Object.keys(coursesData));
+
+    for (const courseName in coursesData) {
+        try {
+            const container = document.createElement("div");
+            container.style.display = "flex";
+            container.style.flexDirection = "column";
+            container.style.gap = "0.5rem";
+            container.style.marginBottom = "1.5rem";
+
+            const row = document.createElement("div");
+            row.style.display = "flex";
+            row.style.gap = "0.5rem";
+
+            const btn = document.createElement("button");
+            btn.className = "alternative";
+            btn.style.margin = "0";
+            btn.style.flex = "1";
+            
+            const progressData = localStorage.getItem(`lern_progress_${courseName}`);
+            let isInProgress = false;
+            if (progressData) {
+                try {
+                    const state = JSON.parse(progressData);
+                    isInProgress = !state.graded;
+                } catch (e) {
+                    console.error("Error parsing progress for", courseName, e);
+                }
+            }
+
+            btn.innerText = (courseName.charAt(0).toUpperCase() + courseName.slice(1)) + (isInProgress ? " (In Progress)" : "");
+            
+            btn.onclick = () => {
+                console.log(`Course button clicked: ${courseName}, isInProgress: ${isInProgress}`);
+                if (isInProgress) {
+                    try {
+                        const state = JSON.parse(progressData);
+                        startQuiz(courseName, state.mode || "topic", state);
+                    } catch (e) {
+                        console.error("Failed to parse saved state", e);
+                        showModeSelection(courseName);
+                    }
+                } else {
+                    showModeSelection(courseName);
                 }
             };
-            container.appendChild(resetBtn);
-        }
+            
+            row.appendChild(btn);
 
-        list.appendChild(container);
+            // Add Stats Button if stats exist
+            const statsKey = `lern_cumulative_stats_${courseName}`;
+            if (localStorage.getItem(statsKey)) {
+                const statsBtn = document.createElement("button");
+                statsBtn.className = "alternative";
+                statsBtn.style.margin = "0";
+                statsBtn.style.width = "auto";
+                statsBtn.innerText = "📈";
+                statsBtn.title = "View Cumulative Stats";
+                statsBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    showCumulativeStatsView(courseName);
+                };
+                row.appendChild(statsBtn);
+            }
+
+            if (isInProgress) {
+                const resetBtn = document.createElement("button");
+                resetBtn.className = "alternative";
+                resetBtn.style.margin = "0";
+                resetBtn.style.width = "auto";
+                resetBtn.innerHTML = "↺";
+                resetBtn.title = "Reset Progress";
+                resetBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Reset progress for ${courseName}?`)) {
+                        localStorage.removeItem(`lern_progress_${courseName}`);
+                        showMenu();
+                    }
+                };
+                row.appendChild(resetBtn);
+            }
+
+            container.appendChild(row);
+            list.appendChild(container);
+        } catch (err) {
+            console.error(`Error rendering course ${courseName}:`, err);
+        }
     }
 }
 
 function showModeSelection(courseName) {
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("mode-selection").style.display = "block";
-    document.getElementById("topic-selection").style.display = "none";
-    document.getElementById("quiz").style.display = "none";
-    
-    document.getElementById("selected-course-title-mode").innerText = courseName;
-    document.getElementById("back-to-courses-from-mode").onclick = showMenu;
+    console.log(`showModeSelection called for: ${courseName}`);
+    try {
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("mode-selection").style.display = "block";
+        document.getElementById("topic-selection").style.display = "none";
+        document.getElementById("quiz").style.display = "none";
+        
+        document.getElementById("selected-course-title-mode").innerText = courseName;
+        document.getElementById("back-to-courses-from-mode").onclick = showMenu;
 
-    document.getElementById("mode-topic").onclick = () => showTopicSelection(courseName);
-    document.getElementById("mode-practice").onclick = () => startQuiz(courseName, "practice");
-    document.getElementById("mode-exam").onclick = () => startQuiz(courseName, "exam");
+        document.getElementById("mode-topic").onclick = () => {
+            console.log("Mode: topic selected");
+            showTopicSelection(courseName);
+        };
+        document.getElementById("mode-practice").onclick = () => {
+            console.log("Mode: practice selected");
+            startQuiz(courseName, "practice");
+        };
+        document.getElementById("mode-exam").onclick = () => {
+            console.log("Mode: exam selected");
+            startQuiz(courseName, "exam");
+        };
+    } catch (err) {
+        console.error("Error in showModeSelection:", err);
+    }
 }
 
 function showTopicSelection(courseName) {
@@ -465,11 +631,14 @@ function render() {
     const questionNumber = document.getElementById("question-number");
     const questionLabel = document.getElementById("question-label");
 
+    const copyPromptBtn = document.getElementById("copy-prompt-btn");
+
     finalResults.style.display = "none";
     document.getElementById("navigation-btns").style.display = "flex";
     questionDiv.style.display = "block";
     document.getElementById("score-container").style.display = "none";
     document.getElementById("question-nav-bar").style.display = "flex";
+    copyPromptBtn.style.display = "block";
 
     const currentIndex = get_current_question_index();
     const totalCount = get_total_questions();
@@ -478,7 +647,8 @@ function render() {
     // Render Navigation Bar
     const navBar = document.getElementById("question-nav-bar");
     navBar.innerHTML = "";
-    const selections = JSON.parse(get_selections_json());
+    const selectionsJson = get_selections_json();
+    const selections = selectionsJson ? JSON.parse(selectionsJson) : [];
     for (let i = 0; i < totalCount; i++) {
         const navNum = document.createElement("div");
         navNum.className = "nav-num";
@@ -528,7 +698,6 @@ function render() {
         }
     };
 
-    const copyPromptBtn = document.getElementById("copy-prompt-btn");
     copyPromptBtn.onclick = async (e) => {
         e.preventDefault();
         
@@ -562,6 +731,7 @@ function render() {
         toggleAltBtn.style.display = "none";
         document.getElementById("navigation-btns").style.display = "none";
         document.getElementById("question-nav-bar").style.display = "none";
+        document.getElementById("copy-prompt-btn").style.display = "none";
         resultDiv.style.display = "none";
         questionNumber.innerText = "";
         
@@ -573,6 +743,73 @@ function render() {
         document.getElementById("score-container").style.display = "block";
         finalScore.innerText = `You scored ${score} out of ${total}`;
         percentageScore.innerText = `${percentage}% - ${getRank(percentage)}`;
+
+        // Topic Analysis
+        const statsJson = get_topic_stats_json();
+        const topicStats = statsJson ? JSON.parse(statsJson) : [];
+        
+        // Update Persistent Cumulative Stats
+        updateCumulativeStats(currentCourse, topicStats);
+        
+        const statsList = document.getElementById("topic-stats-list");
+        statsList.innerHTML = "";
+        
+        const strengths = [];
+        const weaknesses = [];
+
+        topicStats.forEach(stat => {
+            const p = Math.round((stat.correct / stat.total) * 100);
+            if (p >= 80) strengths.push(stat.topic);
+            else if (p < 50) weaknesses.push(stat.topic);
+
+            const row = document.createElement("div");
+            row.className = "stat-row";
+            row.innerHTML = `
+                <div class="stat-header">
+                    <span>${stat.topic}</span>
+                    <span>${stat.correct}/${stat.total} (${p}%)</span>
+                </div>
+                <div class="stat-bar-bg">
+                    <div class="stat-bar-fill" style="width: 0%"></div>
+                </div>
+            `;
+            statsList.appendChild(row);
+            setTimeout(() => {
+                row.querySelector(".stat-bar-fill").style.width = `${p}%`;
+            }, 100);
+        });
+
+        // Recommendations
+        const recContainer = document.getElementById("recommendations");
+        const recList = document.getElementById("recommendations-list");
+        recList.innerHTML = "";
+        
+        if (topicStats.length > 0) {
+            recContainer.style.display = "block";
+            if (weaknesses.length > 0) {
+                const p = document.createElement("p");
+                p.innerHTML = `<span class="weakness">Focus needed:</span> You should spend more time on <strong>${weaknesses.join(", ")}</strong>.`;
+                recList.appendChild(p);
+                
+                const practiceBtn = document.createElement("button");
+                practiceBtn.innerText = "Start Focused Practice on Weak Areas";
+                practiceBtn.className = "alternative";
+                practiceBtn.style.marginTop = "1rem";
+                practiceBtn.style.textAlign = "center";
+                practiceBtn.onclick = () => {
+                    startQuiz(currentCourse, "topic", { selectedTopics: weaknesses });
+                };
+                recList.appendChild(practiceBtn);
+            } else if (strengths.length === topicStats.length && percentage >= 90) {
+                const p = document.createElement("p");
+                p.innerHTML = `<span class="strength">Outstanding!</span> You have mastered all selected topics. Ready for the next challenge?`;
+                recList.appendChild(p);
+            } else {
+                const p = document.createElement("p");
+                p.innerHTML = `Good progress! Keep practicing to achieve full mastery across all topics.`;
+                recList.appendChild(p);
+            }
+        }
         
         const incorrectIndices = get_incorrect_indices();
         if (incorrectIndices.length > 0) {

@@ -19,6 +19,13 @@ pub struct Question {
     pub alternatives: Vec<Alternative>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TopicStats {
+    pub topic: String,
+    pub correct: usize,
+    pub total: usize,
+}
+
 pub struct Quiz {
     pub questions: Vec<Question>,
     pub current_question_index: usize,
@@ -140,6 +147,38 @@ impl Quiz {
             }
         }
         score
+    }
+
+    pub fn get_topic_stats(&self) -> Vec<TopicStats> {
+        let mut stats: std::collections::HashMap<String, (usize, usize)> =
+            std::collections::HashMap::new();
+        for (i, question) in self.questions.iter().enumerate() {
+            let is_correct = self.selections
+                .get(i)
+                .and_then(|&s| s)
+                .and_then(|idx| question.alternatives.get(idx))
+                .map(|alt| alt.is_correct)
+                .unwrap_or(false);
+
+            for topic in &question.topics {
+                let entry = stats.entry(topic.clone()).or_insert((0, 0));
+                entry.1 += 1;
+                if is_correct {
+                    entry.0 += 1;
+                }
+            }
+        }
+
+        let mut result: Vec<TopicStats> = stats
+            .into_iter()
+            .map(|(topic, (correct, total))| TopicStats {
+                topic,
+                correct,
+                total,
+            })
+            .collect();
+        result.sort_by(|a, b| a.topic.cmp(&b.topic));
+        result
     }
 
     pub fn incorrect_question_indices(&self) -> Vec<usize> {

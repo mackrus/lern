@@ -188,3 +188,9 @@ pub fn get_score() -> usize {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref().map(|s| s.get_score()).unwrap_or(0)
 }
+
+#[wasm_bindgen]
+pub fn get_topic_stats_json() -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref().map(|s| serde_json::to_string(&s.get_topic_stats()).unwrap())
+}
