@@ -23,8 +23,10 @@ Think brilliant.com but more minimal and written in Rust + WebAssembly + Typst.
     - Navigation (Next/Previous) must wrap around indefinitely.
     - Grading is a manual action triggered by the user.
 
-## Development Workflow
-- **Linting**: Use `uvx ruff check . --fix` and `uvx ruff format .` for all Python scripts.
-- **Testing**: Maintain Rust unit tests in `src/quiz.rs` for all logic changes.
-- **Building**: Use `./build.sh` to synchronize preprocessing, WASM compilation, and question aggregation.
-- **Serving**: Use `uv run serve.py` to host the application and open it in the browser.
+## Resetting Local Storage
+If you encounter `QuotaExceededError` or need to reset your progress, you can clear the application's local storage:
+1. Open the browser's Developer Tools (F12).
+2. Go to the "Application" or "Storage" tab.
+3. Select "Local Storage" -> `http://localhost:8000`.
+4. Right-click and choose "Clear".
+Alternatively, you can reset individual courses using the ↺ button in the course menu.
