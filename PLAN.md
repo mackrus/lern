@@ -57,14 +57,8 @@
    - Add hover-based highlighting for selectable alternatives.
    - Refine spacing and transitions to feel "crisp" and professional.
 
-### Phase 14: Mode Selection
-1. **Mode Selection UI**:
-    - After selecting a course, present a UI for the user to select one of three modes: Topic Traversal, Practice Mode, or Exam Mode.
-2. **Topic Traversal Mode**:
-    - Retain the current functionality: users are presented with the topic selection screen and can choose specific topics to practice.
-3. **Practice Mode**:
-    - Randomly select up to 10 questions from the chosen course.
-    - If questions have a "practice" label, restrict selection strictly to those.
-4. **Exam Mode**:
-    - Display all questions within the selected course that have the "exam" label.
-    - Implement an active countdown clock displaying 5 hours starting from the moment Exam Mode is initiated.
+### Phase 14: Mode Selection (Completed)
+1. Implement Topic Traversal, Practice Mode, and Exam Mode UIs.
+
+### Phase 15: Automated Deployment
+1. **GitHub Actions**: Add automated workflow for building and deploying the static site to GitHub Pages on every push to `master`.
