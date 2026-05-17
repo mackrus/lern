@@ -33,6 +33,7 @@ jobs:
 
       - name: Build project
         run: |
+          source $HOME/.cargo/env
           ./build.sh
 
       - name: Deploy
