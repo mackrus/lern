@@ -1042,8 +1042,8 @@ function getRank(percentage) {
 run();
 
 function startLernGlitch() {
-    const lernSpan = document.querySelector('.lern-anim');
-    if (!lernSpan) return;
+    const lernSpans = document.querySelectorAll('.lern-anim');
+    if (lernSpans.length === 0) return;
     
     const originalText = "lern";
     const symbols = "■▇▆▅▄▃▃▁▉▊▌▍▎▏";
@@ -1055,7 +1055,7 @@ function startLernGlitch() {
         const glitchInterval = setInterval(() => {
             if (currentCycle >= cycles) {
                 clearInterval(glitchInterval);
-                lernSpan.innerText = originalText;
+                lernSpans.forEach(span => span.innerText = originalText);
                 
                 // Schedule next glitch randomly between 2 and 6 seconds
                 setTimeout(triggerGlitch, Math.random() * 4000 + 2000);
@@ -1071,7 +1071,7 @@ function startLernGlitch() {
                     glitchedText += originalText[i];
                 }
             }
-            lernSpan.innerText = glitchedText;
+            lernSpans.forEach(span => span.innerText = glitchedText);
             currentCycle++;
         }, 50); // 50ms per cycle frame
     }
