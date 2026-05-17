@@ -61,4 +61,7 @@
 1. Implement Topic Traversal, Practice Mode, and Exam Mode UIs.
 
 ### Phase 15: Automated Deployment
-1. **GitHub Actions**: Add automated workflow for building and deploying the static site to GitHub Pages on every push to `master`.
+1. **Build Automation**: Implement GitHub Actions workflow to automate compilation (Typst to SVG, WASM build) on each push.
+2. **Environment Configuration**: Configure the GitHub Pages hosting settings in the repository to serve the contents of the `dist/` folder.
+3. **Domain & Routing**: Validate site accessibility and verify that relative asset paths function correctly across browser environments.
+4. **Maintenance**: Establish a workflow for handling domain redirects or custom URL configurations if needed in the future.
