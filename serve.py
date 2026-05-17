@@ -16,6 +16,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 class ReuseAddrTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
 
+
 def serve():
     # Ensure we are in the project root
     os.chdir(os.path.dirname(os.path.abspath(__file__)))

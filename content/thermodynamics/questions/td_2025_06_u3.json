@@ -1,0 +1,11 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "label": "exam",
+    "topics": [
+        "Entropy",
+        "Ideal Gas",
+        "State Processes"
+    ]
+}

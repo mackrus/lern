@@ -16,6 +16,7 @@ import init, {
     is_graded,
     next_question,
     previous_question,
+    set_question_index,
     get_score,
     get_current_question_index,
     get_total_questions,
@@ -140,6 +141,24 @@ function setupTheme() {
     };
 }
 
+function updateStorageUsage() {
+    let total = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        total += (key.length + value.length) * 2; // Roughly 2 bytes per character for UTF-16
+    }
+    
+    const usageSpan = document.getElementById("storage-usage");
+    if (usageSpan) {
+        if (total < 1024) {
+            usageSpan.innerText = `Usage: ${total} bytes`;
+        } else {
+            usageSpan.innerText = `Usage: ${(total / 1024).toFixed(1)} KB`;
+        }
+    }
+}
+
 function showMenu() {
     currentCourse = null;
     currentMode = null;
@@ -147,8 +166,19 @@ function showMenu() {
     if (examTimerInterval) clearInterval(examTimerInterval);
     localStorage.removeItem("lern_last_course");
     document.getElementById("menu").style.display = "flex";
+    document.getElementById("mode-selection").style.display = "none";
     document.getElementById("topic-selection").style.display = "none";
     document.getElementById("quiz").style.display = "none";
+
+    updateStorageUsage();
+
+    const purgeBtn = document.getElementById("purge-storage-btn");
+    purgeBtn.onclick = () => {
+        if (confirm("Are you sure you want to purge ALL local storage data? This will reset all progress and settings.")) {
+            localStorage.clear();
+            showMenu();
+        }
+    };
 
     const list = document.getElementById("course-list");
     list.innerHTML = "";
@@ -439,10 +469,32 @@ function render() {
     document.getElementById("navigation-btns").style.display = "flex";
     questionDiv.style.display = "block";
     document.getElementById("score-container").style.display = "none";
+    document.getElementById("question-nav-bar").style.display = "flex";
 
     const currentIndex = get_current_question_index();
     const totalCount = get_total_questions();
     questionNumber.innerText = `Question ${currentIndex + 1} of ${totalCount}`;
+
+    // Render Navigation Bar
+    const navBar = document.getElementById("question-nav-bar");
+    navBar.innerHTML = "";
+    const selections = JSON.parse(get_selections_json());
+    for (let i = 0; i < totalCount; i++) {
+        const navNum = document.createElement("div");
+        navNum.className = "nav-num";
+        navNum.innerText = i + 1;
+        if (i === currentIndex) {
+            navNum.classList.add("current");
+        } else if (selections[i] !== null) {
+            navNum.classList.add("answered");
+        }
+        navNum.onclick = () => {
+            set_question_index(i);
+            saveState();
+            render();
+        };
+        navBar.appendChild(navNum);
+    }
 
     const label = get_current_question_label();
     if (label) {
@@ -509,6 +561,7 @@ function render() {
         prereqDiv.style.display = "none";
         toggleAltBtn.style.display = "none";
         document.getElementById("navigation-btns").style.display = "none";
+        document.getElementById("question-nav-bar").style.display = "none";
         resultDiv.style.display = "none";
         questionNumber.innerText = "";
         

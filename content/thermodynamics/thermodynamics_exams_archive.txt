@@ -1,0 +1,412 @@
+================================================================================
+EXAM ARCHIVE: THERMODYNAMICS (1FA517) - UPPSALA UNIVERSITY
+================================================================================
+
+This file replicates the comprehensive information, questions, structure, and 
+solutions from the thermodynamics examinations (1FA517) for the 2025 academic 
+year. All content has been translated into English for stylistic consistency 
+with the quantum mechanics curriculum.
+
+--------------------------------------------------------------------------------
+EXAM 1: 2025-06-05 (exam_25.pdf / Lösningar_2025-06-05.pdf)
+--------------------------------------------------------------------------------
+
+Course: Thermodynamics (1FA517)
+Date: 2025-06-05
+Allowed Aids: Physics Handbook, Mathematics Handbook, calculator
+Instructions: 
+- Show your code/ID on all pages. Define terms clearly with text or figures.
+- Justify all assumptions, relations, and calculations carefully. Write legibly.
+- The exam consists of 4 parts. All parts must be attempted. To pass the exam, 
+  a passing grade is required on EVERY single part.
+- A passing grade on all parts gives a grade 3; higher grades require an oral exam.
+
+================================================================================
+PART 1: DEL 1 (Ideal Gas Basics & State Transitions)
+================================================================================
+
+Question ID: TD_2025_06_U1
+Topics: Ideal Gas, Cyclic Processes, First Law, PV-Diagrams
+Question Text:
+Assume one mole of a monatomic ideal gas at T1 = 273 K and P1 = 1.013*10^5 Pa 
+and consider the following cyclic process:
+  (1) -> (2) An isobaric expansion to V2 = 2 * V1
+  (2) -> (3) An isothermal compression to P3 = 2 * P2
+  (3) -> (1) An isochoric process back to the initial state
+Plot the cycle in a P-V diagram and calculate dU, dH, Q, and W for each step 
+and for the entire cycle.
+
+Explanation & Solution:
+1. State Coordinates:
+   - State 1: T1 = 273 K, P1 = 1.013*10^5 Pa, V1 = nRT1/P1 = 0.0224 m^3
+   - State 2: P2 = P1 = 1.013*10^5 Pa, V2 = 2*V1 = 0.0448 m^3, T2 = 2*T1 = 546 K
+   - State 3: T3 = T2 = 546 K, P3 = 2*P2 = 2.026*10^5 Pa, V3 = 0.5*V2 = 0.0224 m^3
+
+2. Process Steps (n = 1 mol, Cv = 1.5*R = 12.47 J/(mol K), Cp = 2.5*R = 20.79 J/(mol K)):
+   - Step (1) -> (2) [Isobaric Expansion]:
+     dU = n*Cv*(T2 - T1) = 1 * 12.47 * 273 = 3405 J
+     dH = n*Cp*(T2 - T1) = 1 * 20.79 * 273 = 5675 J
+     Q = dH = 5675 J (Heat added)
+     W = -P1*(V2 - V1) = -1.013*10^5 * 0.0224 = -2269 J (Work done BY the gas)
+
+   - Step (2) -> (3) [Isothermal Compression]:
+     dU = 0 J
+     dH = 0 J
+     W = -n*R*T2*ln(V3/V2) = -1 * 8.314 * 546 * ln(0.5) = 3147 J (Work done ON the gas)
+     Q = -W = -3147 J (Heat removed)
+
+   - Step (3) -> (1) [Isochoric Cooling]:
+     dU = n*Cv*(T1 - T3) = 1 * 12.47 * (-273) = -3405 J
+     dH = n*Cp*(T1 - T3) = 1 * 20.79 * (-273) = -5675 J
+     W = 0 J (Constant volume)
+     Q = dU = -3405 J (Heat removed)
+
+3. Total Cycle Totals:
+   dU_tot = 3405 + 0 - 3405 = 0 J
+   dH_tot = 5675 + 0 - 5675 = 0 J
+   Q_tot  = 5675 - 3147 - 3405 = -877 J
+   W_tot  = -2269 + 3147 + 0 = 878 J
+   Note: The cycle consumes net work due to minor rounding artifacts (1 J mismatch in the key).
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_06_U2
+Topics: First Law, Calorimetry, Specific Heat Capacity, Kinetic Theory
+Question Text:
+One mole of nitrogen gas (N2) is in a cylinder with a piston at a temperature 
+T1 = 273 K and a pressure P1 = 1.013*10^5 Pa. In an experiment, Q = 3000 J of 
+heat is added to the gas at constant pressure, causing it to perform work 
+|W| = 832 J. Calculate:
+  (a) the final state of the gas, i.e., T2, P2, V2
+  (b) values for dU and dH during the process
+  (c) values for cv and cp for N2 based on the experimental values. Compare with 
+      values from the kinetic theory of gases.
+The nitrogen gas can be considered an ideal gas and all processes are reversible.
+
+Explanation & Solution:
+(a) Final State:
+    - State 1: T1 = 273 K, P1 = 1.013*10^5 Pa, V1 = nRT1/P1 = 0.0224 m^3
+    - Isobaric process: P2 = P1 = 1.013*10^5 Pa
+    - Expansion work: W = -P*(V2 - V1) = -832 J -> V2 = V1 + 832/P1 = 0.0306 m^3
+    - Temperature: T2 = (V2/V1)*T1 = 373 K (dT = 100 K)
+
+(b) Internal Energy and Enthalpy Changes:
+    - Isobaric: dH = Q = 3000 J
+    - First Law: dU = dH - P*dV = 3000 - 832 = 2168 J
+
+(c) Heat Capacities:
+    - cp = (1/n)*(dH/dT) = 3000 / 100 = 30.00 J/(mol K)
+    - cv = (1/n)*(dU/dT) = 2168 / 100 = 21.68 J/(mol K)
+    - Kinetic Theory Comparison (diatomic gas):
+      Theoretical cv = 2.5 * R = 20.79 J/(mol K)
+      Theoretical cp = 3.5 * R = 29.10 J/(mol K)
+      The experimental coefficients tightly fit the expected configuration.
+
+================================================================================
+PART 2: DEL 2 (Entropy & Temperature Analysis)
+================================================================================
+
+Question ID: TD_2025_06_U3
+Topics: Entropy change, Ideal Gas, State Processes
+Question Text:
+One mole of a monatomic ideal gas is in a state with P1 = 10 atm and T1 = 300 K. 
+Determine the change in the gas's entropy for:
+  (a) an isothermal pressure reduction to P2 = 5 atm
+  (b) an adiabatic expansion to P2 = 5 atm
+  (c) an isochoric pressure reduction to P2 = 5 atm
+All processes can be considered reversible.
+
+Explanation & Solution:
+(a) Isothermal (T2 = T1, P2 = 0.5*P1):
+    - dS = -n*R*ln(P2/P1) = -1 * 8.314 * ln(0.5) = 5.76 J/K
+
+(b) Reversible Adiabatic:
+    - dQ_rev = 0 -> dS = 0 J/K
+
+(c) Isochoric (V2 = V1, P2 = 0.5*P1 -> T2 = 0.5*T1 = 150 K):
+    - cv = 1.5*R for a monatomic gas
+    - dS = n*cv*ln(T2/T1) = 1.5 * 8.314 * ln(0.5) = -8.64 J/K
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_06_U4
+Topics: Reversible Expansion, Entropy, State Reconstructions
+Question Text:
+One mole of a monatomic ideal gas expands reversibly at constant pressure. 
+During this process, the entropy of the gas increases by 14.41 J/K and the gas 
+absorbs 6236 J of thermal energy. Determine the initial and final temperatures 
+of the expansion.
+
+Explanation & Solution:
+1. At constant pressure: cp = 2.5*R = 20.785 J/(mol K)
+2. dS = n*cp*ln(T2/T1) -> 14.41 = 20.785 * ln(T2/T1) -> ln(T2/T1) = 0.69 -> T2/T1 = 2.00
+3. Q = n*cp*(T2 - T1) -> 6236 = 20.785 * (2*T1 - T1) -> T1 = 300 K
+4. Absolute values: T1 = 300 K, T2 = 600 K.
+
+================================================================================
+PART 3: DEL 3 (Maxwell Relations & Free Energies)
+================================================================================
+
+Question ID: TD_2025_06_U5
+Topics: Maxwell Relations, van der Waals Gas, Thermodynamic Derivatives
+Question Text:
+Use one of Maxwell's relations to calculate (dS/dV)_T for a van der Waals gas 
+with the equation of state:
+  (P + a*n^2/V^2)(V - n*b) = n*R*T
+Compare with an ideal gas.
+
+Explanation & Solution:
+1. Maxwell relation from mixed partials of F (dF = -SdT - PdV): (dS/dV)_T = (dP/dT)_V
+2. Express pressure: P = nRT/(V - nb) - a*n^2/V^2
+3. Evaluate derivative: (dP/dT)_V = nR/(V - nb) -> (dS/dV)_T = nR/(V - nb)
+4. Comparison: For an ideal gas, a=0 and b=0, matching (dS/dV)_T = nR/V. 
+   The excluded volume constraint 'nb' yields a steeper entropy increase per volume step.
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_06_U6
+Topics: Helmholtz Free Energy, Thermodynamic Identity, Entropy Mapping
+Question Text:
+For a certain thermodynamic system, the Helmholtz free energy is given by:
+  F(T,V) = -alpha * T * ln(V) + beta * V
+with positive constants alpha and beta. Use Maxwell's relations to calculate 
+the dependence of entropy on volume at constant temperature. Compare your 
+result with a direct calculation of the entropy from the Helmholtz free energy.
+
+Explanation & Solution:
+1. Maxwell route: (dS/dV)_T = (dP/dT)_V
+   - P = -(dF/dV)_T = alpha*T/V - beta
+   - (dP/dT)_V = alpha/V -> (dS/dV)_T = alpha/V
+2. Direct canonical differential definition (dF = -SdT - PdV):
+   - S = -(dF/dT)_V = alpha * ln(V)
+   - Taking derivative of S: (dS/dV)_T = alpha/V (Both methods confirm complete consistency).
+
+================================================================================
+PART 4: DEL 4 (Advanced Mathematical Proofs)
+================================================================================
+
+Question ID: TD_2025_06_U7
+Topics: Partial Derivatives, Compressibility, Thermal Expansion
+Question Text:
+Show that:
+  (dF/dP)_V = -(S * kappa) / beta
+with the compressibility kappa = -1/V * (dV/dP)_T and the volume expansion 
+coefficient beta = 1/V * (dV/dT)_P.
+
+Explanation & Solution:
+1. From dF parameters: (dF/dT)_V = -S
+2. Re-express target relation fraction: -(S*kappa)/beta = [ (dF/dT)_V * (-1/V)*(dV/dP)_T ] / [ (1/V)*(dV/dT)_P ] 
+   = [ (dF/dT)_V * (dV/dP)_T ] / (dV/dT)_P
+3. Invoke Barkhausen's cyclic relation:
+   (dV/dP)_T * (dP/dT)_V * (dT/dV)_P = -1 -> (dV/dP)_T / (dV/dT)_P = -(dT/dP)_V
+4. Substitute:
+   -(S*kappa)/beta = -(dF/dT)_V * (dT/dP)_V = -(dF/dP)_V. [Q.E.D.]
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_06_U8
+Topics: Gibbs Free Energy, Helmholtz Free Energy, Second Derivatives
+Question Text:
+Gibbs and Helmholtz free energies describe thermodynamic systems in terms of 
+pressure and temperature (Gibbs) or volume and temperature (Helmholtz). Show that:
+  (d^2G / dP^2)_T = -1 / (d^2F / dV^2)_T
+
+Explanation & Solution:
+1. From dG = -SdT + VdP -> (dG/dP)_T = V -> (d^2G/dP^2)_T = (dV/dP)_T
+2. From dF = -SdT - PdV -> (dF/dV)_T = -P -> (d^2F/dV^2)_T = -(dP/dV)_T
+3. Utilizing single-variable inverse partial transform rules: (dV/dP)_T = 1 / (dP/dV)_T
+   (d^2G/dP^2)_T = -1 / [ -(dP/dV)_T ] = -1 / (d^2F/dV^2)_T. [Q.E.D.]
+
+
+################################################################################
+EXAM 2: 2025-08-20 (exam2_25.pdf / Lösningar_2025-08-20.pdf)
+################################################################################
+
+Course: Thermodynamics (1FA517)
+Date: 2025-08-20
+Allowed Aids: Physics Handbook, Mathematics Handbook, calculator
+
+================================================================================
+PART 1: DEL 1 (Cyclic Processes & Carnot Mechanics)
+================================================================================
+
+Question ID: TD_2025_08_U1
+Topics: Net Work, PV-Triangles, Expansion vs Compression
+Question Text:
+10 moles of a monatomic ideal gas are in a state with P1 = 1.013*10^6 Pa 
+and T1 = 300 K. Consider the following cycle:
+  (1) -> (2) A process along a straight line in a P-V diagram to a state 
+             with P2 = 1.013*10^5 Pa and T2 = 300 K.
+  (2) -> (3) An isobaric compression to V3.
+  (3) -> (1) An isochoric process back to P1.
+All processes can be assumed to be reversible. Calculate the net work of the 
+cycle. Is work performed by or on the gas?
+
+Explanation & Solution:
+1. State vectors:
+   - State 1: P1 = 1.013*10^6 Pa, T1 = 300 K -> V1 = nRT1/P1 = 0.0246 m^3
+   - State 2: P2 = 1.013*10^5 Pa, T2 = 300 K -> V2 = nRT2/P2 = 0.2462 m^3
+   - State 3: P3 = P2 = 1.013*10^5 Pa, V3 = V1 = 0.0246 m^3 -> T3 = P3V3/(nR) = 30 K
+2. Enclosed clockwise triangular loop tracking:
+   W_net = -0.5 * (P1 - P2) * (V2 - V1)
+   W_net = -0.5 * (1.013*10^6 - 1.013*10^5) * (0.2462 - 0.0246) = -101 kJ
+3. Mechanical Direction:
+   Because W_net < 0, the engine completes a clockwise loop; net work is done BY the gas on the environment.
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_08_U2
+Topics: Carnot Cycle, Ideal Gas, State Variables
+Question Text:
+Consider a Carnot cycle where the working medium is n moles of an ideal gas. 
+The cycle includes the following processes:
+  (1) -> (2) Isothermal expansion
+  (2) -> (3) Adiabatic expansion
+  (3) -> (4) Isothermal compression
+  (4) -> (1) Adiabatic compression
+For each process, express dU, Q, and W in terms of the quantities T and V, 
+and if necessary, the heat capacity of the gas. Indicate for each process 
+whether work is performed on or by the gas.
+
+Explanation & Solution:
+- Step 1->2 (Isothermal Expansion at T1):
+  dU = 0 J, W = -nRT1*ln(V2/V1) [W < 0 -> Done BY gas], Q = nRT1*ln(V2/V1)
+- Step 2->3 (Adiabatic Expansion from T2 to T3):
+  Q = 0 J, dU = n*cv*(T3 - T2), W = n*cv*(T3 - T2) [T3 < T2 -> W < 0 -> Done BY gas]
+- Step 3->4 (Isothermal Compression at T3):
+  dU = 0 J, W = -nRT3*ln(V4/V3) [V4 < V3 -> W > 0 -> Done ON gas], Q = nRT3*ln(V4/V3)
+- Step 4->1 (Adiabatic Compression from T4 to T1):
+  Q = 0 J, dU = n*cv*(T1 - T4), W = n*cv*(T1 - T4) [T1 > T4 -> W > 0 -> Done ON gas]
+
+================================================================================
+PART 2: DEL 2 (Entropy Ratios & Liquid Mixing)
+================================================================================
+
+Question ID: TD_2025_08_U3
+Topics: Isothermal Expansion, Specific Work, Volumetric Ratio
+Question Text:
+One mole of a monatomic ideal gas expands in a reversible process at constant 
+temperature. During the process, the gas performs 1729 J of work, and its 
+entropy increases by 5.763 J/K. Determine the ratio between the initial and 
+final volumes, as well as the temperature at which the expansion occurs.
+
+Explanation & Solution:
+1. Volume change multiplier:
+   Isothermal -> dS = n*R*ln(V2/V1) -> 5.763 = 1 * 8.314 * ln(V2/V1)
+   ln(V2/V1) = 0.693 -> V2/V1 = 2 (Volume doubles, initial-to-final ratio is 1:2)
+2. Operating thermal footprint:
+   W_by = nRT*ln(V2/V1) -> 1729 = 1 * 8.314 * T * ln(2) -> T = 300 K.
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_08_U4
+Topics: Entropy of Mixing, Specific Heat, Final Equilibrium Temperature
+Question Text:
+A certain amount (n, in moles) of a certain liquid at temperature T1 is mixed 
+with the same amount of the same liquid at temperature T2. The system can be 
+considered adiabatic. Show that the entropy change is:
+  dS = 2 * n * c * ln( (T1 + T2) / (2 * sqrt(T1 * T2)) )
+where c is the molar heat capacity of the liquid. Hint: Begin by determining 
+the final temperature.
+
+Explanation & Solution:
+1. Heat balance sets equilibrium condition: Tf = (T1 + T2)/2
+2. Split entropy shifts: dS1 = n*c*ln(Tf/T1), dS2 = n*c*ln(Tf/T2)
+3. Sum profiles: dS = n*c*ln(Tf^2 / (T1*T2)) = 2*n*c*ln(Tf / sqrt(T1*T2))
+4. Re-inject component definitions: dS = 2*n*c*ln( (T1 + T2) / (2 * sqrt(T1 * T2)) ). [Q.E.D.]
+
+================================================================================
+PART 3: DEL 3 (Practical / Applied Thermodynamics)
+================================================================================
+
+Question ID: TD_2025_08_U5
+Topics: Heat Transfer Rates, Applied Cooling Laws, Sequence Optimization
+Question Text:
+Before you solve an exam problem, you fetch a cup of (hot) coffee in an open 
+but otherwise well-insulated cylindrical thermos mug, and some milk in a glass 
+or porcelain pitcher. You decide to drink your coffee when you are finished 
+with the problem. In which case is the coffee hotter when you want to drink it: 
+if you pour the milk in first and solve the problem later, or vice versa? 
+Assume that the milk initially has the same temperature as the surroundings. 
+Motivate your answer.
+
+Explanation & Solution:
+1. Convective evacuation models follow Newton's law: dQ/dt = alpha * A * dT, with dT = T_mixture - T_env.
+2. Mixing milk right away reduces initial mixture temperature, bringing it closer to ambient levels.
+3. This diminished thermal gradient drastically curtails the aggregate heat escaping over the ticking study window.
+4. Conclusion: Liquid parameters preserve a higher thermal value at execution if milk is introduced FIRST.
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_08_U6
+Topics: Energy Balance, Gravitational Dissipation, Stefan-Boltzmann Radiation
+Question Text:
+A car drives at a constant speed of 30 km/h down a road with a 10% slope. 
+What temperature do the brake discs reach if we ignore all other braking forces 
+(t.ex. air resistance) and assume that all heat released during braking is 
+transferred to the brake discs, and that the brake discs release energy 
+exclusively through radiation? Assume that the distance is long enough for 
+the brake discs to reach this temperature.
+
+Technical information:
+  Brake disc mass: 15 kg (per disc, the car has four brake discs)
+  Brake disc diameter: 300 mm
+  Brake disc heat capacity: 0.46 kJ/(kg*K)
+  Brake disc emissivity: 0.7
+  Car mass: 2000 kg (with driver)
+
+Explanation & Solution:
+1. Energy conversion balance per second (v = 30/3.6 = 8.333 m/s):
+   dE/dt = M_car * g * v * 10% = 2000 * 9.81 * 8.333 * 0.1 = 16350 W
+2. Exposed structural geometry (4 disks, 2 active faces each, r = 0.15 m):
+   A = 4 * 2 * pi * r^2 = 0.565 m^2
+3. Equating balance equations under high-temperature assumptions:
+   dE/dt = A * sigma * epsilon * T^4 -> 16350 = 0.565 * 5.67*10^-8 * 0.7 * T^4
+   T^4 = 0.72 * 10^12 -> T = 924 K.
+
+================================================================================
+PART 4: DEL 4 (Differential Transforms & Coefficients)
+================================================================================
+
+Question ID: TD_2025_08_U7
+Topics: Joule-Thomson Effect, Enthalpy Conservation, Expansion Coefficients
+Question Text:
+Joule and Thomson showed experimentally that the temperature of a non-ideal gas 
+changes when the gas passes through an adiabatic throttling valve.
+  (a) Show that enthalpy is a conserved quantity during this process.
+  (b) The temperature change of the gas is described by the Joule-Thomson 
+      coefficient mu_JT = (dT/dP)_H. Show that:
+        mu_JT = V/Cp * (beta * T - 1)
+      where beta is the volume expansion coefficient beta = 1/V * (dV/dT)_P 
+      and Cp is the heat capacity of the gas at constant pressure.
+
+Explanation & Solution:
+(a) Enthalpy Conservation:
+    - Net flow boundary energy exchange: W = P1V1 - P2V2. System bounds are adiabatic (Q = 0).
+    - First Law statement: dU = W -> U2 - U1 = P1V1 - P2V2 -> U2 + P2V2 = U1 + P1V1 -> H2 = H1 (dH = 0).
+
+(b) Derivative Proof:
+    - Cyclical triple constraint relation: (dT/dP)_H = - (dH/dP)_T / (dH/dT)_P with variable (dH/dT)_P = Cp
+    - From definition dH = TdS + VdP -> (dH/dP)_T = T*(dS/dP)_T + V
+    - Apply Maxwell identity: (dS/dP)_T = -(dV/dT)_P = -V*beta
+    - Assemble elements: (dH/dP)_T = -T*V*beta + V = -V*(beta*T - 1)
+    - Re-insert to target cyclic fraction: mu_JT = -[-V*(beta*T - 1)] / Cp = V/Cp * (beta*T - 1). [Q.E.D.]
+
+--------------------------------------------------------------------------------
+
+Question ID: TD_2025_08_U8
+Topics: Isentropic Relations, Thermal Expansion, Specific Heat
+Question Text:
+Show that:
+  (dT/dP)_S = (T * beta * V) / Cp
+with the volume expansion coefficient beta = 1/V * (dV/dT)_P and Cp as 
+the heat capacity at constant pressure.
+
+Explanation & Solution:
+1. Relate variables via cyclic identity tracking:
+   (dT/dP)_S * (dP/dS)_T * (dS/dT)_P = -1 -> (dT/dP)_S = - (dS/dP)_T / (dS/dT)_P
+2. Apply identity metrics:
+   - Maxwell substitution: (dS/dP)_T = -V*beta
+   - Definition: (dS/dT)_P = Cp/T
+3. Combine variables:
+   (dT/dP)_S = - (-V*beta) / (Cp/T) = (T * beta * V) / Cp. [Q.E.D.]

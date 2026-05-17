@@ -1,0 +1,26 @@
+#import "../../template.typ": *
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+#set list(..list_style)
+#set enum(numbering: "a)", ..list_style)
+Prove the Heisenberg Uncertainty Principle $ sigma_x sigma_p >= planck/2 $ from the commutator $[x, p] = i planck$. Which operator identity is the starting point for this proof?
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+Cauchy-Schwarz inequality
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+Triangle inequality
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+Euler's identity
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+Taylor expansion
+#pagebreak()
+#include "../explanations/owp_05.typ"
+#pagebreak()
+#include "../prerequisites/oscillator_wavepacket.typ"

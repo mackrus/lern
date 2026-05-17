@@ -58,14 +58,32 @@
    - Refine spacing and transitions to feel "crisp" and professional.
 
 ### Phase 14: Mode Selection (Completed)
+
 1. Implement Topic Traversal, Practice Mode, and Exam Mode UIs.
 
-### Phase 15: Thermodynamics Course Expansion
+### Phase 15: Thermodynamics Course Expansion (Completed)
+
 1. **Course Scaffolding**: Create the `content/thermodynamics` directory structure.
 2. **Content Development**: Draft Typst content for core thermodynamics topics (e.g., Entropy, Laws of Thermodynamics).
 3. **Metadata Aggregation**: Create corresponding JSON metadata for thermodynamics questions and ensure they are recognized by the build aggregator.
 
-### Phase 16: Automated Deployment
+### Phase 16: Local Storage Management (Completed)
+
+1. **Storage Inspection**: Implement a utility in `app.js` to calculate and display current `localStorage` usage.
+2. **Purge Functionality**: Add a "Purge Local Storage" button in the settings/menu that clears all application data via standard JS `localStorage.clear()`.
+3. **Safety UX**: Include a confirmation dialog before purging to prevent accidental data loss.
+
+### Phase 17: Advanced Quiz Navigation UI (Completed)
+
+1. **Question Number Bar**: Implement a horizontal navigation bar above the question SVG containing clickable question numbers.
+2. **State Visualization**:
+    - **Gray**: Unanswered questions.
+    - **Primary Color**: Current active question.
+    - **High Contrast/Secondary**: Already answered questions.
+3. **Interactive Navigation**: Enable direct jumping to any question in the current set by clicking its number.
+
+### Phase 18: Automated Deployment
+
 1. **Build Automation**: Implement GitHub Actions workflow to automate compilation (Typst to SVG, WASM build) on each push.
 2. **Environment Configuration**: Configure the GitHub Pages hosting settings in the repository to serve the contents of the `dist/` folder.
 3. **Domain & Routing**: Validate site accessibility and verify that relative asset paths function correctly across browser environments.

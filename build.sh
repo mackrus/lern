@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+# Delete any previous svg files to avoid duplicates
+find dist -name "*.svg" -delete
 rm -rf dist/content
 mkdir -p dist/content
 

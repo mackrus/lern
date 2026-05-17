@@ -114,6 +114,51 @@
             transition: transform 0.2s;
         }
 
+        #question-number {
+            display: none; /* Hidden as we now use the nav bar */
+        }
+
+        #question-nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-num {
+            width: 2.2rem;
+            height: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .nav-num:hover {
+            border-color: var(--text-color);
+            opacity: 1;
+        }
+
+        .nav-num.current {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        .nav-num.answered {
+            opacity: 1;
+            border-color: var(--text-color);
+            background-color: var(--hover-color);
+        }
+
         #question {
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
@@ -274,6 +319,12 @@
         <div id="menu">
             <h1>what do you want to <span class="lern-anim">lern</span>?</h1>
             <div id="course-list"></div>
+            <div id="storage-management" style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="storage-usage">Usage: 0 KB</span>
+                    <button id="purge-storage-btn" style="font-size: 0.9rem; color: #ff4444;">Purge All Data</button>
+                </div>
+            </div>
         </div>
         <div id="mode-selection" style="display: none;">
             <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
@@ -305,6 +356,7 @@
                     <div id="question-number" style="color: var(--text-color);"></div>
                 </div>
             </div>
+            <div id="question-nav-bar"></div>
             <div id="question">Loading...</div>
             <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
                 <button id="prereq-btn" style="display: none; margin: 0;">Show Prerequisites</button>

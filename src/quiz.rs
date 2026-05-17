@@ -109,6 +109,12 @@ impl Quiz {
         }
     }
 
+    pub fn set_question_index(&mut self, index: usize) {
+        if index < self.questions.len() {
+            self.current_question_index = index;
+        }
+    }
+
     pub fn current_question_index(&self) -> usize {
         self.current_question_index
     }
@@ -124,12 +130,13 @@ impl Quiz {
     pub fn get_score(&self) -> usize {
         let mut score = 0;
         for (i, question) in self.questions.iter().enumerate() {
-            if let Some(selection_idx) = self.selections.get(i).and_then(|&s| s) {
-                if let Some(alt) = question.alternatives.get(selection_idx) {
-                    if alt.is_correct {
-                        score += 1;
-                    }
-                }
+            let is_correct = self.selections.get(i)
+                .and_then(|&s| s)
+                .and_then(|idx| question.alternatives.get(idx))
+                .map(|alt| alt.is_correct)
+                .unwrap_or(false);
+            if is_correct {
+                score += 1;
             }
         }
         score
@@ -168,8 +175,10 @@ mod tests {
             label: None,
             topics: vec!["Math".to_string()],
             question_html: "<p>What is 1+1?</p>".to_string(),
+            question_raw: Some("What is 1+1?".to_string()),
             prerequisites_html: Some("<p>Addition</p>".to_string()),
             explanation_html: Some("<p>Because 1+1=2</p>".to_string()),
+            explanation_raw: Some("Because 1+1=2".to_string()),
             alternatives: vec![
                 Alternative {
                     content_html: "1".to_string(),
@@ -224,7 +233,7 @@ mod tests {
 
     #[test]
     fn test_shuffled_grading_consistency() {
-        let mut q1 = Question {
+        let q1 = Question {
             id: "test_consistency_id_1".to_string(),
             label: None,
             topics: vec![],
@@ -275,5 +284,28 @@ mod tests {
             .position(|a| a.is_correct)
             .unwrap();
         assert_eq!(correct_idx, correct_idx2);
+    }
+
+    #[test]
+    fn test_set_question_index() {
+        let q1 = Question {
+            id: "q1".to_string(),
+            label: None,
+            topics: vec![],
+            question_html: "Q1".to_string(),
+            question_raw: None,
+            prerequisites_html: None,
+            explanation_html: None,
+            explanation_raw: None,
+            alternatives: vec![],
+        };
+        let q2 = q1.clone();
+        let mut quiz = Quiz::new(vec![q1, q2]);
+        
+        assert_eq!(quiz.current_question_index, 0);
+        quiz.set_question_index(1);
+        assert_eq!(quiz.current_question_index, 1);
+        quiz.set_question_index(5); // Out of bounds, should be ignored
+        assert_eq!(quiz.current_question_index, 1);
     }
 }

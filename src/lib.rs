@@ -122,6 +122,14 @@ pub fn previous_question() {
 }
 
 #[wasm_bindgen]
+pub fn set_question_index(index: usize) {
+    let mut state = QUIZ_STATE.lock().unwrap();
+    if let Some(quiz) = state.as_mut() {
+        quiz.set_question_index(index);
+    }
+}
+
+#[wasm_bindgen]
 pub fn can_go_back() -> bool {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref().map(|s| s.can_go_back()).unwrap_or(false)
