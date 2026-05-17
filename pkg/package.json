@@ -1,0 +1,15 @@
+{
+  "name": "lern",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "lern_bg.wasm",
+    "lern.js",
+    "lern.d.ts"
+  ],
+  "main": "lern.js",
+  "types": "lern.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
