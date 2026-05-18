@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lern</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #000000;
@@ -31,17 +34,69 @@
             --accent-color: #000000;
         }
 
+        body.biology-mode {
+            --bg-color: #040d04; /* Night: Deepest green */
+            --text-color: #d1ffd1;
+            --surface-color: #040d04;
+            --hover-color: #0a1f0a;
+            --border-color: #1a3a1a;
+            --prereq-bg: #040d04;
+            --prereq-border: #1a3a1a;
+            --svg-filter: invert(88%) sepia(21%) saturate(1034%) hue-rotate(67deg) brightness(107%) contrast(101%);
+            --header-color: #44ff44;
+            --accent-color: #44ff44;
+        }
+
+        body.biology-mode.light-mode {
+            --bg-color: #1a331a; /* Day: Lush forest green */
+            --text-color: #f0fff0;
+            --surface-color: #1a331a;
+            --hover-color: #254a25;
+            --border-color: #3d6b3d;
+            --prereq-bg: #1a331a;
+            --prereq-border: #3d6b3d;
+        }
+
         body {
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            max-width: 1150px; /* Increased to accommodate sidebar */
-            margin: 4rem auto;
-            padding: 0 1rem;
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
             font-size: 1.2rem;
-            position: relative;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #app-wrapper {
+            flex: 1 0 auto;
+            width: 100%;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #app {
+            width: 100%;
+        }
+
+        footer {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 2rem 1rem 4rem 1rem;
+            font-size: 0.9rem;
+            opacity: 0.5;
+            border-top: 1px solid var(--border-color);
+            max-width: 1150px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         #app-content {
@@ -90,8 +145,15 @@
 
         #header {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            height: 3rem;
+        }
+
+        #logo-container {
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
         /* Clean Text Buttons with Underscore Animation */
@@ -358,6 +420,16 @@
             min-width: 4ch;
         }
 
+        body.biology-mode .lern-anim {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5), 0 0 10px var(--accent-color);
+            color: var(--header-color);
+            transition: all 0.5s ease;
+        }
+
         .stat-row {
             display: flex;
             flex-direction: column;
@@ -381,13 +453,18 @@
         .strength { color: #44ff44; }
         .weakness { color: #ff4444; }
     </style>
-</head>
 <body>
-    <div id="header">
-        <button id="theme-toggle" title="Toggle Light/Dark Mode">
-            <span id="theme-icon">🌙</span>
-        </button>
-    </div>
+    <div id="app-wrapper">
+        <div id="header">
+            <div id="logo-container" style="cursor: pointer; visibility: hidden;">
+                <span class="lern-anim">lern</span>
+            </div>
+            <button id="theme-toggle" title="Toggle Light/Dark Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
+
+        <div id="app">
 
     <div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.5s;">
         <h2 style="margin-bottom: 1rem;">Loading <span class="lern-anim">lern</span>...</h2>
@@ -507,8 +584,9 @@
             </div>
         </div>
     </div>
+    </div>
     <!-- Cumulative Stats Modal -->
-    <div id="stats-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; overflow-y: auto; padding: 2rem 1rem;">
+    <div id="stats-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); opacity: 0.98; z-index: 1000; overflow-y: auto; padding: 2rem 1rem;">
         <div style="max-width: 750px; margin: 0 auto; background: var(--bg-color); border: 1px solid var(--border-color); padding: 2.5rem; position: relative;">
             <button id="close-stats-btn" style="position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem;">✕</button>
             <h1 id="stats-course-title" style="text-align: center; margin-top: 0;">Course Stats</h1>
@@ -519,10 +597,10 @@
         </div>
     </div>
 
-    <footer style="text-align: center; margin-top: 4rem; padding-bottom: 4rem; font-size: 0.9rem; opacity: 0.5; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+    <footer>
         Cookies? Don't worry, everything is stored locally. We don't track anything.
     </footer>
 
-    <script type="module" src="./app.js?v=5"></script>
+    <script type="module" src="./app.js?v=7"></script>
 </body>
 </html>

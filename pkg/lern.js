@@ -143,11 +143,16 @@ export function get_current_question_references_json() {
 }
 
 /**
- * @returns {number | undefined}
+ * @returns {string | undefined}
  */
 export function get_current_selection() {
     const ret = wasm.get_current_selection();
-    return ret === Number.MAX_SAFE_INTEGER ? undefined : ret;
+    let v1;
+    if (ret[0] !== 0) {
+        v1 = getStringFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    }
+    return v1;
 }
 
 /**
@@ -299,10 +304,12 @@ export function restore_quiz_state(current_index, selections_json, is_graded) {
 }
 
 /**
- * @param {number} index
+ * @param {string} answer
  */
-export function select_answer(index) {
-    wasm.select_answer(index);
+export function select_answer(answer) {
+    const ptr0 = passStringToWasm0(answer, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.select_answer(ptr0, len0);
 }
 
 /**

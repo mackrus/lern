@@ -25,7 +25,7 @@ export function get_current_question_raw(): string | undefined;
 
 export function get_current_question_references_json(): string | undefined;
 
-export function get_current_selection(): number | undefined;
+export function get_current_selection(): string | undefined;
 
 export function get_explanation_html_by_index(index: number): string | undefined;
 
@@ -57,7 +57,7 @@ export function previous_question(): void;
 
 export function restore_quiz_state(current_index: number, selections_json: string, is_graded: boolean): void;
 
-export function select_answer(index: number): void;
+export function select_answer(answer: string): void;
 
 export function set_question_index(index: number): void;
 
@@ -76,12 +76,11 @@ export interface InitOutput {
     readonly get_current_question_prerequisites_html: () => [number, number];
     readonly get_current_question_raw: () => [number, number];
     readonly get_current_question_references_json: () => [number, number];
-    readonly get_current_selection: () => number;
+    readonly get_current_selection: () => [number, number];
     readonly get_explanation_html_by_index: (a: number) => [number, number];
     readonly get_incorrect_indices: () => [number, number];
     readonly get_question_html_by_index: (a: number) => [number, number];
     readonly get_references_json_by_index: (a: number) => [number, number];
-    readonly get_score: () => number;
     readonly get_selections_json: () => [number, number];
     readonly get_topic_stats_json: () => [number, number];
     readonly get_total_questions: () => number;
@@ -89,10 +88,11 @@ export interface InitOutput {
     readonly is_finished: () => number;
     readonly is_graded: () => number;
     readonly restore_quiz_state: (a: number, b: number, c: number, d: number) => [number, number];
+    readonly select_answer: (a: number, b: number) => void;
     readonly grade_quiz: () => void;
     readonly get_current_question_index: () => number;
     readonly previous_question: () => void;
-    readonly select_answer: (a: number) => void;
+    readonly get_score: () => number;
     readonly next_question: () => void;
     readonly set_question_index: (a: number) => void;
     readonly __wbindgen_externrefs: WebAssembly.Table;
