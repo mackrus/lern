@@ -1,0 +1,927 @@
+[
+  {
+    "common_name": "korkgran",
+    "latin_name": "Abies lasiocarpa var. arizonica",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/10589062/medium.jpg"
+  },
+  {
+    "common_name": "japansk lönn 'Ôsakazuki'",
+    "latin_name": "Acer palmatum 'Ôsakazuki'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2651499/medium.jpg"
+  },
+  {
+    "common_name": "klotlönn",
+    "latin_name": "Acer platanoides 'Globosum'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/87307303/medium.jpeg"
+  },
+  {
+    "common_name": "blodlönn 'Faassen’s Black'",
+    "latin_name": "Acer platanoides 'Faassen's Black'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/87307303/medium.jpeg"
+  },
+  {
+    "common_name": "japansk gyllenlönn",
+    "latin_name": "Acer shirasawanum 'Aureum'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/82247849/medium.jpeg"
+  },
+  {
+    "common_name": "dansk lönn 'Annae'",
+    "latin_name": "Acer x zoeschense 'Annae'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/27342760/medium.jpeg"
+  },
+  {
+    "common_name": "flikbladig gråal",
+    "latin_name": "Alnus incana 'Laciniata'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/542369958/medium.jpg"
+  },
+  {
+    "common_name": "kopparhäggmispel",
+    "latin_name": "Amelanchier laevis",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/40513174/medium.jpg"
+  },
+  {
+    "common_name": "röd häckberberis 'A. N.'",
+    "latin_name": "Berberis thunbergii 'Atropurpurea Nana'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/37811889/medium.jpeg"
+  },
+  {
+    "common_name": "holländsk blodberberis",
+    "latin_name": "Berberis x ottawensis 'Superba'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/68438043/medium.jpg"
+  },
+  {
+    "common_name": "tårbjörk 'Youngii'",
+    "latin_name": "Betula pendula 'Youngii'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/36257611/medium.jpeg"
+  },
+  {
+    "common_name": "syrenbuddleja",
+    "latin_name": "Buddleja davidii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/87998902/medium.jpg"
+  },
+  {
+    "common_name": "buxbom 'Polar'",
+    "latin_name": "Buxus sempervirens 'Polar'",
+    "photo_url": "https://static.inaturalist.org/photos/43384449/medium.jpeg"
+  },
+  {
+    "common_name": "pyramidavenbok 'Fastigiata'",
+    "latin_name": "Carpinus betulus 'Fastigiata'",
+    "photo_url": "https://static.inaturalist.org/photos/46763976/medium.jpeg"
+  },
+  {
+    "common_name": "japansk träddödare",
+    "latin_name": "Celastrus orbiculatus",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/59337841/medium.jpg"
+  },
+  {
+    "common_name": "gulved",
+    "latin_name": "Cladrastis kentukea",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/129061871/medium.jpg"
+  },
+  {
+    "common_name": "viticella-klematis",
+    "latin_name": "Clematis (Viticella-Gruppen)",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/812962/medium.jpg"
+  },
+  {
+    "common_name": "rysk kornell 'Cream Cracker'",
+    "latin_name": "Cornus alba 'Cream Cracker'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/75344741/medium.jpg"
+  },
+  {
+    "common_name": "rysk kornell 'Ivory Halo'",
+    "latin_name": "Cornus alba 'Ivory Halo'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/75344741/medium.jpg"
+  },
+  {
+    "common_name": "ormhassel",
+    "latin_name": "Corylus avellana 'Contorta'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/249644515/medium.jpg"
+  },
+  {
+    "common_name": "turkhassel",
+    "latin_name": "Corylus colurna",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/86037388/medium.jpg"
+  },
+  {
+    "common_name": "rödbladig perukbuske 'Royal Purple'",
+    "latin_name": "Cotinus coggygria 'Royal Purple'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/136745491/medium.jpg"
+  },
+  {
+    "common_name": "krypoxbär 'Major'",
+    "latin_name": "Cotoneaster dammeri 'Major'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103529169/medium.jpeg"
+  },
+  {
+    "common_name": "gullginst",
+    "latin_name": "Cytisus oromediterraneus",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/100232337/medium.jpeg"
+  },
+  {
+    "common_name": "tibast",
+    "latin_name": "Daphne mezereum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/76021443/medium.jpeg"
+  },
+  {
+    "common_name": "getris",
+    "latin_name": "Diervilla lonicera",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/21142762/medium.jpeg"
+  },
+  {
+    "common_name": "smalbladig silverbuske",
+    "latin_name": "Elaeagnus angustifolia",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/57604163/medium.jpg"
+  },
+  {
+    "common_name": "silverbuske 'Zempin'",
+    "latin_name": "Elaeagnus commutata 'Zempin'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/240436263/medium.jpg"
+  },
+  {
+    "common_name": "vingbenved",
+    "latin_name": "Euonymus alatus",
+    "photo_url": "https://static.inaturalist.org/photos/244596971/medium.jpeg"
+  },
+  {
+    "common_name": "forsythia 'Northern Gold'",
+    "latin_name": "Forsythia 'Northern Gold'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/1181774/medium.jpg"
+  },
+  {
+    "common_name": "vidjehortensia 'Annabelle'",
+    "latin_name": "Hydrangea arborescens 'Annabelle'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/177832046/medium.jpg"
+  },
+  {
+    "common_name": "blå järnek",
+    "latin_name": "Ilex x meserveae",
+    "photo_url": "https://static.inaturalist.org/photos/15413229/medium.jpeg"
+  },
+  {
+    "common_name": "valnöt",
+    "latin_name": "Juglans",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/340610/medium.jpg"
+  },
+  {
+    "common_name": "dvärgliguster",
+    "latin_name": "Ligustrum vulgare 'Lodense'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/291303580/medium.jpg"
+  },
+  {
+    "common_name": "eldkaprifol 'Dropmore Scarlet'",
+    "latin_name": "Lonicera x brownii 'Dropmore Scarlet'",
+    "photo_url": "https://static.inaturalist.org/photos/1730229/medium.jpg"
+  },
+  {
+    "common_name": "blomsterkaprifol 'Goldflame'",
+    "latin_name": "Lonicera x heckrottii 'Goldflame'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/27651979/medium.jpg"
+  },
+  {
+    "common_name": "stjärnmagnolia",
+    "latin_name": "Magnolia stellata",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/66470463/medium.jpg"
+  },
+  {
+    "common_name": "kryptuja",
+    "latin_name": "Microbiota decussata",
+    "photo_url": "https://static.inaturalist.org/photos/8261593/medium.jpg"
+  },
+  {
+    "common_name": "rådhusvin 'Veitchii'",
+    "latin_name": "Parthenocissus tricuspidata 'Veitchii'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/161427647/medium.jpeg"
+  },
+  {
+    "common_name": "smällspirea",
+    "latin_name": "Physocarpus opulifolius",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/135237890/medium.jpeg"
+  },
+  {
+    "common_name": "liten serbgran",
+    "latin_name": "Picea omorika 'Nana'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/64885025/medium.jpg"
+  },
+  {
+    "common_name": "jättepoppel 'Kiruna'",
+    "latin_name": "Populus trichocarpa 'Kiruna'",
+    "photo_url": "https://static.inaturalist.org/photos/19455945/medium.jpg"
+  },
+  {
+    "common_name": "prydnadskörsbär 'Accolade'",
+    "latin_name": "Prunus 'Accolade'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/93584919/medium.jpg"
+  },
+  {
+    "common_name": "fylldblommigt fågelbär",
+    "latin_name": "Prunus avium 'Plena'",
+    "photo_url": "https://static.inaturalist.org/photos/66778868/medium.jpeg"
+  },
+  {
+    "common_name": "blodplommon 'Nigra'",
+    "latin_name": "Prunus cerasifera 'Nigra'",
+    "photo_url": "https://static.inaturalist.org/photos/62295627/medium.jpg"
+  },
+  {
+    "common_name": "blodhägg",
+    "latin_name": "Prunus padus 'Colorata'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/11624584/medium.jpg"
+  },
+  {
+    "common_name": "sandkörsbär",
+    "latin_name": "Prunus pumila var. depressa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/200676803/medium.jpeg"
+  },
+  {
+    "common_name": "trädgårdseldtorn 'Anatolia'",
+    "latin_name": "Pyracantha 'Anatolia'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/6798/medium.jpg"
+  },
+  {
+    "common_name": "silverpäron 'Pendula'",
+    "latin_name": "Pyrus salicifolia 'Pendula'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/189109633/medium.jpg"
+  },
+  {
+    "common_name": "kärrek",
+    "latin_name": "Quercus palustris",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/19499393/medium.jpg"
+  },
+  {
+    "common_name": "caucasicum-rododendron 'C. W.'",
+    "latin_name": "Rhododendron 'Cunningham's White'",
+    "photo_url": "https://static.inaturalist.org/photos/132769155/medium.jpg"
+  },
+  {
+    "common_name": "yakushimanum-rododendron",
+    "latin_name": "Rhododendron (Yakushimanum-Gruppen)",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/384296245/medium.jpg"
+  },
+  {
+    "common_name": "svarta vinbär",
+    "latin_name": "Ribes nigrum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/130495402/medium.jpg"
+  },
+  {
+    "common_name": "röda vinbär",
+    "latin_name": "Ribes rubrum",
+    "photo_url": "https://static.inaturalist.org/photos/39067323/medium.jpg"
+  },
+  {
+    "common_name": "rosenrips 'Koja'",
+    "latin_name": "Ribes sanguineum 'Koja'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/474659582/medium.jpg"
+  },
+  {
+    "common_name": "krusbär",
+    "latin_name": "Ribes uva-crispa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/30123059/medium.jpg"
+  },
+  {
+    "common_name": "hallon",
+    "latin_name": "Rubus idaeus",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/358785151/medium.jpg"
+  },
+  {
+    "common_name": "ullungrönn 'Dodong'",
+    "latin_name": "Sorbus ulleungensis 'Dodong'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/397992415/medium.jpg"
+  },
+  {
+    "common_name": "pelarrönn 'Fastigiata'",
+    "latin_name": "Sorbus aucuparia 'Fastigiata'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/10450/medium.jpg"
+  },
+  {
+    "common_name": "silveroxel",
+    "latin_name": "Sorbus incana",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/327388047/medium.jpg"
+  },
+  {
+    "common_name": "häckoxel",
+    "latin_name": "Sorbus mougeotii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/3723995/medium.JPG"
+  },
+  {
+    "common_name": "prydnadssnöbär 'Arvid'",
+    "latin_name": "Symphoricarpos 'Arvid'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/44050/medium.jpg"
+  },
+  {
+    "common_name": "hybridsnöbär 'Hancock'",
+    "latin_name": "Symphoricarpos x chenaultii 'Hancock'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/338748845/medium.jpeg"
+  },
+  {
+    "common_name": "dvärgsyren",
+    "latin_name": "Syringa meyeri 'Palibin'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/17596826/medium.jpeg"
+  },
+  {
+    "common_name": "syren 'Andenken an Ludwig Späth'",
+    "latin_name": "Syringa vulgaris 'Andenken an Ludwig Späth'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/131487901/medium.jpeg"
+  },
+  {
+    "common_name": "syren 'Mme Lemoine'",
+    "latin_name": "Syringa vulgaris 'Mme Lemoine'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/131487901/medium.jpeg"
+  },
+  {
+    "common_name": "tuja 'Little Champion'",
+    "latin_name": "Thuja occidentalis 'Little Champion'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/4684247/medium.jpeg"
+  },
+  {
+    "common_name": "japansk hemlock",
+    "latin_name": "Tsuga diversifolia",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/8582950/medium.jpeg"
+  },
+  {
+    "common_name": "koreagran",
+    "latin_name": "Abies koreana",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/210177268/medium.jpeg"
+  },
+  {
+    "common_name": "coloradogran",
+    "latin_name": "Abies concolor",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/56287604/medium.jpg"
+  },
+  {
+    "common_name": "freemanlönn",
+    "latin_name": "Acer x freemanii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/161242/medium.jpg"
+  },
+  {
+    "common_name": "silverlönn",
+    "latin_name": "Acer saccharinum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/135565/medium.jpg"
+  },
+  {
+    "common_name": "ginnalalönn",
+    "latin_name": "Acer tataricum subsp. ginnala",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/10162059/medium.jpg"
+  },
+  {
+    "common_name": "blodlönn 'Schwedleri'",
+    "latin_name": "Acer platanoides 'Schwedleri'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/87307303/medium.jpeg"
+  },
+  {
+    "common_name": "tysklönn",
+    "latin_name": "Acer pseudoplatanus",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270771593/medium.jpg"
+  },
+  {
+    "common_name": "rysk lönn",
+    "latin_name": "Acer tataricum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/10162059/medium.jpg"
+  },
+  {
+    "common_name": "manchurisk strimlönn",
+    "latin_name": "Acer tegmentosum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/83560088/medium.jpg"
+  },
+  {
+    "common_name": "prakthäggmispel",
+    "latin_name": "Amelanchier lamarckii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/6872034/medium.jpg"
+  },
+  {
+    "common_name": "stor häggmispel 'Robin Hill'",
+    "latin_name": "Amelanchier x grandiflora 'Robin Hill'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/6872034/medium.jpg"
+  },
+  {
+    "common_name": "koreansk pipranka",
+    "latin_name": "Aristolochia manshuriensis",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/4243642/medium.jpg"
+  },
+  {
+    "common_name": "koreansk berberis",
+    "latin_name": "Berberis koreana",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/245018/medium.jpg"
+  },
+  {
+    "common_name": "häckberberis",
+    "latin_name": "Berberis thunbergii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/37811889/medium.jpeg"
+  },
+  {
+    "common_name": "kamtjatkabjörk",
+    "latin_name": "Betula ermanii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/232331146/medium.jpeg"
+  },
+  {
+    "common_name": "hängbjörk",
+    "latin_name": "Betula pendula 'Tristis'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/36257611/medium.jpeg"
+  },
+  {
+    "common_name": "ornäsbjörk",
+    "latin_name": "Betula pendula 'Dalecarlica'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/81483357/medium.jpg"
+  },
+  {
+    "common_name": "himalayabjörk",
+    "latin_name": "Betula utilis subsp. jacquemontii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/19525847/medium.jpeg"
+  },
+  {
+    "common_name": "häckkaragan",
+    "latin_name": "Caragana arborescens",
+    "photo_url": "https://static.inaturalist.org/photos/203687726/medium.jpg"
+  },
+  {
+    "common_name": "atragene-klematis",
+    "latin_name": "Clematis Atragene-Gruppen",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/25083605/medium.jpeg"
+  },
+  {
+    "common_name": "koreansk blomsterkornell",
+    "latin_name": "Cornus kousa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/69066485/medium.jpg"
+  },
+  {
+    "common_name": "körbärskornell",
+    "latin_name": "Cornus mas",
+    "photo_url": "https://static.inaturalist.org/photos/48590986/medium.jpeg"
+  },
+  {
+    "common_name": "häckoxbär",
+    "latin_name": "Cotoneaster lucidus",
+    "photo_url": "https://static.inaturalist.org/photos/73571079/medium.jpg"
+  },
+  {
+    "common_name": "skogholmsoxbär",
+    "latin_name": "Cotoneaster x suecicus 'Skogholm'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/103529169/medium.jpeg"
+  },
+  {
+    "common_name": "pärlhagtorn 'Toba'",
+    "latin_name": "Crataegus x mordenensis 'Toba'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/58744571/medium.jpg"
+  },
+  {
+    "common_name": "hängcypress",
+    "latin_name": "Cupressus nootkatensis 'Pendula'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/43618148/medium.jpg"
+  },
+  {
+    "common_name": "praktforsythia",
+    "latin_name": "Forsythia x intermedia 'Spectabilis'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/3369427/medium.jpg"
+  },
+  {
+    "common_name": "hybridtrollhassel",
+    "latin_name": "Hamamelis x intermedia",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/60205851/medium.jpeg"
+  },
+  {
+    "common_name": "en",
+    "latin_name": "Juniperus communis",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/61660329/medium.jpg"
+  },
+  {
+    "common_name": "paradisbuske",
+    "latin_name": "Kolkwitzia amabilis",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/44278471/medium.jpg"
+  },
+  {
+    "common_name": "hybridgullregn 'Vossii'",
+    "latin_name": "Laburnum x watereri 'Vossii'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/12186994/medium.jpg"
+  },
+  {
+    "common_name": "europeisk lärk",
+    "latin_name": "Larix decidua",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/4252042/medium.JPG"
+  },
+  {
+    "common_name": "japansk lärk",
+    "latin_name": "Larix kaempferi",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/8658087/medium.jpg"
+  },
+  {
+    "common_name": "kaprifol",
+    "latin_name": "Lonicera caprifolium",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/394716622/medium.jpeg"
+  },
+  {
+    "common_name": "koreatry",
+    "latin_name": "Lonicera maackii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/277949422/medium.jpg"
+  },
+  {
+    "common_name": "vildkaprifol",
+    "latin_name": "Lonicera periclymenum",
+    "photo_url": "https://static.inaturalist.org/photos/78836578/medium.jpg"
+  },
+  {
+    "common_name": "rosentry",
+    "latin_name": "Lonicera tatarica",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2187712/medium.jpg"
+  },
+  {
+    "common_name": "hybridmagnolia 'Merrill'",
+    "latin_name": "Magnolia x loebneri 'Merrill'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/90093212/medium.jpeg"
+  },
+  {
+    "common_name": "manchurisk bärapel",
+    "latin_name": "Malus baccata var. mandshurica",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/219032885/medium.jpeg"
+  },
+  {
+    "common_name": "buskpion",
+    "latin_name": "Paeonia suffruticosa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/87057/medium.jpg"
+  },
+  {
+    "common_name": "doftschersmin",
+    "latin_name": "Philadelphus coronarius",
+    "photo_url": "https://static.inaturalist.org/photos/79457044/medium.jpg"
+  },
+  {
+    "common_name": "smultronschersmin 'Mont Blanc'",
+    "latin_name": "Philadelphus 'Mont Blanc'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/83023833/medium.jpeg"
+  },
+  {
+    "common_name": "norrlandsschersmin",
+    "latin_name": "Philadelphus lewisii 'Waterton'",
+    "photo_url": "https://static.inaturalist.org/photos/40363644/medium.jpg"
+  },
+  {
+    "common_name": "fågelbogran",
+    "latin_name": "Picea abies 'Nidiformis'",
+    "photo_url": "https://static.inaturalist.org/photos/21333741/medium.jpeg"
+  },
+  {
+    "common_name": "serbgran",
+    "latin_name": "Picea omorika",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/64885025/medium.jpg"
+  },
+  {
+    "common_name": "blågran",
+    "latin_name": "Picea pungens Glauca-Gruppen",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/389275799/medium.jpeg"
+  },
+  {
+    "common_name": "balkanbergtall",
+    "latin_name": "Pinus mugo var. pumilio",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/90409560/medium.jpeg"
+  },
+  {
+    "common_name": "bergtall",
+    "latin_name": "Pinus mugo",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/90409560/medium.jpeg"
+  },
+  {
+    "common_name": "svarttall",
+    "latin_name": "Pinus nigra",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/544490847/medium.jpg"
+  },
+  {
+    "common_name": "makedonisk tall",
+    "latin_name": "Pinus peuce",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/16751588/medium.jpg"
+  },
+  {
+    "common_name": "sibirisk cembratall",
+    "latin_name": "Pinus sibirica",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/8465889/medium.jpg"
+  },
+  {
+    "common_name": "silverpoppel",
+    "latin_name": "Populus alba",
+    "photo_url": "https://static.inaturalist.org/photos/83341124/medium.jpeg"
+  },
+  {
+    "common_name": "jämtlandspoppel",
+    "latin_name": "Populus balsamifera 'Elongata'",
+    "photo_url": "https://static.inaturalist.org/photos/19455945/medium.jpg"
+  },
+  {
+    "common_name": "kinesisk poppel",
+    "latin_name": "Populus simonii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/208550933/medium.jpg"
+  },
+  {
+    "common_name": "pelarasp",
+    "latin_name": "Populus tremula 'Erecta'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/26648317/medium.jpeg"
+  },
+  {
+    "common_name": "goliatpoppel",
+    "latin_name": "Populus x canadensis 'Robusta'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/383049502/medium.jpg"
+  },
+  {
+    "common_name": "körbärsplommon",
+    "latin_name": "Prunus cerasifera",
+    "photo_url": "https://static.inaturalist.org/photos/62295627/medium.jpg"
+  },
+  {
+    "common_name": "douglasgran",
+    "latin_name": "Pseudotsuga menziesii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/140217013/medium.jpg"
+  },
+  {
+    "common_name": "kaukasisk vingnöt",
+    "latin_name": "Pterocarya fraxinifolia",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/1137573/medium.jpg"
+  },
+  {
+    "common_name": "pelarek",
+    "latin_name": "Quercus robur Fastigiata-Gruppen",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/342725494/medium.jpg"
+  },
+  {
+    "common_name": "guldazalea",
+    "latin_name": "Rhododendron luteum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/177588/medium.jpg"
+  },
+  {
+    "common_name": "måbär 'Schmidt'",
+    "latin_name": "Ribes alpinum 'Schmidt'",
+    "photo_url": "https://static.inaturalist.org/photos/22907311/medium.jpeg"
+  },
+  {
+    "common_name": "doftrips",
+    "latin_name": "Ribes aureum var. villosum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/3394402/medium.jpg"
+  },
+  {
+    "common_name": "robinia",
+    "latin_name": "Robinia pseudoacacia",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/37431398/medium.jpeg"
+  },
+  {
+    "common_name": "carolinaros",
+    "latin_name": "Rosa carolina",
+    "photo_url": "https://static.inaturalist.org/photos/64020693/medium.jpg"
+  },
+  {
+    "common_name": "vresros",
+    "latin_name": "Rosa rugosa",
+    "photo_url": "https://static.inaturalist.org/photos/74197363/medium.jpg"
+  },
+  {
+    "common_name": "silverpil",
+    "latin_name": "Salix alba f. sericea",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/70159039/medium.jpeg"
+  },
+  {
+    "common_name": "litet rödvide",
+    "latin_name": "Salix purpurea 'Nana'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/4819890/medium.jpg"
+  },
+  {
+    "common_name": "vitoxel",
+    "latin_name": "Sorbus aria",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/76073229/medium.jpg"
+  },
+  {
+    "common_name": "praktrönn",
+    "latin_name": "Sorbus decora",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/15534/medium.jpg"
+  },
+  {
+    "common_name": "björkspirea 'Tor'",
+    "latin_name": "Spiraea betulifolia 'Tor'",
+    "photo_url": "https://static.inaturalist.org/photos/261365274/medium.jpg"
+  },
+  {
+    "common_name": "praktspirea 'Little Princess'",
+    "latin_name": "Spiraea japonica 'Little Princess'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/449207/medium.jpg"
+  },
+  {
+    "common_name": "sibirisk spirea",
+    "latin_name": "Spiraea trilobata",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29131752/medium.jpeg"
+  },
+  {
+    "common_name": "norskspirea",
+    "latin_name": "Spiraea x cinerea 'Grefsheim'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/277614796/medium.jpeg"
+  },
+  {
+    "common_name": "bukettspirea",
+    "latin_name": "Spiraea x vanhouttei",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/131392897/medium.jpg"
+  },
+  {
+    "common_name": "ungersk syren",
+    "latin_name": "Syringa josikaea",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/244895/medium.jpg"
+  },
+  {
+    "common_name": "ligustersyren",
+    "latin_name": "Syringa reticulata",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/8881612/medium.jpeg"
+  },
+  {
+    "common_name": "parksyren",
+    "latin_name": "Syringa x chinensis",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/167766328/medium.jpg"
+  },
+  {
+    "common_name": "prestonsyren",
+    "latin_name": "Syringa x prestoniae",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/134028281/medium.jpeg"
+  },
+  {
+    "common_name": "krypidegran",
+    "latin_name": "Taxus baccata 'Repandens'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/8502/medium.jpg"
+  },
+  {
+    "common_name": "svartlind 'Nova'",
+    "latin_name": "Tilia americana 'Nova'",
+    "photo_url": "https://static.inaturalist.org/photos/404975522/medium.jpeg"
+  },
+  {
+    "common_name": "mongollind",
+    "latin_name": "Tilia mongolica",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/214361185/medium.jpg"
+  },
+  {
+    "common_name": "silverlind",
+    "latin_name": "Tilia tomentosa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/289618202/medium.jpeg"
+  },
+  {
+    "common_name": "luktolvon 'Aurora'",
+    "latin_name": "Viburnum carlesii 'Aurora'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/198266898/medium.jpeg"
+  },
+  {
+    "common_name": "kejsarolvon",
+    "latin_name": "Viburnum farreri",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/290572029/medium.jpg"
+  },
+  {
+    "common_name": "parkolvon",
+    "latin_name": "Viburnum lantana",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/538587517/medium.jpg"
+  },
+  {
+    "common_name": "skogsolvon",
+    "latin_name": "Viburnum opulus",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38959696/medium.jpeg"
+  },
+  {
+    "common_name": "röd häckberberis 'Atropurpurea'",
+    "latin_name": "Berberis thunbergii 'Atropurpurea'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/37811889/medium.jpeg"
+  },
+  {
+    "common_name": "goliattuja",
+    "latin_name": "Thuja plicata 'Excelsa'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/7846522/medium.jpeg"
+  },
+  {
+    "common_name": "kameleontbuske",
+    "latin_name": "Actinidia kolomikta",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/56206683/medium.jpeg"
+  },
+  {
+    "common_name": "parkaralia",
+    "latin_name": "Aralia elata",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/131587335/medium.jpg"
+  },
+  {
+    "common_name": "svartaronia",
+    "latin_name": "Aronia melanocarpa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/12231787/medium.jpg"
+  },
+  {
+    "common_name": "katsura",
+    "latin_name": "Cercidiphyllum japonicum",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/37820164/medium.jpg"
+  },
+  {
+    "common_name": "gullklematis",
+    "latin_name": "Clematis tangutica",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/812957/medium.jpg"
+  },
+  {
+    "common_name": "trädgårdstok",
+    "latin_name": "Dasiphora fruticosa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/302097709/medium.jpeg"
+  },
+  {
+    "common_name": "benved",
+    "latin_name": "Euonymus europaeus",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/165386172/medium.jpeg"
+  },
+  {
+    "common_name": "storbladig klätterbenved",
+    "latin_name": "Euonymus fortunei var. vegetus",
+    "photo_url": "https://static.inaturalist.org/photos/14845513/medium.jpeg"
+  },
+  {
+    "common_name": "körsbärsbenved",
+    "latin_name": "Euonymus planipes",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/470940054/medium.jpeg"
+  },
+  {
+    "common_name": "blodbok",
+    "latin_name": "Fagus sylvatica Purpurbladiga Gruppen",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/608828197/medium.jpg"
+  },
+  {
+    "common_name": "manchurisk forsythia",
+    "latin_name": "Forsythia mandshurica",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/1181774/medium.jpg"
+  },
+  {
+    "common_name": "ginkgo",
+    "latin_name": "Ginkgo biloba",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/397250612/medium.jpeg"
+  },
+  {
+    "common_name": "syrenhortensia",
+    "latin_name": "Hydrangea paniculata",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/56235268/medium.jpg"
+  },
+  {
+    "common_name": "purpuraplar",
+    "latin_name": "Malus Purpurapel-Gruppen",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/14004/medium.jpg"
+  },
+  {
+    "common_name": "korallapel 'Professor Sprenger'",
+    "latin_name": "Malus x zumi 'Professor Sprenger'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/258228287/medium.jpeg"
+  },
+  {
+    "common_name": "blåbärstry ANJA",
+    "latin_name": "Lonicera caerulea var. kamtschatica 'Anja'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/356932/medium.jpg"
+  },
+  {
+    "common_name": "vildvin",
+    "latin_name": "Parthenocissus inserta",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/530887613/medium.jpg"
+  },
+  {
+    "common_name": "engelsmannsvin",
+    "latin_name": "Parthenocissus quinquefolia var. engelmannii",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/428768/medium.jpg"
+  },
+  {
+    "common_name": "sockertoppsgran",
+    "latin_name": "Picea glauca 'Conica'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/10737093/medium.jpeg"
+  },
+  {
+    "common_name": "rönnsumak",
+    "latin_name": "Rhus typhina",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/41368056/medium.jpg"
+  },
+  {
+    "common_name": "daggros",
+    "latin_name": "Rosa glauca",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/3994762/medium.jpg"
+  },
+  {
+    "common_name": "bergsros",
+    "latin_name": "Rosa pendulina",
+    "photo_url": "https://static.inaturalist.org/photos/221996/medium.JPG"
+  },
+  {
+    "common_name": "äppelros",
+    "latin_name": "Rosa rubiginosa",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/26171838/medium.jpg"
+  },
+  {
+    "common_name": "rönnspirea",
+    "latin_name": "Sorbaria sorbifolia",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/83957835/medium.jpg"
+  },
+  {
+    "common_name": "rundoxel",
+    "latin_name": "Sorbus x thuringiaca 'Fastigiata'",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/508724103/medium.jpg"
+  },
+  {
+    "common_name": "skogslind",
+    "latin_name": "Tilia cordata",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/12491246/medium.jpg"
+  },
+  {
+    "common_name": "glanslind",
+    "latin_name": "Tilia x euchlora",
+    "photo_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/49768083/medium.jpg"
+  },
+  {
+    "common_name": "bukettapel",
+    "latin_name": "Malus toringo var. sargentii",
+    "photo_url": "https://static.inaturalist.org/photos/189064229/medium.jpg"
+  }
+]

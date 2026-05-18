@@ -105,9 +105,77 @@
 3. **Source Enrichment**:
     - Update `generate_questions.py` and the Rust WASM module to pass this new field through to the frontend.
 
-### Phase 20: Automated Deployment (Completed)
+### Phase 21: Content Categorization & Biology Refactoring (In Progress)
 
-1. **Build Automation**: Implement GitHub Actions workflow to automate compilation (Typst to SVG, WASM build) on each push.
-2. **Environment Configuration**: Configure the GitHub Pages hosting settings in the repository to serve the contents of the `dist/` folder.
-3. **Domain & Routing**: Validate site accessibility and verify that relative asset paths function correctly across browser environments.
-4. **Maintenance**: Establish a workflow for handling domain redirects or custom URL configurations if needed in the future.
+1. **Category Structure (Completed)**:
+    - Created `content/physics/` and `content/biology/` directories.
+    - Moved `quantum_mechanics` and `thermodynamics` to `content/physics/`.
+    - Restructured build scripts to handle nested content categories.
+2. **Physics Migration (Completed)**:
+    - Updated `generate_questions.py` and build scripts to handle new directory nesting.
+    - Verified Physics course builds and UI integration.
+3. **Biology Refactoring (In Progress)**:
+    - Converted `växtkännedom` CSV data into a JSON library format (`library.json`) compatible with dynamic quizzing.
+    - Implemented text-input based answering mechanism with async grading.
+    - Implemented flexible attribute-pairing selector (e.g., Common Name ↔ Latin Name, Photo ↔ Common Name) in the UI.
+    - **Pending**: Full verification of all plant records in the quiz interface and final styling polish for text-input fields.
+4. **UI Refactoring (In Progress)**:
+    - Updated `showModeSelection` logic to display the custom attribute-pairing UI for the Biology course.
+
+### Phase 22: Frontend Architecture Refactoring (Completed)
+
+**Goal**: Refactor `dist/app.js` to transition from a monolithic script to a structured, modular architecture. Improve maintainability and scalability for new course types and features without altering the existing visual design.
+
+1. **Modularization & Separation of Concerns (Completed)**:
+    - Decomposed `app.js` into logical modules: `state.js`, `ui.js`, `render.js`, `navigation.js`, `physics.js`, and `biology.js`.
+2. **Unified State Management (Completed)**:
+    - Implemented a centralized `State` object to track application phase, current course/mode, and quiz progress.
+    - Updated `State.save()` to persist dynamically generated questions for custom quiz modes.
+3. **Surgical Rendering Refactor (Completed)**:
+    - Broke down the monolithic `render()` function into discrete, idempotent component rendering functions in `Renderer`.
+    - Fully implemented the clickable Question Navigation Bar and improved result visualizations.
+4. **WASM Core Alignment (Completed)**:
+    - Refactored the Rust `Question` struct and grading logic to natively support text-input questions and string-based selections.
+    - Synchronized frontend data extraction to handle the nested `data` structure in `questions.json`.
+5. **Clean Event Delegation (Completed)**:
+    - Centralized event listeners in `main.js` and removed inline handlers.
+
+### Phase 23: Biology Content Refinement (Completed)
+
+**Goal**: Stabilize and verify the Biology course content and its dynamic quiz generation logic. Ensure high-fidelity rendering and accurate grading for all plant records.
+
+1. **Content Loading Stabilization (Completed)**:
+    - Audited the `questions.json` structure; verified that `generate_questions.py` correctly handles flexible library formats.
+2. **Dynamic Generation Verification (Completed)**:
+    - Implemented multiple-choice support for photo-based answers (`Common ↔ Photo`) with automated distractor generation in `biology.js`.
+    - Added `Photo ↔ Latin` and `Latin ↔ Photo` modes.
+    - Improved prompt generation and image styling for better visual clarity.
+3. **Grading Logic Validation (Completed)**:
+    - Implemented `normalize_answer` in Rust to handle case-sensitivity, whitespace, and smart quotes.
+    - Added unit tests in `src/quiz.rs` for normalization and quiz flow.
+4. **Progress Persistence Polish (Completed)**:
+    - Implemented `syncTextInput()` in `Renderer` to ensure text-input answers are captured during navigation or grading.
+    - Verified that dynamic questions are correctly saved and restored from `localStorage`.
+
+### Phase 24: Biology UI Transform (Completed)
+
+**Goal**: When a user selects Biology, the entire theme of the website will change. The lern logo will appear in a different form (using provided CSS), and the entire page will transition from dark/light mode to a "forest green" mode. This thematic change will persist until the user exits the Biology course.
+
+### Phase 25: Physics Logic Fix (Completed)
+
+**Goal**: Restore the ability to select specific sub-courses (e.g., Quantum Mechanics, Thermodynamics) within the Physics category.
+
+1. **Menu Restructuring**: Update `Navigation.renderCourseList` to handle nested categories or flatten the course list for the main menu.
+2. **Breadcrumb Navigation**: Ensure users can navigate back from a sub-course to the category or main menu.
+3. **State Management Alignment**: Update `State` saving/loading to correctly track the nested course structure.
+
+### Phase 26: General Polish & Performance Optimization (Planned)
+
+### Phase 27: Biology Data Recovery & Enrichment (Completed)
+
+**Goal**: Restore and formalize the plant source database by re-fetching all photo assets using the iNaturalist API based on the existing `library.json`.
+
+1. **API Integration**: Re-implemented the iNaturalist API client to fetch high-quality plant images.
+2. **Data Enrichment**: Iterated through all 185 records in `content/biology/växtkännedom/questions/library.json` and retrieved matching photos.
+3. **Database Reconstruction**: Programmatically recreated the `plants_gallery.db` SQLite database to store names, latin names, and retrieved URLs, ensuring a permanent and manageable source of truth.
+4. **Pipeline Verification**: Verified that the `generate_questions.py` script correctly aggregates the library from the newly reconstructed data.

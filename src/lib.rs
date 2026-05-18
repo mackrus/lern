@@ -19,7 +19,7 @@ pub fn init_quiz(questions_json: &str) -> Result<(), JsValue> {
 
 #[wasm_bindgen]
 pub fn restore_quiz_state(current_index: usize, selections_json: &str, is_graded: bool) -> Result<(), JsValue> {
-    let selections: Vec<Option<usize>> = serde_json::from_str(selections_json)
+    let selections: Vec<Option<String>> = serde_json::from_str(selections_json)
         .map_err(|e| JsValue::from_str(&e.to_string()))?;
     
     let mut state = QUIZ_STATE.lock().unwrap();
@@ -98,15 +98,15 @@ pub fn grade_quiz() {
 }
 
 #[wasm_bindgen]
-pub fn select_answer(index: usize) {
+pub fn select_answer(answer: String) {
     let mut state = QUIZ_STATE.lock().unwrap();
     if let Some(quiz) = state.as_mut() {
-        quiz.select_answer(index);
+        quiz.select_answer(answer);
     }
 }
 
 #[wasm_bindgen]
-pub fn get_current_selection() -> Option<usize> {
+pub fn get_current_selection() -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref()?.get_current_selection()
 }

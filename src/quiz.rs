@@ -24,6 +24,8 @@ pub struct Question {
     pub prerequisites_html: Option<String>,
     pub explanation_html: Option<String>,
     pub explanation_raw: Option<String>,
+    pub is_text_input: Option<bool>,
+    pub expected_answer: Option<String>,
     pub alternatives: Vec<Alternative>,
 }
 
@@ -37,7 +39,7 @@ pub struct TopicStats {
 pub struct Quiz {
     pub questions: Vec<Question>,
     pub current_question_index: usize,
-    pub selections: Vec<Option<usize>>,
+    pub selections: Vec<Option<String>>,
     pub is_graded: bool,
 }
 
@@ -75,7 +77,7 @@ impl Quiz {
     pub fn restore_state(
         &mut self,
         current_index: usize,
-        selections: Vec<Option<usize>>,
+        selections: Vec<Option<String>>,
         is_graded: bool,
     ) {
         if current_index < self.questions.len() {
@@ -91,19 +93,19 @@ impl Quiz {
         self.questions.get(self.current_question_index)
     }
 
-    pub fn select_answer(&mut self, alternative_index: usize) {
+    pub fn select_answer(&mut self, answer: String) {
         if self.is_graded {
             return;
         }
         if let Some(selection) = self.selections.get_mut(self.current_question_index) {
-            *selection = Some(alternative_index);
+            *selection = Some(answer);
         }
     }
 
-    pub fn get_current_selection(&self) -> Option<usize> {
+    pub fn get_current_selection(&self) -> Option<String> {
         self.selections
             .get(self.current_question_index)
-            .and_then(|&s| s)
+            .and_then(|s| s.clone())
     }
 
     pub fn next_question(&mut self) {
@@ -145,13 +147,21 @@ impl Quiz {
     pub fn get_score(&self) -> usize {
         let mut score = 0;
         for (i, question) in self.questions.iter().enumerate() {
-            let is_correct = self.selections.get(i)
-                .and_then(|&s| s)
-                .and_then(|idx| question.alternatives.get(idx))
-                .map(|alt| alt.is_correct)
-                .unwrap_or(false);
-            if is_correct {
-                score += 1;
+            let selected = self.selections.get(i).and_then(|s| s.as_ref());
+            if let Some(sel) = selected {
+                if question.is_text_input.unwrap_or(false) {
+                    if let Some(expected) = &question.expected_answer {
+                        if normalize_answer(sel) == normalize_answer(expected) {
+                            score += 1;
+                        }
+                    }
+                } else if let Ok(idx) = sel.parse::<usize>() {
+                    if let Some(alt) = question.alternatives.get(idx) {
+                        if alt.is_correct {
+                            score += 1;
+                        }
+                    }
+                }
             }
         }
         score
@@ -161,12 +171,24 @@ impl Quiz {
         let mut stats: std::collections::HashMap<String, (usize, usize)> =
             std::collections::HashMap::new();
         for (i, question) in self.questions.iter().enumerate() {
-            let is_correct = self.selections
-                .get(i)
-                .and_then(|&s| s)
-                .and_then(|idx| question.alternatives.get(idx))
-                .map(|alt| alt.is_correct)
-                .unwrap_or(false);
+            let selected = self.selections.get(i).and_then(|s| s.as_ref());
+            let mut is_correct = false;
+
+            if let Some(sel) = selected {
+                if question.is_text_input.unwrap_or(false) {
+                    if let Some(expected) = &question.expected_answer {
+                        if normalize_answer(sel) == normalize_answer(expected) {
+                            is_correct = true;
+                        }
+                    }
+                } else if let Ok(idx) = sel.parse::<usize>() {
+                    if let Some(alt) = question.alternatives.get(idx) {
+                        if alt.is_correct {
+                            is_correct = true;
+                        }
+                    }
+                }
+            }
 
             for topic in &question.topics {
                 let entry = stats.entry(topic.clone()).or_insert((0, 0));
@@ -195,11 +217,25 @@ impl Quiz {
         }
         let mut indices = Vec::new();
         for (i, question) in self.questions.iter().enumerate() {
-            let selected = self.selections.get(i).and_then(|&s| s);
-            let is_correct = selected
-                .and_then(|idx| question.alternatives.get(idx))
-                .map(|a| a.is_correct)
-                .unwrap_or(false);
+            let selected = self.selections.get(i).and_then(|s| s.as_ref());
+            let mut is_correct = false;
+
+            if let Some(sel) = selected {
+                if question.is_text_input.unwrap_or(false) {
+                    if let Some(expected) = &question.expected_answer {
+                        if normalize_answer(sel) == normalize_answer(expected) {
+                            is_correct = true;
+                        }
+                    }
+                } else if let Ok(idx) = sel.parse::<usize>() {
+                    if let Some(alt) = question.alternatives.get(idx) {
+                        if alt.is_correct {
+                            is_correct = true;
+                        }
+                    }
+                }
+            }
+
             if !is_correct {
                 indices.push(i);
             }
@@ -212,9 +248,25 @@ impl Quiz {
     }
 }
 
+fn normalize_answer(s: &str) -> String {
+    s.trim()
+        .to_lowercase()
+        .replace('’', "'")
+        .replace('‘', "'")
+        .replace('”', "\"")
+        .replace('“', "\"")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_normalization() {
+        assert_eq!(normalize_answer(" Korkgran "), "korkgran");
+        assert_eq!(normalize_answer("Faassen’s Black"), "faassen's black");
+        assert_eq!(normalize_answer("Faassen's Black"), "faassen's black");
+    }
 
     fn sample_quiz() -> Quiz {
         let q1 = Question {
@@ -227,6 +279,8 @@ mod tests {
             prerequisites_html: Some("<p>Addition</p>".to_string()),
             explanation_html: Some("<p>Because 1+1=2</p>".to_string()),
             explanation_raw: Some("Because 1+1=2".to_string()),
+            is_text_input: None,
+            expected_answer: None,
             alternatives: vec![
                 Alternative {
                     content_html: "1".to_string(),
@@ -252,8 +306,8 @@ mod tests {
             .iter()
             .position(|a| a.is_correct)
             .unwrap();
-        quiz.select_answer(correct_idx);
-        assert_eq!(quiz.get_current_selection(), Some(correct_idx));
+        quiz.select_answer(correct_idx.to_string());
+        assert_eq!(quiz.get_current_selection(), Some(correct_idx.to_string()));
         assert_eq!(quiz.get_score(), 1);
         assert!(!quiz.is_graded);
 
@@ -273,7 +327,7 @@ mod tests {
             .iter()
             .position(|a| !a.is_correct)
             .unwrap();
-        quiz.select_answer(wrong_idx);
+        quiz.select_answer(wrong_idx.to_string());
         assert_eq!(quiz.get_score(), 0);
         quiz.grade();
         assert_eq!(quiz.incorrect_question_indices(), vec![0]);
@@ -291,6 +345,8 @@ mod tests {
             prerequisites_html: None,
             explanation_html: None,
             explanation_raw: None,
+            is_text_input: None,
+            expected_answer: None,
             alternatives: vec![
                 Alternative {
                     content_html: "A".to_string(),
@@ -320,7 +376,7 @@ mod tests {
             .position(|a| a.is_correct)
             .unwrap();
 
-        quiz.select_answer(correct_idx);
+        quiz.select_answer(correct_idx.to_string());
         quiz.grade();
         assert_eq!(quiz.get_score(), 1);
         assert!(quiz.incorrect_question_indices().is_empty());
@@ -347,6 +403,8 @@ mod tests {
             prerequisites_html: None,
             explanation_html: None,
             explanation_raw: None,
+            is_text_input: None,
+            expected_answer: None,
             alternatives: vec![],
         };
         let q2 = q1.clone();

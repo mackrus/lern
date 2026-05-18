@@ -16,3 +16,9 @@
   body-indent: 0.5em,
   spacing: 1.2em,
 )
+
+#let quiz_layout(doc) = {
+  set page(width: q_width, height: auto, margin: q_margin)
+  set text(size: q_size)
+  doc
+}

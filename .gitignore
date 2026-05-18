@@ -1,1 +1,8 @@
 /target
+/dist/pkg
+/dist/content
+/dist/questions.json
+.ruff_cache/
+__pycache__/
+*.pyc
+*.db
