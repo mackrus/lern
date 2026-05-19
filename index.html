@@ -109,7 +109,7 @@
             gap: 4rem;
             align-items: flex-start;
             justify-content: center;
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
@@ -119,7 +119,7 @@
         }
 
         #sidebar-column {
-            flex: 0 0 320px;
+            flex: 0 0 400px;
             position: sticky;
             top: 4rem;
             height: fit-content;
@@ -329,13 +329,53 @@
             height: auto;
         }
 
-        #prerequisites, #explanation {
+        #explanation {
             background: var(--prereq-bg);
             padding: 2rem;
             margin-top: 1.5rem;
             margin-bottom: 2rem;
             border-left: 3px solid var(--text-color);
             font-size: 1.1rem;
+        }
+
+        .sidebar-section {
+            width: 100%;
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        #prerequisites {
+            background: var(--prereq-bg);
+            padding: 2.5rem;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+            border-left: 4px solid var(--text-color);
+            font-size: 1.5rem; /* Significant increase for readability */
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #prerequisites h1, #prerequisites h2, #prerequisites h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        #prerequisites ul, #prerequisites ol {
+            padding-left: 2rem;
+        }
+
+        .sidebar-btn {
+            margin: 0 0 1.5rem 0;
+            width: 100%;
+            text-align: left;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
         }
 
         #result {
@@ -452,6 +492,53 @@
         }
         .strength { color: #44ff44; }
         .weakness { color: #ff4444; }
+
+        .alternative.graded-correct {
+            border-color: #44ff44;
+            background-color: rgba(68, 255, 68, 0.08);
+            cursor: default;
+        }
+        .alternative.graded-correct:hover {
+            transform: none;
+        }
+        .alternative.graded-incorrect {
+            border-color: #ff4444;
+            background-color: rgba(255, 68, 68, 0.08);
+            cursor: default;
+        }
+        .alternative.graded-incorrect:hover {
+            transform: none;
+        }
+        .alternative.graded-neutral {
+            cursor: default;
+            opacity: 0.4;
+        }
+        .alternative.graded-neutral:hover {
+            transform: none;
+            background: var(--surface-color);
+            border-color: var(--border-color);
+        }
+        .user-answer-summary {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-left: 3px solid var(--border-color);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        .user-answer-summary .label {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        .user-answer-summary .answer-correct {
+            color: #44ff44;
+        }
+        .user-answer-summary .answer-incorrect {
+            color: #ff4444;
+        }
+        .user-answer-summary .answer-missing {
+            opacity: 0.5;
+            font-style: italic;
+        }
     </style>
 <body>
     <div id="app-wrapper">
@@ -531,14 +618,11 @@
                     <div id="question">Loading...</div>
                     
                     <div class="controls-container" style="display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-bottom: 2rem; align-items: center;">
-                        <div style="display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center;">
-                            <button id="prereq-btn" style="display: none; margin: 0;">Show Prerequisites</button>
-                            <button id="toggle-alt-btn" style="margin: 0;">Hide Alternatives</button>
-                        </div>
+                        <button id="prereq-btn" style="display: none; margin: 0; font-size: 1.2rem; font-weight: bold;">Show Prerequisites</button>
                         <button id="copy-prompt-btn" style="margin: 0; margin-left: auto; font-size: 0.85rem; opacity: 0.6; letter-spacing: 0.02em;">Copy as Prompt</button>
                     </div>
                     <div id="prerequisites" style="display: none;"></div>
-                    <div id="alternatives"></div>
+
                     <div id="explanation" style="display: none;"></div>
                     <div id="result"></div>
 
@@ -576,8 +660,16 @@
                 </div>
 
                 <div id="sidebar-column">
-                    <button id="refs-btn" style="display: none; margin: 0 0 1.5rem 0; width: 100%; text-align: left; font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Where do i read about this?</button>
-                    <aside id="references" style="display: none; width: 100%; background: var(--surface-color); padding: 1.5rem; border: 1px solid var(--border-color); font-size: 0.95rem;">
+                    <div id="alternatives-area" style="margin-bottom: 3rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                            <h3 style="margin: 0; font-size: 1rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.1em;">Your Answer</h3>
+                            <button id="toggle-alt-btn" style="font-size: 0.8rem; opacity: 0.5; margin: 0;">Hide</button>
+                        </div>
+                        <div id="alternatives"></div>
+                    </div>
+
+                    <button id="refs-btn" class="sidebar-btn" style="display: none;">Where do i read about this?</button>
+                    <aside id="references" class="sidebar-section" style="display: none;">
                         <!-- References injected here -->
                     </aside>
                 </div>

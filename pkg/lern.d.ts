@@ -47,6 +47,8 @@ export function grade_quiz(): void;
 
 export function init_quiz(questions_json: string): void;
 
+export function is_alternative_correct(index: number): boolean;
+
 export function is_finished(): boolean;
 
 export function is_graded(): boolean;
@@ -85,6 +87,7 @@ export interface InitOutput {
     readonly get_topic_stats_json: () => [number, number];
     readonly get_total_questions: () => number;
     readonly init_quiz: (a: number, b: number) => [number, number];
+    readonly is_alternative_correct: (a: number) => number;
     readonly is_finished: () => number;
     readonly is_graded: () => number;
     readonly restore_quiz_state: (a: number, b: number, c: number, d: number) => [number, number];

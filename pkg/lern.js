@@ -266,6 +266,15 @@ export function init_quiz(questions_json) {
 }
 
 /**
+ * @param {number} index
+ * @returns {boolean}
+ */
+export function is_alternative_correct(index) {
+    const ret = wasm.is_alternative_correct(index);
+    return ret !== 0;
+}
+
+/**
  * @returns {boolean}
  */
 export function is_finished() {

@@ -103,10 +103,12 @@ export const Biology = {
                 return `<strong>${val}</strong>`;
             };
 
+            const plantLabel = `${plant.common_name} (${plant.latin_name})`;
+
             const q = {
                 id: `plant_${index}_${qAttr}_${aAttr}_${Date.now()}`,
                 label: "Plant Identification",
-                topics: [`${attrNames[qAttr]} → ${attrNames[aAttr]}`],
+                topics: [plantLabel],
                 references: [],
                 question_html: `<div style="text-align: center; margin-bottom: 1rem; opacity: 0.8;">${prompt}</div>${renderQ(qValue)}`,
                 question_raw: `${prompt} ${qValue}`,

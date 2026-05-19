@@ -21,6 +21,7 @@ export const get_selections_json: () => [number, number];
 export const get_topic_stats_json: () => [number, number];
 export const get_total_questions: () => number;
 export const init_quiz: (a: number, b: number) => [number, number];
+export const is_alternative_correct: (a: number) => number;
 export const is_finished: () => number;
 export const is_graded: () => number;
 export const restore_quiz_state: (a: number, b: number, c: number, d: number) => [number, number];

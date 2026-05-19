@@ -3,6 +3,7 @@ import {
     get_current_selection,
     get_alternatives_count,
     get_alternative_html,
+    is_alternative_correct,
     get_current_question_label,
     get_current_question_html,
     get_current_question_raw,
@@ -149,13 +150,13 @@ export const Renderer = {
         alternativesDiv.innerHTML = "";
         
         if (currentQuestion.is_text_input) {
-            this.renderTextInput(alternativesDiv, graded);
+            this.renderTextInput(alternativesDiv, currentQuestion, graded);
         } else {
-            this.renderStandardAlternatives(alternativesDiv, graded);
+            this.renderStandardAlternatives(alternativesDiv, currentQuestion, graded);
         }
     },
 
-    renderTextInput(container, graded) {
+    renderTextInput(container, currentQuestion, graded) {
         container.style.display = "block";
         const input = document.createElement("input");
         input.type = "text";
@@ -168,31 +169,44 @@ export const Renderer = {
         input.disabled = graded;
 
         if (graded) {
-            const expected = get_current_question_explanation_raw() || "";
-            const isCorrect = selection.trim().toLowerCase() === expected.trim().toLowerCase();
-            input.style.borderColor = isCorrect ? "#44ff44" : "#ff4444";
-            input.style.backgroundColor = isCorrect ? "rgba(68, 255, 68, 0.1)" : "rgba(255, 68, 68, 0.1)";
+            const expected = currentQuestion.expected_answer || "";
+            const isCorrect = selection && expected &&
+                selection.trim().toLowerCase() === expected.trim().toLowerCase();
+            input.classList.add(isCorrect ? "graded-correct" : "graded-incorrect");
+
+            container.appendChild(input);
+
+            const summary = document.createElement("div");
+            summary.className = "user-answer-summary";
+            if (selection) {
+                const answerClass = isCorrect ? "answer-correct" : "answer-incorrect";
+                summary.innerHTML = `<div><span class="label">Your answer:</span> <strong class="${answerClass}">${selection}</strong></div>`;
+            } else {
+                summary.innerHTML = `<div class="answer-missing">No answer given</div>`;
+            }
+            if (!isCorrect) {
+                summary.innerHTML += `<div><span class="label">Correct answer:</span> <strong class="answer-correct">${expected}</strong></div>`;
+            }
+            container.appendChild(summary);
+            return;
         }
         
-        if (!graded) {
-            input.oninput = () => {
+        input.oninput = () => {
+            select_answer(input.value);
+        };
+        input.onkeydown = (e) => {
+            if (e.key === "Enter") {
                 select_answer(input.value);
-            };
-            input.onkeydown = (e) => {
-                if (e.key === "Enter") {
-                    select_answer(input.value);
-                    State.save();
-                    next_question();
-                    this.renderQuiz();
-                }
-            };
-            // Auto-focus input
-            setTimeout(() => input.focus(), 10);
-        }
+                State.save();
+                next_question();
+                this.renderQuiz();
+            }
+        };
+        setTimeout(() => input.focus(), 10);
         container.appendChild(input);
     },
 
-    renderStandardAlternatives(container, graded) {
+    renderStandardAlternatives(container, currentQuestion, graded) {
         const count = get_alternatives_count();
         const selection = get_current_selection();
         const toggleAltBtn = document.getElementById("toggle-alt-btn");
@@ -206,9 +220,21 @@ export const Renderer = {
         for (let i = 0; i < count; i++) {
             const btn = document.createElement("button");
             btn.className = "alternative";
-            if (selection === i.toString()) btn.classList.add("selected");
             btn.innerHTML = get_alternative_html(i);
-            if (!graded) {
+
+            if (graded) {
+                const isSelected = selection === i.toString();
+                const isCorrect = is_alternative_correct(i);
+                if (isCorrect) {
+                    btn.classList.add("graded-correct");
+                } else if (isSelected) {
+                    btn.classList.add("graded-incorrect");
+                } else {
+                    btn.classList.add("graded-neutral");
+                }
+                if (isSelected) btn.classList.add("selected");
+            } else {
+                if (selection === i.toString()) btn.classList.add("selected");
                 btn.onclick = () => {
                     select_answer(i.toString());
                     toggleAltBtn.dataset.state = "shown";
@@ -251,8 +277,18 @@ export const Renderer = {
         }
 
         // Toggle Alternatives Button
-        toggleAltBtn.style.display = graded || currentQuestion.is_text_input ? "none" : "block";
-        toggleAltBtn.innerText = toggleAltBtn.dataset.state === "shown" ? "Hide Alternatives" : "Show Alternatives";
+        const altArea = document.getElementById("alternatives-area");
+        if (graded) {
+            toggleAltBtn.style.display = "none";
+            altArea.style.display = "block";
+        } else if (currentQuestion.is_text_input) {
+            toggleAltBtn.style.display = "none";
+            altArea.style.display = "block";
+        } else {
+            toggleAltBtn.style.display = "block";
+            altArea.style.display = "block";
+            toggleAltBtn.innerText = toggleAltBtn.dataset.state === "shown" ? "Hide" : "Show";
+        }
         
         // Explanation
         const explanationDiv = document.getElementById("explanation");
@@ -408,11 +444,15 @@ export const Renderer = {
             return;
         }
 
+        const selectionsJson = get_selections_json();
+        const selections = selectionsJson ? JSON.parse(selectionsJson) : [];
+        const savedIndex = get_current_question_index();
+
         incorrectReview.style.display = "block";
         incorrectList.innerHTML = "";
         incorrectIndices.forEach(idx => {
             const item = document.createElement("div");
-            item.className = "incorrect-item"; // Add a class for styling if needed
+            item.className = "incorrect-item";
             item.style.marginBottom = "2rem";
             item.style.padding = "2rem";
             item.style.border = "1px solid var(--border-color)";
@@ -420,15 +460,54 @@ export const Renderer = {
             
             const qHtml = get_question_html_by_index(idx);
             const eHtml = get_explanation_html_by_index(idx);
-            
+            const question = State.currentQuestionsList[idx];
+            const sel = selections[idx];
+
+            // Build user answer HTML
+            let userAnswerHtml = "";
+            if (sel === null || sel === undefined) {
+                userAnswerHtml = `<span class="answer-missing">No answer given</span>`;
+            } else if (question && question.is_text_input) {
+                userAnswerHtml = `<strong class="answer-incorrect">${sel}</strong>`;
+            } else {
+                // MC: get the alternative HTML via WASM (needs correct question context)
+                set_question_index(idx);
+                const altHtml = get_alternative_html(parseInt(sel));
+                if (altHtml) {
+                    // Check if it contains an img (photo quiz) — show as thumbnail
+                    if (altHtml.includes("<img")) {
+                        const wrapper = document.createElement("div");
+                        wrapper.innerHTML = altHtml;
+                        const img = wrapper.querySelector("img");
+                        if (img) {
+                            img.style.maxWidth = "120px";
+                            img.style.height = "auto";
+                            img.style.display = "inline-block";
+                            img.style.verticalAlign = "middle";
+                        }
+                        userAnswerHtml = wrapper.innerHTML;
+                    } else {
+                        userAnswerHtml = `<strong class="answer-incorrect">${altHtml}</strong>`;
+                    }
+                } else {
+                    userAnswerHtml = `<span class="answer-missing">Invalid selection</span>`;
+                }
+            }
+
             item.innerHTML = `
                 <div style="font-weight: bold; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Question ${idx + 1}:</div>
                 <div style="margin-bottom: 1.5rem;">${qHtml}</div>
+                <div class="user-answer-summary" style="margin-bottom: 1.5rem;">
+                    <div><span class="label">Your answer:</span> ${userAnswerHtml}</div>
+                </div>
                 <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
                     <strong>Explanation:</strong><br>${eHtml || "No explanation available."}
                 </div>
             `;
             incorrectList.appendChild(item);
         });
+
+        // Restore the question index
+        set_question_index(savedIndex);
     }
 };
