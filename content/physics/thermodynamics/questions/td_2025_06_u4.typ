@@ -17,7 +17,5 @@ $T_1 = 273$ K, $T_2 = 546$ K
 $T_1 = 300$ K, $T_2 = 300$ K
 #pagebreak()
 $T_1 = 600$ K, $T_2 = 300$ K
-#pagebreak()
-#include "../explanations/td_2025_06_u4.typ"
-#pagebreak()
-#include "../prerequisites/entropy_second_law.typ"
+#expl_page(include "../explanations/td_2025_06_u4.typ")
+#prereq_page(include "../prerequisites/entropy_second_law.typ")

@@ -20,7 +20,5 @@ $Delta F = 2$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $Delta M = 2$
-#pagebreak()
-#include "../explanations/sam_07.typ"
-#pagebreak()
-#include "../prerequisites/spin_angular_momentum.typ"
+#expl_page(include "../explanations/sam_07.typ")
+#prereq_page(include "../prerequisites/spin_angular_momentum.typ")

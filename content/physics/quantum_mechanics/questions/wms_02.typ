@@ -20,7 +20,5 @@ It depends on where the position measurement result was found
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $1/2$
-#pagebreak()
-#include "../explanations/wms_02.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_foundations.typ"
+#expl_page(include "../explanations/wms_02.typ")
+#prereq_page(include "../prerequisites/conceptual_foundations.typ")

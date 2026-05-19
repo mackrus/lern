@@ -18,5 +18,4 @@ False
 Explanation:
 
 False for superpositions of traveling waves (e.g. standing waves).
-#pagebreak()
-#include "../prerequisites/conceptual_practice.typ"
+#prereq_page(include "../prerequisites/conceptual_practice.typ")

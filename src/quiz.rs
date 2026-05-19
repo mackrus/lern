@@ -145,6 +145,9 @@ impl Quiz {
     }
 
     pub fn get_score(&self) -> usize {
+        if !self.is_graded {
+            return 0;
+        }
         let mut score = 0;
         for (i, question) in self.questions.iter().enumerate() {
             let selected = self.selections.get(i).and_then(|s| s.as_ref());
@@ -308,7 +311,7 @@ mod tests {
             .unwrap();
         quiz.select_answer(correct_idx.to_string());
         assert_eq!(quiz.get_current_selection(), Some(correct_idx.to_string()));
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 0, "score should be 0 before grading");
         assert!(!quiz.is_graded);
 
         quiz.grade();
@@ -415,5 +418,556 @@ mod tests {
         assert_eq!(quiz.current_question_index, 1);
         quiz.set_question_index(5); // Out of bounds, should be ignored
         assert_eq!(quiz.current_question_index, 1);
+    }
+
+    // --- New comprehensive tests ---
+
+    fn make_question(id: &str, topics: Vec<&str>, alternatives: Vec<(&str, bool)>) -> Question {
+        Question {
+            id: id.to_string(),
+            label: None,
+            topics: topics.into_iter().map(|s| s.to_string()).collect(),
+            references: vec![],
+            question_html: format!("<p>{}</p>", id),
+            question_raw: None,
+            prerequisites_html: None,
+            explanation_html: None,
+            explanation_raw: None,
+            is_text_input: None,
+            expected_answer: None,
+            alternatives: alternatives
+                .into_iter()
+                .map(|(html, correct)| Alternative {
+                    content_html: html.to_string(),
+                    is_correct: correct,
+                })
+                .collect(),
+        }
+    }
+
+    fn make_text_question(id: &str, topics: Vec<&str>, expected: &str) -> Question {
+        Question {
+            id: id.to_string(),
+            label: None,
+            topics: topics.into_iter().map(|s| s.to_string()).collect(),
+            references: vec![],
+            question_html: format!("<p>{}</p>", id),
+            question_raw: None,
+            prerequisites_html: None,
+            explanation_html: None,
+            explanation_raw: None,
+            is_text_input: Some(true),
+            expected_answer: Some(expected.to_string()),
+            alternatives: vec![],
+        }
+    }
+
+    #[test]
+    fn test_empty_quiz() {
+        let mut quiz = Quiz::new(vec![]);
+        assert_eq!(quiz.total_questions(), 0);
+        assert_eq!(quiz.current_question_index(), 0);
+        assert!(quiz.current_question().is_none());
+        assert_eq!(quiz.get_score(), 0);
+        assert!(!quiz.can_go_back());
+
+        // Navigation on empty quiz should not panic
+        quiz.next_question();
+        quiz.previous_question();
+        assert_eq!(quiz.current_question_index(), 0);
+
+        quiz.grade();
+        assert!(quiz.incorrect_question_indices().is_empty());
+    }
+
+    #[test]
+    fn test_navigation_wraps() {
+        let q1 = make_question("n1", vec!["A"], vec![("X", true)]);
+        let q2 = make_question("n2", vec!["A"], vec![("Y", true)]);
+        let q3 = make_question("n3", vec!["A"], vec![("Z", true)]);
+        let mut quiz = Quiz::new(vec![q1, q2, q3]);
+
+        // Forward wrap: 0 -> 1 -> 2 -> 0
+        assert_eq!(quiz.current_question_index(), 0);
+        quiz.next_question();
+        assert_eq!(quiz.current_question_index(), 1);
+        quiz.next_question();
+        assert_eq!(quiz.current_question_index(), 2);
+        quiz.next_question();
+        assert_eq!(quiz.current_question_index(), 0);
+
+        // Backward wrap: 0 -> 2
+        quiz.previous_question();
+        assert_eq!(quiz.current_question_index(), 2);
+        quiz.previous_question();
+        assert_eq!(quiz.current_question_index(), 1);
+        quiz.previous_question();
+        assert_eq!(quiz.current_question_index(), 0);
+    }
+
+    #[test]
+    fn test_single_question_navigation() {
+        let q = make_question("solo", vec![], vec![("A", true)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        assert_eq!(quiz.current_question_index(), 0);
+        quiz.next_question();
+        assert_eq!(quiz.current_question_index(), 0); // wraps to 0
+        quiz.previous_question();
+        assert_eq!(quiz.current_question_index(), 0); // wraps to 0
+    }
+
+    #[test]
+    fn test_select_answer_ignored_after_grading() {
+        let q = make_question("locked", vec![], vec![("Wrong", false), ("Right", true)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        let correct_idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        let wrong_idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| !a.is_correct)
+            .unwrap();
+
+        quiz.select_answer(correct_idx.to_string());
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 1);
+
+        // Attempt to change answer after grading — should be ignored
+        quiz.select_answer(wrong_idx.to_string());
+        assert_eq!(
+            quiz.get_current_selection(),
+            Some(correct_idx.to_string()),
+            "Selection should remain locked after grading"
+        );
+        assert_eq!(quiz.get_score(), 1);
+    }
+
+    #[test]
+    fn test_score_and_incorrect_consistency() {
+        // This test checks that get_score() + incorrect count == total
+        // after grading, for a fully-answered quiz.
+        let q1 = make_question("c1", vec!["T"], vec![("A", true), ("B", false)]);
+        let q2 = make_question("c2", vec!["T"], vec![("A", false), ("B", true)]);
+        let q3 = make_question("c3", vec!["T"], vec![("A", false), ("B", true)]);
+        let mut quiz = Quiz::new(vec![q1, q2, q3]);
+
+        // Answer q1 correctly
+        let idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        // Answer q2 wrong
+        quiz.next_question();
+        let idx = quiz.questions[1]
+            .alternatives
+            .iter()
+            .position(|a| !a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        // Answer q3 correctly
+        quiz.next_question();
+        let idx = quiz.questions[2]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        quiz.grade();
+
+        let score = quiz.get_score();
+        let incorrect = quiz.incorrect_question_indices();
+        assert_eq!(score, 2);
+        assert_eq!(incorrect.len(), 1);
+        assert_eq!(
+            score + incorrect.len(),
+            quiz.total_questions(),
+            "score + incorrect should equal total for a fully answered quiz"
+        );
+    }
+
+    #[test]
+    fn test_unanswered_questions_counted_as_incorrect() {
+        // Unanswered questions have no selection. After grading,
+        // incorrect_question_indices should include them.
+        let q1 = make_question("u1", vec![], vec![("A", true)]);
+        let q2 = make_question("u2", vec![], vec![("A", true)]);
+        let mut quiz = Quiz::new(vec![q1, q2]);
+
+        // Only answer q1
+        let idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        quiz.grade();
+        let incorrect = quiz.incorrect_question_indices();
+        assert!(
+            incorrect.contains(&1),
+            "Unanswered question index 1 should be in incorrect list"
+        );
+        assert!(
+            !incorrect.contains(&0),
+            "Correctly answered question 0 should NOT be in incorrect list"
+        );
+    }
+
+    #[test]
+    fn test_score_before_grading_vs_after() {
+        // Both get_score and incorrect_question_indices should return
+        // empty/zero results before grading — they are now consistent.
+        let q = make_question("pre", vec![], vec![("A", true), ("B", false)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        let correct_idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(correct_idx.to_string());
+
+        // Before grading: both should return 0 / empty
+        let score_before = quiz.get_score();
+        let incorrect_before = quiz.incorrect_question_indices();
+
+        assert_eq!(score_before, 0, "get_score returns 0 before grading");
+        assert!(
+            incorrect_before.is_empty(),
+            "incorrect_question_indices returns empty before grading"
+        );
+
+        // After grading, they should be consistent
+        quiz.grade();
+        let score_after = quiz.get_score();
+        let incorrect_after = quiz.incorrect_question_indices();
+        assert_eq!(score_after, 1);
+        assert!(incorrect_after.is_empty());
+    }
+
+    #[test]
+    fn test_text_input_grading() {
+        let q = make_text_question("txt1", vec!["Bio"], "Mitochondria");
+        let mut quiz = Quiz::new(vec![q]);
+
+        // Exact match (case-insensitive, trimmed)
+        quiz.select_answer("  mitochondria  ".to_string());
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 1);
+    }
+
+    #[test]
+    fn test_text_input_no_expected_answer() {
+        // A text-input question with no expected_answer should never score
+        let q = Question {
+            id: "no_exp".to_string(),
+            label: None,
+            topics: vec![],
+            references: vec![],
+            question_html: "Q".to_string(),
+            question_raw: None,
+            prerequisites_html: None,
+            explanation_html: None,
+            explanation_raw: None,
+            is_text_input: Some(true),
+            expected_answer: None, // Missing!
+            alternatives: vec![],
+        };
+        let mut quiz = Quiz::new(vec![q]);
+        quiz.select_answer("anything".to_string());
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 0);
+    }
+
+    #[test]
+    fn test_topic_stats_multi_topic() {
+        let q1 = make_question("mt1", vec!["Math", "Physics"], vec![("A", true)]);
+        let q2 = make_question("mt2", vec!["Math"], vec![("A", false), ("B", true)]);
+        let mut quiz = Quiz::new(vec![q1, q2]);
+
+        // Answer q1 correctly
+        let idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        // Answer q2 wrong
+        quiz.next_question();
+        let idx = quiz.questions[1]
+            .alternatives
+            .iter()
+            .position(|a| !a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        let stats = quiz.get_topic_stats();
+        let math = stats.iter().find(|s| s.topic == "Math").unwrap();
+        let physics = stats.iter().find(|s| s.topic == "Physics").unwrap();
+
+        assert_eq!(math.total, 2);
+        assert_eq!(math.correct, 1);
+        assert_eq!(physics.total, 1);
+        assert_eq!(physics.correct, 1);
+    }
+
+    #[test]
+    fn test_restore_state_valid() {
+        let q1 = make_question("r1", vec![], vec![("A", true)]);
+        let q2 = make_question("r2", vec![], vec![("A", true)]);
+        let mut quiz = Quiz::new(vec![q1, q2]);
+
+        quiz.restore_state(1, vec![Some("0".to_string()), None], true);
+        assert_eq!(quiz.current_question_index(), 1);
+        assert!(quiz.is_graded);
+        assert_eq!(quiz.selections[0], Some("0".to_string()));
+        assert_eq!(quiz.selections[1], None);
+    }
+
+    #[test]
+    fn test_restore_state_invalid_index() {
+        let q = make_question("ri", vec![], vec![]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        quiz.restore_state(999, vec![None], false);
+        // Out-of-bounds index should be ignored
+        assert_eq!(quiz.current_question_index(), 0);
+    }
+
+    #[test]
+    fn test_restore_state_wrong_selection_length() {
+        let q = make_question("rs", vec![], vec![]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        // selections.len() != questions.len() → should be ignored
+        quiz.restore_state(0, vec![None, None, None], false);
+        assert_eq!(quiz.selections.len(), 1, "Wrong-length selections should be rejected");
+    }
+
+    #[test]
+    fn test_invalid_selection_index() {
+        // If the user somehow selects an alternative index that doesn't exist
+        let q = make_question("inv", vec![], vec![("A", true), ("B", false)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        quiz.select_answer("999".to_string()); // index 999 doesn't exist
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 0, "Out-of-bounds alternative index should score 0");
+
+        let incorrect = quiz.incorrect_question_indices();
+        assert_eq!(incorrect, vec![0]);
+    }
+
+    #[test]
+    fn test_non_numeric_selection_for_mc() {
+        // A non-numeric string for a multiple-choice question
+        let q = make_question("nan", vec![], vec![("A", true)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        quiz.select_answer("not_a_number".to_string());
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 0, "Non-numeric selection should score 0 for MC");
+    }
+
+    #[test]
+    fn test_get_current_selection_no_answer() {
+        let q = make_question("nosel", vec![], vec![("A", true)]);
+        let quiz = Quiz::new(vec![q]);
+        assert_eq!(quiz.get_current_selection(), None);
+    }
+
+    #[test]
+    fn test_deterministic_shuffle_different_ids() {
+        // Different question IDs should produce different shuffle orders
+        // (at least for a non-trivial number of alternatives)
+        let alts: Vec<(&str, bool)> = vec![
+            ("A", false),
+            ("B", false),
+            ("C", false),
+            ("D", true),
+            ("E", false),
+        ];
+        let q1 = make_question("alpha", vec![], alts.clone());
+        let q2 = make_question("beta", vec![], alts.clone());
+
+        let quiz1 = Quiz::new(vec![q1]);
+        let quiz2 = Quiz::new(vec![q2]);
+
+        let order1: Vec<&str> = quiz1.questions[0]
+            .alternatives
+            .iter()
+            .map(|a| a.content_html.as_str())
+            .collect();
+        let order2: Vec<&str> = quiz2.questions[0]
+            .alternatives
+            .iter()
+            .map(|a| a.content_html.as_str())
+            .collect();
+
+        // With 5 elements the chance of identical order for different seeds is ~1/120
+        // This is a probabilistic assertion but extremely unlikely to fail
+        assert_ne!(
+            order1, order2,
+            "Different IDs should (almost certainly) produce different shuffle orders"
+        );
+    }
+
+    #[test]
+    fn test_grade_idempotent() {
+        let q = make_question("idem", vec![], vec![("A", true)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        let idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 1);
+
+        quiz.grade(); // Grade again
+        assert_eq!(quiz.get_score(), 1);
+        assert!(quiz.is_graded);
+    }
+
+    #[test]
+    fn test_mixed_mc_and_text_input() {
+        let q_mc = make_question("mc", vec!["Mixed"], vec![("X", false), ("Y", true)]);
+        let q_text = make_text_question("txt", vec!["Mixed"], "42");
+        let mut quiz = Quiz::new(vec![q_mc, q_text]);
+
+        // Answer MC correctly
+        let idx = quiz.questions[0]
+            .alternatives
+            .iter()
+            .position(|a| a.is_correct)
+            .unwrap();
+        quiz.select_answer(idx.to_string());
+
+        // Answer text correctly
+        quiz.next_question();
+        quiz.select_answer("42".to_string());
+
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 2);
+        assert!(quiz.incorrect_question_indices().is_empty());
+
+        let stats = quiz.get_topic_stats();
+        let mixed = stats.iter().find(|s| s.topic == "Mixed").unwrap();
+        assert_eq!(mixed.correct, 2);
+        assert_eq!(mixed.total, 2);
+    }
+
+    #[test]
+    fn test_normalize_answer_unicode_quotes() {
+        // Verify all four smart-quote replacements
+        assert_eq!(normalize_answer("\u{2018}test\u{2019}"), "'test'"); // ' '
+        assert_eq!(normalize_answer("\u{201C}test\u{201D}"), "\"test\""); // " "
+    }
+
+    #[test]
+    fn test_question_with_no_correct_alternative() {
+        // Edge case: all alternatives are wrong
+        let q = make_question("nocorrect", vec![], vec![("A", false), ("B", false)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        quiz.select_answer("0".to_string());
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 0);
+        assert_eq!(quiz.incorrect_question_indices(), vec![0]);
+    }
+
+    #[test]
+    fn test_question_with_no_alternatives() {
+        // MC question with empty alternatives vec (not text input)
+        let q = make_question("empty_alts", vec![], vec![]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        quiz.select_answer("0".to_string());
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 0);
+    }
+
+    #[test]
+    fn test_selection_tracks_per_question() {
+        // Selecting answers on different questions should be independent
+        let q1 = make_question("s1", vec![], vec![("A", true), ("B", false)]);
+        let q2 = make_question("s2", vec![], vec![("X", false), ("Y", true)]);
+        let mut quiz = Quiz::new(vec![q1, q2]);
+
+        // Answer q1
+        quiz.select_answer("0".to_string());
+        assert_eq!(quiz.get_current_selection(), Some("0".to_string()));
+
+        // Move to q2 and answer
+        quiz.next_question();
+        assert_eq!(quiz.get_current_selection(), None);
+        quiz.select_answer("1".to_string());
+        assert_eq!(quiz.get_current_selection(), Some("1".to_string()));
+
+        // Go back to q1 — selection should still be there
+        quiz.previous_question();
+        assert_eq!(quiz.get_current_selection(), Some("0".to_string()));
+    }
+
+    /// Simulates the practice mode bug for Thermodynamics:
+    /// All 16 thermodynamics questions have label="exam", none have label="practice".
+    /// The JS frontend (navigation.js:234) filters with `q.label === "practice"`,
+    /// producing an empty list, so the quiz silently fails to start.
+    /// Reproduces the thermodynamics practice mode issue:
+    /// All thermodynamics questions have label="exam", none have label="practice".
+    /// The UI (physics.js) now hides mode buttons when no questions match,
+    /// preventing users from entering an empty quiz. This test verifies that
+    /// the label-based filtering correctly produces zero results, confirming
+    /// the UI must gate on available labels.
+    #[test]
+    fn test_practice_mode_no_matching_label_thermodynamics() {
+        // Simulate thermodynamics: all questions labeled "exam", none "practice"
+        let questions: Vec<Question> = (0..16)
+            .map(|i| Question {
+                id: format!("td_q{}", i),
+                label: Some("exam".to_string()),
+                topics: vec!["First Law".to_string()],
+                references: vec![],
+                question_html: format!("<p>Thermo Q{}</p>", i),
+                question_raw: None,
+                prerequisites_html: None,
+                explanation_html: None,
+                explanation_raw: None,
+                is_text_input: None,
+                expected_answer: None,
+                alternatives: vec![
+                    Alternative { content_html: "A".to_string(), is_correct: false },
+                    Alternative { content_html: "B".to_string(), is_correct: true },
+                ],
+            })
+            .collect();
+
+        // Label-based filtering: practice mode finds nothing
+        let practice_questions: Vec<&Question> = questions
+            .iter()
+            .filter(|q| q.label.as_deref() == Some("practice"))
+            .collect();
+        assert_eq!(practice_questions.len(), 0, "No practice questions → UI must hide the button");
+
+        // Exam mode finds all 16
+        let exam_questions: Vec<&Question> = questions
+            .iter()
+            .filter(|q| q.label.as_deref() == Some("exam"))
+            .collect();
+        assert_eq!(exam_questions.len(), 16, "All questions are exam-labeled");
     }
 }

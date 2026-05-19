@@ -20,7 +20,5 @@ $lambda = Delta E / (L dot S)$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $lambda = Delta E / n$
-#pagebreak()
-#include "../explanations/ao_07.typ"
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#expl_page(include "../explanations/ao_07.typ")
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

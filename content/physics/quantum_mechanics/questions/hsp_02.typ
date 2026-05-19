@@ -20,7 +20,5 @@ By cooling the system to absolute zero
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 It is impossible to know the exact wave function
-#pagebreak()
-#include "../explanations/hsp_02.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_foundations.typ"
+#expl_page(include "../explanations/hsp_02.typ")
+#prereq_page(include "../prerequisites/conceptual_foundations.typ")

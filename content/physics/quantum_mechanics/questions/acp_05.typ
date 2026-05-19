@@ -26,5 +26,4 @@ It is complex
 Explanation:
 
 Expectation value of $A^dagger A$ is $chevron.l psi bar.v A^dagger A bar.v psi chevron.r = norm(A psi)^2 >= 0$.
-#pagebreak()
-#include "../prerequisites/advanced_conceptual.typ"
+#prereq_page(include "../prerequisites/advanced_conceptual.typ")

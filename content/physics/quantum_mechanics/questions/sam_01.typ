@@ -20,7 +20,5 @@ $0, gamma$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $gamma$
-#pagebreak()
-#include "../explanations/sam_01.typ"
-#pagebreak()
-#include "../prerequisites/spin_angular_momentum.typ"
+#expl_page(include "../explanations/sam_01.typ")
+#prereq_page(include "../prerequisites/spin_angular_momentum.typ")

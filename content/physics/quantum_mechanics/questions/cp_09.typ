@@ -20,7 +20,5 @@ $I/8$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $0$
-#pagebreak()
-#include "../explanations/cp_09.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_practice.typ"
+#expl_page(include "../explanations/cp_09.typ")
+#prereq_page(include "../prerequisites/conceptual_practice.typ")

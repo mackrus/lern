@@ -19,7 +19,5 @@ $(partial S / partial V)_T = (n R) / V$
 $(partial S / partial V)_T = (n R) / (V + n b)$
 #pagebreak()
 $(partial S / partial V)_T = 0$
-#pagebreak()
-#include "../explanations/td_2025_06_u5.typ"
-#pagebreak()
-#include "../prerequisites/thermodynamic_potentials.typ"
+#expl_page(include "../explanations/td_2025_06_u5.typ")
+#prereq_page(include "../prerequisites/thermodynamic_potentials.typ")

@@ -20,7 +20,5 @@ $1/2 planck omega$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $7/2 planck omega$
-#pagebreak()
-#include "../explanations/owp_03.typ"
-#pagebreak()
-#include "../prerequisites/oscillator_wavepacket.typ"
+#expl_page(include "../explanations/owp_03.typ")
+#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")

@@ -20,7 +20,5 @@ Consider the spin system of Ethylene ($C_2 H_4$) with Hamiltonian $ H = alpha B_
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 3
-#pagebreak()
-#include "../explanations/sam_03.typ"
-#pagebreak()
-#include "../prerequisites/spin_angular_momentum.typ"
+#expl_page(include "../explanations/sam_03.typ")
+#prereq_page(include "../prerequisites/spin_angular_momentum.typ")

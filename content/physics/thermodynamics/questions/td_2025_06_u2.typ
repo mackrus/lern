@@ -9,20 +9,18 @@ One mole of nitrogen gas ($N_2$) at $T_1 = 273$ K and $P_1 = 1.013 times 10^5$ P
 
 Calculate:
 (a) The final state ($T_2, P_2, V_2$).
-(b) The internal energy change ($d U$) and enthalpy change ($d H$).
+(b) The internal energy change ($Delta U$) and enthalpy change ($Delta H$).
 (c) The molar heat capacities ($c_p, c_v$) and compare with kinetic theory.
 
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$d H = 3000$ J, $d U = 2168$ J
+$Delta H = 3000$ J, $Delta U = 2168$ J
 #pagebreak()
-$d H = 2168$ J, $d U = 3000$ J
+$Delta H = 2168$ J, $Delta U = 3000$ J
 #pagebreak()
-$d H = 3832$ J, $d U = 3000$ J
+$Delta H = 3832$ J, $Delta U = 3000$ J
 #pagebreak()
-$d H = 3000$ J, $d U = 3832$ J
-#pagebreak()
-#include "../explanations/td_2025_06_u2.typ"
-#pagebreak()
-#include "../prerequisites/ideal_gas_states.typ"
+$Delta H = 3000$ J, $Delta U = 3832$ J
+#expl_page(include "../explanations/td_2025_06_u2.typ")
+#prereq_page(include "../prerequisites/ideal_gas_states.typ")

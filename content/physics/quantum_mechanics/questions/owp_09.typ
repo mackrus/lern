@@ -20,7 +20,5 @@ When $t = 0$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 Never
-#pagebreak()
-#include "../explanations/owp_09.typ"
-#pagebreak()
-#include "../prerequisites/oscillator_wavepacket.typ"
+#expl_page(include "../explanations/owp_09.typ")
+#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")

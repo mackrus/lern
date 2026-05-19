@@ -12,7 +12,5 @@ True
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 False
-#pagebreak()
-#include "../explanations/acp_08.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_practice.typ"
+#expl_page(include "../explanations/acp_08.typ")
+#prereq_page(include "../prerequisites/conceptual_practice.typ")

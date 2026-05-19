@@ -9,9 +9,33 @@ export const Physics = {
             Navigation.showCategoryCourses(State.currentCategory || "Physics");
         };
 
+        // Find the course's questions to check available labels
+        let questions = [];
+        for (const cat in State.coursesData) {
+            if (State.coursesData[cat][courseName]) {
+                questions = State.coursesData[cat][courseName].data || [];
+                break;
+            }
+        }
+        const labels = new Set(questions.map(q => q.label).filter(Boolean));
+
         document.getElementById("mode-topic").onclick = () => this.showTopicSelection(courseName);
-        document.getElementById("mode-practice").onclick = () => Navigation.startQuiz(courseName, "practice");
-        document.getElementById("mode-exam").onclick = () => Navigation.startQuiz(courseName, "exam");
+
+        const practiceBtn = document.getElementById("mode-practice");
+        if (labels.has("practice")) {
+            practiceBtn.style.display = "";
+            practiceBtn.onclick = () => Navigation.startQuiz(courseName, "practice");
+        } else {
+            practiceBtn.style.display = "none";
+        }
+
+        const examBtn = document.getElementById("mode-exam");
+        if (labels.has("exam")) {
+            examBtn.style.display = "";
+            examBtn.onclick = () => Navigation.startQuiz(courseName, "exam");
+        } else {
+            examBtn.style.display = "none";
+        }
     },
 
     showTopicSelection(courseName) {

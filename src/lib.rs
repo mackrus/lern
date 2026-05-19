@@ -154,6 +154,16 @@ pub fn get_alternative_html(index: usize) -> Option<String> {
 }
 
 #[wasm_bindgen]
+pub fn is_alternative_correct(index: usize) -> bool {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()
+        .and_then(|s| s.current_question())
+        .and_then(|q| q.alternatives.get(index))
+        .map(|a| a.is_correct)
+        .unwrap_or(false)
+}
+
+#[wasm_bindgen]
 pub fn is_finished() -> bool {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref().map(|s| s.is_graded).unwrap_or(true)

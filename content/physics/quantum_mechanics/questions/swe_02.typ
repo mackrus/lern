@@ -20,7 +20,5 @@ $1/sqrt(2)$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 0
-#pagebreak()
-#include "../explanations/swe_02.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_practice.typ"
+#expl_page(include "../explanations/swe_02.typ")
+#prereq_page(include "../prerequisites/conceptual_practice.typ")

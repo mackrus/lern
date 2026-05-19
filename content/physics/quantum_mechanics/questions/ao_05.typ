@@ -20,7 +20,5 @@ $Y(0) = 0$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $Y'(0) = 0$
-#pagebreak()
-#include "../explanations/ao_05.typ"
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#expl_page(include "../explanations/ao_05.typ")
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

@@ -12,7 +12,5 @@ True
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 False
-#pagebreak()
-#include "../explanations/acp_16.typ"
-#pagebreak()
-#include "../prerequisites/spin_angular_momentum.typ"
+#expl_page(include "../explanations/acp_16.typ")
+#prereq_page(include "../prerequisites/spin_angular_momentum.typ")

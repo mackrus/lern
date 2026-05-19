@@ -26,5 +26,4 @@ In the context of many-electron atoms and the central field approximation: Deter
 Explanation:
 
 Chromium is an exception where a half-filled $d$-shell is more stable.
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

@@ -20,7 +20,5 @@ $gamma n^3$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $2 gamma (n+1)^3$
-#pagebreak()
-#include "../explanations/hop_01.typ"
-#pagebreak()
-#include "../prerequisites/harmonic_perturbation.typ"
+#expl_page(include "../explanations/hop_01.typ")
+#prereq_page(include "../prerequisites/harmonic_perturbation.typ")

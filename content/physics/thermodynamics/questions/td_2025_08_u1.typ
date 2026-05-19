@@ -22,7 +22,5 @@ Work is done ON the gas
 Net work is zero
 #pagebreak()
 Net work cannot be determined
-#pagebreak()
-#include "../explanations/td_2025_08_u1.typ"
-#pagebreak()
-#include "../prerequisites/heat_engines.typ"
+#expl_page(include "../explanations/td_2025_08_u1.typ")
+#prereq_page(include "../prerequisites/heat_engines.typ")

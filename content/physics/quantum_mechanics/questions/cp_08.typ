@@ -12,7 +12,5 @@ True
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 False
-#pagebreak()
-#include "../explanations/cp_08.typ"
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#expl_page(include "../explanations/cp_08.typ")
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

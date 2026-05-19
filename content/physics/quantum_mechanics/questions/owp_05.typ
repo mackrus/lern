@@ -20,7 +20,5 @@ Euler's identity
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 Taylor expansion
-#pagebreak()
-#include "../explanations/owp_05.typ"
-#pagebreak()
-#include "../prerequisites/oscillator_wavepacket.typ"
+#expl_page(include "../explanations/owp_05.typ")
+#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")

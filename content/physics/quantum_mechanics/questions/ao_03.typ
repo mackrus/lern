@@ -20,7 +20,5 @@ $""^3 S, ""^3 P, ""^3 D$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $""^1 P, ""^3 P, ""^1 F$
-#pagebreak()
-#include "../explanations/ao_03.typ"
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#expl_page(include "../explanations/ao_03.typ")
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

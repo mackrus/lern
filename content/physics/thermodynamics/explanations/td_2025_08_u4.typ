@@ -4,5 +4,5 @@
 Explanation:
 
 - *Equilibrium*: Determine the final temperature $T_f$ using the heat balance equation.
-- *Entropy Change*: Sum the individual entropy changes for each amount of liquid: $d S = integral n c (d T / T)$.
+- *Entropy Change*: Sum the individual entropy changes for each amount of liquid: $Delta S = integral n c (d T / T)$.
 - *Result*: Combine and simplify to the given expression.

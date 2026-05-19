@@ -26,5 +26,4 @@ $L$
 Explanation:
 
 By symmetry of the wavefunction about the origin.
-#pagebreak()
-#include "../prerequisites/oscillator_wavepacket.typ"
+#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")

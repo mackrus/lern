@@ -20,7 +20,5 @@ Only $E_1, E_2, E_3$ are possible
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 Only the ground state is possible
-#pagebreak()
-#include "../explanations/wms_01.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_foundations.typ"
+#expl_page(include "../explanations/wms_01.typ")
+#prereq_page(include "../prerequisites/conceptual_foundations.typ")

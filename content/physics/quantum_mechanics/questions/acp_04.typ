@@ -18,5 +18,4 @@ False
 Explanation:
 
 Normal operators map to orthogonal eigenbases.
-#pagebreak()
-#include "../prerequisites/advanced_conceptual.typ"
+#prereq_page(include "../prerequisites/advanced_conceptual.typ")

@@ -20,7 +20,5 @@ Isothermal entropy change is zero
 Isochoric entropy change is positive
 #pagebreak()
 All processes result in positive entropy change
-#pagebreak()
-#include "../explanations/td_2025_06_u3.typ"
-#pagebreak()
-#include "../prerequisites/entropy_second_law.typ"
+#expl_page(include "../explanations/td_2025_06_u3.typ")
+#prereq_page(include "../prerequisites/entropy_second_law.typ")

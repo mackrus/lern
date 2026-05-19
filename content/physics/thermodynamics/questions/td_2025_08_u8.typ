@@ -17,7 +17,5 @@ Identity is false
 Requires only the First Law
 #pagebreak()
 Requires only the Second Law
-#pagebreak()
-#include "../explanations/td_2025_08_u8.typ"
-#pagebreak()
-#include "../prerequisites/thermodynamic_potentials.typ"
+#expl_page(include "../explanations/td_2025_08_u8.typ")
+#prereq_page(include "../prerequisites/thermodynamic_potentials.typ")

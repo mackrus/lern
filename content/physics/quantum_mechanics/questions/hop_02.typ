@@ -20,7 +20,5 @@ $bar.v n+6 chevron.r$, $bar.v n chevron.r$, and $bar.v n-6 chevron.r$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 None
-#pagebreak()
-#include "../explanations/hop_02.typ"
-#pagebreak()
-#include "../prerequisites/harmonic_perturbation.typ"
+#expl_page(include "../explanations/hop_02.typ")
+#prereq_page(include "../prerequisites/harmonic_perturbation.typ")

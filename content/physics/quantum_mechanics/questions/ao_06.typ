@@ -20,7 +20,5 @@ In the context of many-electron atoms and the central field approximation: Deter
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 [Ar] $4s^2$
-#pagebreak()
-#include "../explanations/ao_06.typ"
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#expl_page(include "../explanations/ao_06.typ")
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

@@ -17,7 +17,5 @@ Pour milk in last
 It makes no difference
 #pagebreak()
 Depends on the type of thermos
-#pagebreak()
-#include "../explanations/td_2025_08_u5.typ"
-#pagebreak()
-#include "../prerequisites/ideal_gas_states.typ"
+#expl_page(include "../explanations/td_2025_08_u5.typ")
+#prereq_page(include "../prerequisites/ideal_gas_states.typ")

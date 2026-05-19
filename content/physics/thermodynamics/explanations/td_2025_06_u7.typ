@@ -3,5 +3,5 @@
 #set text(size: i_size)
 Explanation:
 
-- *Method*: Expand $(partial F / partial P)_V$ using partial derivatives. Use the cyclic relation $partial(V, P, T) / partial(V, P, T) = -1$ to relate the partial derivatives $(partial V / partial P)_T$ and $(partial V / partial T)_P$.
+- *Method*: Expand $(partial F / partial P)_V$ using partial derivatives. Use the cyclic relation $(partial V / partial P)_T (partial P / partial T)_V (partial T / partial V)_P = -1$ to relate the partial derivatives $(partial V / partial P)_T$ and $(partial V / partial T)_P$.
 - *Result*: Show the identity holds through rigorous substitution.

@@ -20,7 +20,5 @@ $ sin(x) $
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $ 1/sqrt(L) $
-#pagebreak()
-#include "../explanations/owp_02.typ"
-#pagebreak()
-#include "../prerequisites/oscillator_wavepacket.typ"
+#expl_page(include "../explanations/owp_02.typ")
+#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")

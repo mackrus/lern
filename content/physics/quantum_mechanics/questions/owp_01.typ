@@ -20,7 +20,5 @@ $n a^dagger$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $0$
-#pagebreak()
-#include "../explanations/owp_01.typ"
-#pagebreak()
-#include "../prerequisites/oscillator_wavepacket.typ"
+#expl_page(include "../explanations/owp_01.typ")
+#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")

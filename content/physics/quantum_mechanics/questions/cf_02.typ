@@ -26,5 +26,4 @@ A single central peak
 Explanation:
 
 Even for single particles, the probability distribution follows an interference pattern due to the superposition of paths.
-#pagebreak()
-#include "../prerequisites/conceptual_foundations.typ"
+#prereq_page(include "../prerequisites/conceptual_foundations.typ")

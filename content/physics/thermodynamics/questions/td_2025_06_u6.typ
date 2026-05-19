@@ -17,7 +17,5 @@ $(partial S / partial V)_T = (alpha T) / V$
 $(partial S / partial V)_T = beta$
 #pagebreak()
 $(partial S / partial V)_T = -alpha / V$
-#pagebreak()
-#include "../explanations/td_2025_06_u6.typ"
-#pagebreak()
-#include "../prerequisites/thermodynamic_potentials.typ"
+#expl_page(include "../explanations/td_2025_06_u6.typ")
+#prereq_page(include "../prerequisites/thermodynamic_potentials.typ")

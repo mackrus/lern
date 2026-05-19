@@ -17,7 +17,5 @@ Volume ratio = 1, $T = 300$ K
 Volume ratio = 2, $T = 273$ K
 #pagebreak()
 Volume ratio = 4, $T = 300$ K
-#pagebreak()
-#include "../explanations/td_2025_08_u3.typ"
-#pagebreak()
-#include "../prerequisites/ideal_gas_states.typ"
+#expl_page(include "../explanations/td_2025_08_u3.typ")
+#prereq_page(include "../prerequisites/ideal_gas_states.typ")

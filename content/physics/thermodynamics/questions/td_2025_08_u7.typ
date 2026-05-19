@@ -19,7 +19,5 @@ Coefficient is always zero
 Coefficient is independent of temperature
 #pagebreak()
 Coefficient requires only First Law
-#pagebreak()
-#include "../explanations/td_2025_08_u7.typ"
-#pagebreak()
-#include "../prerequisites/thermodynamic_potentials.typ"
+#expl_page(include "../explanations/td_2025_08_u7.typ")
+#prereq_page(include "../prerequisites/thermodynamic_potentials.typ")

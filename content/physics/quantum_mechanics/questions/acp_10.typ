@@ -26,5 +26,4 @@ The Hilbert space describing a single particle is three-dimensional. What is the
 Explanation:
 
 For $N=3$, dimension is $N(N+1)/2 = 6$.
-#pagebreak()
-#include "../prerequisites/advanced_conceptual.typ"
+#prereq_page(include "../prerequisites/advanced_conceptual.typ")

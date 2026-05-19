@@ -20,7 +20,5 @@ $1/L$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $sqrt(3/L)$
-#pagebreak()
-#include "../explanations/owp_07.typ"
-#pagebreak()
-#include "../prerequisites/oscillator_wavepacket.typ"
+#expl_page(include "../explanations/owp_07.typ")
+#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")

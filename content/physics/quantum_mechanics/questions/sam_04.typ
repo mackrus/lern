@@ -26,5 +26,4 @@ For a Caesium atom in the $6s^1$ state with nuclear spin $I=7/2$: The hyperfine 
 Explanation:
 
 $F = I plus.minus 1/2 = 3, 4$.
-#pagebreak()
-#include "../prerequisites/spin_angular_momentum.typ"
+#prereq_page(include "../prerequisites/spin_angular_momentum.typ")

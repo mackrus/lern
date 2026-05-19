@@ -20,7 +20,5 @@ $sigma_A sigma_B > 0$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 All of the above
-#pagebreak()
-#include "../explanations/acp_14.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_practice.typ"
+#expl_page(include "../explanations/acp_14.typ")
+#prereq_page(include "../prerequisites/conceptual_practice.typ")

@@ -11,7 +11,7 @@ The cyclic process is:
 2. $(2) arrow (3)$: Isothermal compression to $P_3 = 2 P_2$.
 3. $(3) arrow (1)$: Isochoric process back to the initial state.
 
-Calculate $d U$, $d H$, $Q$, and $W$ for each step.
+Calculate $Delta U$, $Delta H$, $Q$, and $W$ for each step.
 
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
@@ -23,7 +23,5 @@ Isobaric work is positive, isothermal work is negative
 Net work is zero for the cycle
 #pagebreak()
 Internal energy change is non-zero for the cycle
-#pagebreak()
-#include "../explanations/td_2025_06_u1.typ"
-#pagebreak()
-#include "../prerequisites/ideal_gas_states.typ"
+#expl_page(include "../explanations/td_2025_06_u1.typ")
+#prereq_page(include "../prerequisites/ideal_gas_states.typ")

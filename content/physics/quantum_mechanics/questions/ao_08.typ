@@ -20,7 +20,5 @@ $P(r)$ must go to infinity as $r -> 0$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $P(r)$ must be constant
-#pagebreak()
-#include "../explanations/ao_08.typ"
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#expl_page(include "../explanations/ao_08.typ")
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

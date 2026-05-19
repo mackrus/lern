@@ -20,7 +20,5 @@ $L^2/s$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $1/L$
-#pagebreak()
-#include "../explanations/cp_10.typ"
-#pagebreak()
-#include "../prerequisites/conceptual_practice.typ"
+#expl_page(include "../explanations/cp_10.typ")
+#prereq_page(include "../prerequisites/conceptual_practice.typ")

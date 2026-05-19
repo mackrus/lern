@@ -20,7 +20,5 @@ $k cot(k a) = kappa tanh(kappa(b-a))$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $k tan(k a) = kappa tanh(kappa b)$
-#pagebreak()
-#include "../explanations/pwe_01.typ"
-#pagebreak()
-#include "../prerequisites/potential_wells.typ"
+#expl_page(include "../explanations/pwe_01.typ")
+#prereq_page(include "../prerequisites/potential_wells.typ")

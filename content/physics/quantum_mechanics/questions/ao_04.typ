@@ -20,7 +20,5 @@ $""^1 G_4$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $""^3 F_4$
-#pagebreak()
-#include "../explanations/ao_04.typ"
-#pagebreak()
-#include "../prerequisites/atoms_orbitals.typ"
+#expl_page(include "../explanations/ao_04.typ")
+#prereq_page(include "../prerequisites/atoms_orbitals.typ")

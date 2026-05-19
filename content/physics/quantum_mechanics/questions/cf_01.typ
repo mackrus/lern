@@ -26,5 +26,4 @@ Measurement results are eigenvalues of the operator
 Explanation:
 
 Time evolution is governed by the Schrödinger Equation, not the Heat Equation.
-#pagebreak()
-#include "../prerequisites/conceptual_foundations.typ"
+#prereq_page(include "../prerequisites/conceptual_foundations.typ")
