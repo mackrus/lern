@@ -13,4 +13,7 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/acp_08.typ")
-#prereq_page(include "../prerequisites/conceptual_practice.typ")
+#prereq_page([
+#include "../prerequisites/core/prac_born_rule.typ"
+#include "../prerequisites/core/prac_probability_current.typ"
+])

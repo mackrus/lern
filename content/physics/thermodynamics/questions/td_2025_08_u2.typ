@@ -13,8 +13,7 @@ Consider a Carnot cycle with $n$ moles of an ideal gas:
 
 Express $Delta U, Q, W$ for each process. Indicate if work is performed on or by the gas.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Isothermal steps have $Delta U = 0$
 #pagebreak()

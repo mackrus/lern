@@ -12,8 +12,7 @@
 
 Calculate net work. Is it performed by or on the gas?
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Work is done BY the gas
 #pagebreak()

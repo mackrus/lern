@@ -7,8 +7,7 @@
 
 For a system, the Helmholtz free energy is $F(T, V) = -alpha T ln(V) + beta V$. Use Maxwell's relations to calculate the dependence of entropy on volume at constant temperature. Compare with direct calculation.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 $(partial S / partial V)_T = alpha / V$
 #pagebreak()

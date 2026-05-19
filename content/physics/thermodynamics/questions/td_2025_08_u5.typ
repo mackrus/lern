@@ -7,8 +7,7 @@
 
 You have hot coffee in a thermos and milk at ambient temperature. You want the coffee to be as hot as possible when you drink it. Should you pour the milk in first or last? Motivate.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Pour milk in first
 #pagebreak()

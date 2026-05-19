@@ -21,4 +21,6 @@ Any basis that diagonalizes it must be orthogonal
 #set text(size: a_size)
 None of the above
 #expl_page(include "../explanations/acp_13.typ")
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_unitary_matrices.typ"
+])

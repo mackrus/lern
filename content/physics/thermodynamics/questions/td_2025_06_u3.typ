@@ -10,8 +10,7 @@ One mole of a monatomic ideal gas is in a state with $P_1 = 10$ atm and $T_1 = 3
 (b) Adiabatic expansion to $P_2 = 5$ atm.
 (c) Isochoric pressure reduction to $P_2 = 5$ atm.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Adiabatic entropy change is zero
 #pagebreak()

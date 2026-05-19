@@ -21,4 +21,6 @@ It depends on where the position measurement result was found
 #set text(size: a_size)
 $1/2$
 #expl_page(include "../explanations/wms_02.typ")
-#prereq_page(include "../prerequisites/conceptual_foundations.typ")
+#prereq_page([
+#include "../prerequisites/core/cf_postulates.typ"
+])

@@ -1,0 +1,627 @@
+#import "../../../template.typ": *
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(font: "Liberation Serif", size: q_size, lang: "en")
+#set par(justify: true)
+#set list(..list_style)
+#set enum(numbering: "a)", ..list_style)
+
+// =========================================================================
+// PROBLEM 1.2
+// =========================================================================
+
+Consider a gas contained in the cylinder-piston arrangement shown in Figure 1.1. The gas is pure nitrogen ($N_2$) with a mass of 1.60 g and is in equilibrium with its surroundings. The gas is initially at standard temperature and pressure, with $P = 101$ kPa and $T = 0^circ C$. 
+
+The piston is now moved, slowly enough so that equilibrium with the surroundings is maintained, until its pressure reaches 120 kPa. What are the initial volume ($V_1$) and final volume ($V_2$) of the gas?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$V_1 = 0.0013 " m"^3$ and $V_2 = 0.0011 " m"^3$
+#pagebreak()
+$V_1 = 0.0013 " m"^3$ and $V_2 = 0.0013 " m"^3$
+#pagebreak()
+$V_1 = 0.0011 " m"^3$ and $V_2 = 0.0013 " m"^3$
+#pagebreak()
+$V_1 = 0.0011 " m"^3$ and $V_2 = 0.0011 " m"^3$
+
+#expl_page([
+  *Determination of the number of moles:*
+  The molar mass of atomic nitrogen is $14 " g/mol"$, which means the molar mass of $N_2$ is $28 " g/mol"$.
+  $ n = m / M = (1.60 " g") / (28 " g/mol") = 0.057 " mol" $
+
+  *Initial state (state 1):*
+  $ P_1 = 1.01 times 10^5 " Pa", quad T_1 = 0^circ C = 273.15 " K" $
+  Using the ideal gas law ($P V = n R T$) gives:
+  $ V_1 = (n dot R dot T_1) / P_1 = (0.057 " mol" times 8.314 " J mol"^(-1) "K"^(-1) times 273.15 " K") / (1.01 times 10^5 " Pa") = 0.0013 " m"^3 $
+
+  *Final state (state 2):*
+  The piston is moved so that the pressure becomes $120 " kPa"$. Since the process occurs slowly and in equilibrium with the surroundings, the temperature does not change (isothermal process):
+  $ P_2 = 120 " kPa", quad T_2 = T_1 \
+  n dot R dot T = "constant" => P_1 V_1 = P_2 V_2 $
+  This yields the new volume:
+  $ V_2 = P_1 / P_2 times V_1 = 101 / 120 times 0.0013 " m"^3 = 0.0011 " m"^3 $
+])
+
+// =========================================================================
+// PROBLEM 1.3
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+The length of the mercury column in a mercury-in-glass thermometer is 5.0 cm when the bulb is immersed in water at its triple point ($T_"TP" = 273.16 " K"$). 
+
+If the length of the column can be measured within an uncertainty of only 0.01 cm, can this thermometer be used to safely distinguish between the ice point ($273.15 " K"$) and the triple point of water?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+No, because the required resolution ($0.00018 " cm"$) is much smaller than the thermometer's measurement uncertainty ($0.01 " cm"$).
+#pagebreak()
+Yes, because the required resolution ($0.02 " cm"$) is larger than the thermometer's measurement uncertainty.
+#pagebreak()
+No, because a mercury thermometer scale cannot be modeled linearly for small temperature transitions.
+#pagebreak()
+Yes, because the length changes by exactly $0.10 " cm"$ per $0.01 " K"$.
+
+#expl_page([
+  We assume a linear relationship between temperature and length: $L = c dot T$.
+  The temperature at the triple point is $T_"TP" = 273.16 " K"$, where $L_"TP" = 5.0 " cm"$.
+  
+  The difference between the ice point and the triple point is $Delta T = 273.16 " K" - 273.15 " K" = 0.01 " K"$. The corresponding change in length is:
+  $ Delta L = c dot Delta T = L_"TP" / T_"TP" dot Delta T = (5 " cm") / (273.16 " K") times 0.01 " K" = 0.00018 " cm" $
+  
+  Since the measurement uncertainty of the instrument is $0.01 " cm"$, this tiny difference ($0.00018 " cm"$) *cannot* be resolved or measured with this thermometer.
+])
+
+// =========================================================================
+// PROBLEM 1.4
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+The resistance of a wire is given by $R = R_0 (1 + alpha t + beta t^2)$ where $t$ is the temperature in degrees Celsius measured on the ideal gas scale and $R_0$ is the resistance at the ice point. The constants are $alpha = 3.8 times 10^(-3) " K"^(-1)}$ and $beta = -3.0 times 10^(-6) " K"^(-2)$. 
+
+If the resistance temperature scale is defined linearly as $theta(t) = (R(t) / R_0) times 273.15^circ$, what is the temperature $theta$ on this resistance scale when the temperature on the ideal gas scale is $70^circ C$?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$341.79^circ$
+#pagebreak()
+$70.00^circ$
+#pagebreak()
+$87.59^circ$
+#pagebreak()
+$273.15^circ$
+
+#expl_page([
+  First, evaluate the resistance ratio $R / R_0$ at $t = 70^circ C$:
+  $ R / R_0 = 1 + alpha t + beta t^2 = 1 + (3.8 times 10^(-3) times 70) - (3.0 Bird times 10^(-6) times 70^2) = 1.2513 $
+  
+  Following the definition used in the source documentation:
+  $ theta(70^circ C) = 273.15 times 1.2513 = 341.79^circ $
+])
+
+// =========================================================================
+// PROBLEM 2.1
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+Ten moles of an ideal gas are compressed isothermally and reversibly from a pressure of 1 atm to 10 atm at 300 K. Which of the following statements correctly evaluates the work $W$ done *on* the gas during this compression, and during its reverse process (isothermal expansion)?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$W = +57.4 " kJ"$ during compression, and $W = -57.4 " kJ"$ during the reverse expansion.
+#pagebreak()
+$W = -57.4 " kJ"$ during compression, and $W = +57.4 " kJ"$ during the reverse expansion.
+#pagebreak()
+$W = +57.4 " kJ"$ during compression, and $W = 0 " kJ"$ during the reverse expansion.
+#pagebreak()
+$W = -57.4 " kJ"$ during compression, and $W = -57.4 " kJ"$ during the reverse expansion.
+
+#expl_page([
+  The general expression for thermodynamic boundary work is $W = -integral_1^2 P dif V$. 
+  For an isothermal process of an ideal gas, substituting $P = (n R T) / V$ yields:
+  $ W = -integral_1^2 (n R T) / V dif V = -n R T ln(V_2 / V_1) = -n R T ln(P_1 / P_2) $
+  
+  Substituting the given parameters ($n = 10 " mol"$, $T = 300 " K"$, $P_1 = 1 " atm"$, $P_2 = 10 " atm"$):
+  $ W = -10 " mol" times 8.314 " J mol"^(-1) "K"^(-1) times 300 " K" times ln(1 / 10) approx +57.4 " kJ" $
+  
+  Since the gas is compressed, work is performed *on* the gas ($W > 0$). In the reverse expansion process, the gas does work on the surroundings, meaning the work done *on* the gas is equal in magnitude but opposite in sign ($W = -57.4 " kJ"$).
+])
+
+// =========================================================================
+// PROBLEM 2.2
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+An ideal gas undergoes a reversible thermodynamic cycle consisting of:
+1. An isobaric expansion from $(P_1, V_1)$ to $(P_1, V_2)$
+2. An isochoric pressure reduction to $(P_2, V_2)$
+3. An isobaric compression to $(P_2, V_1)$
+4. An isochoric pressure increase back to $(P_1, V_1)$
+
+If $P_1 = 3.0 " atm"$, $P_2 = 1.0 " atm"$, $V_1 = 1.0 " L"$, and $V_2 = 2.0 " L"$, what is the total work done *on* the gas after traversing this cycle 100 times?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$-20.3 " kJ"$
+#pagebreak()
+$+20.3 " kJ"$
+#pagebreak()
+$-2.03 " kJ"$
+#pagebreak()
+$0 " kJ"$
+
+#expl_page([
+  The work done on the gas for each step of a single cycle is calculated using $W = -integral P dif V$:
+  - Step 1: $W_12 = -P_1(V_2 - V_1)$
+  - Step 2: $W_23 = 0$
+  - Step 3: $W_34 = -P_2(V_1 - V_2) = P_2(V_2 - V_1)$
+  - Step 4: $W_41 = 0$
+  
+  Net work per cycle: $W_"net" = (P_2 - P_1)(V_2 - V_1)$
+  
+  For 100 cycles ($N = 100$) with converted SI units ($1 " atm" = 1.013 times 10^5 " Pa"$, $1 " L" = 1.0 times 10^(-3) " m"^3$):
+  $ W_"tot" = 100 times (1.0 - 3.0) times (1.013 times 10^5 " Pa") times (2.0 - 1.0) times 10^(-3) " m"^3 \
+  W_"tot" = 100 times (-2.026 times 10^5) times 1.0 times 10^(-3) = -20.26 " kJ" approx -20.3 " kJ" $
+])
+
+// =========================================================================
+// PROBLEM 2.6
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+Two moles of an ideal gas initially at $P_1 = 1.0 " atm"$ and $T_1 = 300 " K"$ undergo a three-step reversible process: (i) isobaric expansion to twice its original volume ($V_2 = 2V_1$), (ii) isothermal compression returning to the original volume ($V_3 = V_1$), and (iii) isochoric reduction in pressure back to the original state. What is the net work ($W_"net"$) done *on* the gas across the entire process?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$+1951.7 " J"$
+#pagebreak()
+$-1951.7 " J"$
+#pagebreak()
+$+4963.7 " J"$
+#pagebreak()
+$-6915.4 " J"$
+
+#expl_page([
+  $V_1 = (n R T_1) / P_1 = (2 times 8.314 times 300) / (1.013 times 10^5) = 0.049 " m"^3$.
+  
+  - *Step 1 (Isobaric expansion):* $W_12 = -P_1(2V_1 - V_1) = -P_1 V_1 = -(1.013 times 10^5) times 0.049 = -4963.7 " J"$
+    The final temperature for this step scales linearly with volume: $T_2 = 2 T_1 = 600 " K"$.
+    
+  - *Step 2 (Isothermal compression):* $W_23 = -n R T_2 ln(V_1 / V_2) = -2 times 8.314 times 600 times ln(0.5) = +6915.4 " J"$
+    
+  - *Step 3 (Isochoric path):* $W_31 = 0$ because $dif V = 0$.
+    
+  *Net Work:* $W_"net" = W_12 + W_23 + W_31 = -4963.7 + 6915.4 + 0 = +1951.7 " J"$.
+])
+
+// =========================================================================
+// PROBLEM 2.8
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+During a reversible adiabatic expansion of an ideal gas, the pressure and volume satisfy the condition $P V^gamma = c$. Which of the following expressions correctly defines the boundary work done *on* the system ($W_12$) during an expansion from $(P_1, V_1)$ to $(P_2, V_2)$?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$W_12 = - (P_1 V_1 - P_2 V_2) / (gamma - 1)$
+#pagebreak()
+$W_12 = (P_1 V_1 - P_2 V_2) / (gamma - 1)$
+#pagebreak()
+$W_12 = - (P_2 V_2 - P_1 V_1) / (gamma + 1)$
+#pagebreak()
+$W_12 = (P_1 V_1 + P_2 V_2) / (gamma - 1)$
+
+#expl_page([
+  With the sign convention where work done *on* the system is considered positive:
+  $ W_12 = -integral_1^2 P dif V $
+  Substituting $P = c V^(-gamma)$:
+  $ W_12 = -integral_1^2 c V^(-gamma) dif V = -c [ V^(-gamma + 1) / (-gamma + 1) ]_(V_1)^(V_2) = c / (gamma - 1) (V_2^(-gamma + 1) - V_1^(-gamma + 1)) $
+  Since $c = P_1 V_1^gamma = P_2 V_2^gamma$:
+  $ W_12 = 1 / (gamma - 1) (P_2 V_2 - P_1 V_1) = - (P_1 V_1 - P_2 V_2) / (gamma - 1) $
+])
+
+// =========================================================================
+// PROBLEM 3.2
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+Water inside a rigid cylindrical insulated tank is set into rotation and left to come to rest under the action of viscous forces. Regarding the tank and the water as the closed system, how do work ($W$), heat ($Q$), and internal energy ($Delta U$) change as the water slows to a stop?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$W = 0$, $Q = 0$, and internal energy $U$ increases.
+#pagebreak()
+$W < 0$, $Q = 0$, and internal energy $U$ decreases.
+#pagebreak()
+$W = 0$, $Q < 0$, and internal energy $U$ decreases.
+#pagebreak()
+$W = 0$, $Q = 0$, and internal energy $U$ stays perfectly constant.
+
+#expl_page([
+  - *Work ($W = 0$):* The boundary wall is rigid, meaning no volume change occurs ($dif V = 0$) and no shaft or electrical work crosses the boundary.
+  - *Heat ($Q = 0$):* The tank walls are perfectly insulated (adiabatic).
+  - *Internal Energy ($Delta U > 0$):* According to the first law ($Delta U = Q + W$), the total energy of the closed system remains constant. However, the ordered macroscopic rotational kinetic energy of the fluid is completely degraded via fluid viscous friction into disordered thermal motion. Since macroscopic kinetic energy is external to the definition of thermodynamic *internal energy*, this transition represents a net increase in the internal energy ($U$) of the system.
+])
+
+// =========================================================================
+// PROBLEM 3.4
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+A gas inside a frictionless piston-cylinder system is taken from state $a$ to state $b$ along path $a c b$ (as shown in Figure 3.8). During this reference path, $80 " J"$ of heat flows into the system and the system performs $30 " J"$ of work ($W_{a c b} = -30 " J"$). 
+
+If the system is returned back from state $b$ to state $a$ along a curved path where the work done *on* the system is $20 " J"$, what is the corresponding heat transfer $Q_{b a}$?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$-70 " J"$
+#pagebreak()
+$+70 " J"$
+#pagebreak()
+$-30 " J"$
+#pagebreak()
+$+50 " J"$
+
+#expl_page([
+  First, calculate the change in internal energy using the reference path $a -> c -> b$:
+  $ Delta U = U_b - U_a = Q_(a c b) + W_(a c b) = 80 " J" - 30 " J" = 50 " J" $
+  
+  For the return path $b -> a$, internal energy is a state function, meaning:
+  $ Delta U_{b -> a} = U_a - U_b = -50 " J" $
+  
+  Given that the work performed *on* the gas is $W_{b a} = +20 " J"$, apply the first law:
+  $ Q_{b a} = Delta U_{b -> a} - W_{b a} = -50 " J" - 20 " J" = -70 " J" $
+  The negative sign denotes that the system releases $70 " J"$ of heat to its environment.
+])
+
+// =========================================================================
+// PROBLEM 3.17
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+On a standard pressure-volume ($P$-$V$) diagram, how does the slope of a reversible adiabatic curve compare to the slope of an isothermal curve passing through the exact same coordinate point?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+The adiabat is steeper by a factor of $gamma$.
+#pagebreak()
+The isotherm is steeper by a factor of $gamma$.
+#pagebreak()
+The curves have identical slopes.
+#pagebreak()
+The adiabat is steeper by a factor of $gamma - 1$.
+
+#expl_page([
+  1. *Isothermal slope:* Under constant temperature, the ideal gas follows $P V = C$. Taking the derivative:
+     $ P dif V + V dif P = 0 => (dif P / dif V)_"iso" = - P / V $
+
+  2. *Adiabatic slope:* Under adiabatic conditions ($Q=0$), an ideal gas follows $P V^gamma = C$. Differentiating this relation yields:
+     $ V^gamma dif P + P gamma V^(gamma - 1) dif V = 0 $
+     Dividing the entire expression by $V^(gamma - 1)$:
+     $ V dif P + P gamma dif V = 0 => (dif P / dif V)_"adi" = -gamma P / V $
+
+  Comparing the expressions demonstrates that:
+  $ (dif P / dif V)_"adi" = gamma (dif P / dif V)_"iso" $
+])
+
+// =========================================================================
+// PROBLEM 3.18
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+For a reversible adiabatic expansion of an ideal gas with a constant adiabatic index $gamma$, which of the following sets of relations consistently describes the property constants across states?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$T V^(gamma - 1) = C_1$ and $T / P^(1 - 1/gamma) = C_2$
+#pagebreak()
+$T V^gamma = C_1$ and $T / P^gamma = C_2$
+#pagebreak()
+$T V^(gamma - 1) = C_1$ and $T P^(1 - 1/gamma) = C_2$
+#pagebreak()
+$T^gamma V = C_1$ and $T P^(gamma - 1) = C_2$
+
+#expl_page([
+  From the foundational adiabatic equation $P V^gamma = "constant"$, we can substitute variables using the ideal gas law ($P propto T/V$ or $V propto T/P$):
+  
+  - Substituting $P$:
+    $ (T / V) V^gamma = "constant" => T V^(gamma - 1) = C_1 $
+    
+  - Substituting $V$:
+    $ P (T / P)^gamma = "constant" => T^gamma / P^(gamma - 1) = "constant" $
+    Taking the $1/gamma$ root of both sides yields:
+    $ T / P^((gamma - 1)/gamma) = T / P^(1 - 1/gamma) = C_2 $
+])
+
+// =========================================================================
+// PROBLEM 3.19
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+A gas characterized by an adiabatic exponent $gamma$ is compressed adiabatically from an initial state $(P_i, V_i)$ to a final state $(P_f, V_f)$. Which expression describes the work $W$ performed *on* the gas?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$W = (P_i V_i) / (gamma - 1) [ (V_i / V_f)^(gamma - 1) - 1 ]$
+#pagebreak()
+$W = (P_i V_i) / (gamma - 1) [ 1 - (V_i / V_f)^(gamma - 1) ]$
+#pagebreak()
+$W = (P_f V_f) / (gamma - 1) [ (V_f / V_i)^(gamma) - 1 ]$
+#pagebreak()
+$W = (P_i V_i) / (gamma + 1) [ (V_i / V_f)^(gamma - 1) - 1 ]$
+
+#expl_page([
+  From the standard adiabatic boundary integration, work can be expressed as:
+  $ W = (P_f V_f - P_i V_i) / (gamma - 1) = (P_i V_i) / (gamma - 1) [ (P_f V_f) / (P_i V_i) - 1 ] $
+  
+  Since the process is adiabatic, $P_i V_i^gamma = P_f V_f^gamma$, which means $P_f / P_i = (V_i / V_f)^gamma$. Substituting this pressure ratio into the bracketed statement yields:
+  $ W = (P_i V_i) / (gamma - 1) [ (V_i / V_f)^gamma dot V_f / V_i - 1 ] = (P_i V_i) / (gamma - 1) [ (V_i / V_f)^(gamma - 1) - 1 ] $
+])
+
+// =========================================================================
+// PROBLEM 3.21
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+A thick-walled insulating chamber holds $n_1$ moles of helium gas at high pressure $P_1$ and temperature $T_1$. The gas leaks out slowly to the surrounding atmosphere (at pressure $P_0$) via a small control valve. What is the expression for the final number of moles ($n_2$) remaining inside the chamber?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$n_2 = n_1 (P_0 / P_1)^(1/gamma)$
+#pagebreak()
+$n_2 = n_1 (P_0 / P_1)^gamma$
+#pagebreak()
+$n_2 = n_1 (P_1 / P_0)^(1/gamma)$
+#pagebreak()
+$n_2 = n_1 (P_0 / P_1)^(1 - 1/gamma)$
+
+#expl_page([
+  Define our control system as the precise fraction of gas $n_2$ that remains trapped inside the chamber at the end of the timeline. This sub-gas expands reversibly and adiabatically against the escaping gas to eventually fill the fixed structural volume $V$. Its local pressure transitions from $P_1$ down to atmospheric equilibrium $P_0$.
+  
+  Its temperature change satisfies the relation: $T_2 = T_1 (P_0 / P_1)^(1 - 1/gamma)$.
+  
+  Applying the ideal gas law to the static vessel volume $V$:
+  - Initially: $V = (n_1 R T_1) / P_1$
+  - Final state: $V = (n_2 R T_2) / P_0$
+  
+  Equating both expressions for volume:
+  $ n_2 / n_1 = P_0 / P_1 dot T_1 / T_2 $
+  Substituting the adiabatic temperature ratio $T_1 / T_2 = (P_1 / P_0)^(1 - 1/gamma}$:
+  $ n_2 / n_1 = P_0 / P_1 dot (P_1 / P_0)^(1 - 1/gamma) = P_0^(1/gamma) / P_1^(1/gamma) = (P_0 / P_1)^(1/gamma) => n_2 = n_1 (P_0 / P_1)^(1/gamma) $
+])
+
+// =========================================================================
+// PROBLEM 5.8
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+An ideal gas features a temperature-dependent molar heat capacity defined by $c_v = A + B T$. Which of the following expressions evaluates the change in entropy per mole ($Delta S$) when moving from an initial state $(V_1, T_1)$ to a final state $(V_2, T_2)$?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$Delta S = A ln(T_2 / T_1) + B(T_2 - T_1) + R ln(V_2 / V_1)$
+#pagebreak()
+$Delta S = A ln(T_2 / T_1) + 1/2 B(T_2^2 - T_1^2) + R ln(V_2 / V_1)$
+#pagebreak()
+$Delta S = (A + B) ln(T_2 / T_1) + R ln(V_2 / V_1)$
+#pagebreak()
+$Delta S = A ln(T_2 / T_1) + B(T_2 - T_1) - R ln(V_2 / V_1)$
+
+#expl_page([
+  Combine the first law of thermodynamics with the entropy definition for a reversible pathway:
+  $ T dif S = dif U + P dif V $
+  Since internal energy changes depend strictly on temperature for ideal gas models ($dif U = c_v dif T$ for 1 mole), substitute $c_v = A + B T$ and $P/T = R/V$:
+  $ dif S = c_v dif T / T + P / T dif V = (A + B T) / T dif T + R / V dif V = A dif T / T + B dif T + R dif V / V $
+  
+  Integrating this differential relation from state 1 to state 2 yields:
+  $ Delta S = integral_(T_1)^(T_2) A / T dif T + integral_(T_1)^(T_2) B dif T + integral_(V_1)^(V_2) R / V dif V $
+  $ Delta S = A ln(T_2 / T_1) + B(T_2 - T_1) + R ln(V_2 / V_1) $
+])
+
+// =========================================================================
+// PROBLEM 5.10
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+Two moles of an ideal gas undergo a free expansion into an insulated vacuum chamber, tripling its volume. What are the entropy changes of the gas ($Delta S_"gas"$) and of the total universe ($Delta S_"universe"$) respectively?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$Delta S_"gas" = 18.27 " J/K"$ and $Delta S_"universe" = 18.27 " J/K"$
+#pagebreak()
+$Delta S_"gas" = 18.27 " J/K"$ and $Delta S_"universe" = 0 " J/K"$
+#pagebreak()
+$Delta S_"gas" = 0 " J/K"$ and $Delta S_"universe" = 18.27 " J/K"$
+#pagebreak()
+$Delta S_"gas" = -18.27 " J/K"$ and $Delta S_"universe" = -18.27 " J/K"$
+
+#expl_page([
+  A free expansion into a vacuum is highly irreversible. Because system boundaries are insulated and expand into zero resistance, $Q = 0$ and $W = 0$, leading to $Delta U = 0$. For an ideal gas, this dictates that temperature is perfectly constant ($Delta T = 0$). 
+  
+  Entropy is a state function; hence, its value change can be calculated along an alternate virtual reversible isothermal path:
+  $ Delta S_"gas" = n R ln(V_2 / V_1) = 2 " mol" times 8.314 " J mol"^(-1) "K"^(-1) times ln(3) = 18.27 " J/K" $
+  
+  Because the process is adiabatic and does not affect the surroundings, $Delta S_"surroundings" = 0$. Consequently:
+  $ Delta S_"universe" = Delta S_"gas" + Delta S_"surroundings" = 18.27 + 0 = 18.27 " J/K" $
+])
+
+// =========================================================================
+// PROBLEM 5.11
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+Two equal quantities of water of mass $m$ at initial temperatures $T_1$ and $T_2$ are mixed together inside an adiabatic container under constant pressure. Which equation correctly describes the total entropy change of the universe ($Delta S$)?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$Delta S = 2 m c_p ln( (T_1 + T_2) / (2 sqrt(T_1 T_2)) )$
+#pagebreak()
+$Delta S = m c_p ln( (T_1 + T_2) / (sqrt(T_1 T_2)) )$
+#pagebreak()
+$Delta S = 2 m c_p ln( (T_1 - T_2) / (2 sqrt(T_1 T_2)) )$
+#pagebreak()
+$Delta S = 0$
+
+#expl_page([
+  Since mixing is adiabatic, no heat leaves the container. At constant pressure, the internal energy balance yields:
+  $ m c_p (T_"final" - T_1) + m c_p (T_"final" - T_2) = 0 => T_"final" = (T_1 + T_2) / 2 $
+  
+  Integrating the entropy expression independently for both fluid masses:
+  $ Delta S_1 = m c_p ln(T_"final" / T_1), quad Delta S_2 = m c_p ln(T_"final" / T_2) \
+  Delta S_"tot" = Delta S_1 + Delta S_2 = m c_p ln( T_"final"^2 / (T_1 T_2) ) $
+  Substituting $T_"final"$:
+  $ Delta S_"tot" = m c_p ln( ((T_1 + T_2)/2)^2 / (T_1 T_2) ) = 2 m c_p ln( (T_1 + T_2) / (2 sqrt(T_1 T_2)) ) $
+  Because the arithmetic mean $(T_1 + T_2)/2$ always equals or exceeds the geometric mean $sqrt(T_1 T_2)$, the term inside the log parameter remains $>= 1$, verifying that $Delta S >= 0$.
+])
+
+// =========================================================================
+// PROBLEM 5.13
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+According to Gibbs Theorem, what can be stated about the total entropy change ($Delta S = S_f - S_i$) of a system where two distinct ideal gases, initially isolated at identical temperatures and pressures, are mixed via the slow, reversible displacement of coupled semipermeable membranes?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$S_i = S_f$, meaning the total entropy does not change during a reversible mixing process driven by ideal semipermeable separation.
+#pagebreak()
+$S_f > S_i$, because mixing always generates entropy.
+#pagebreak()
+$S_f < S_i$, because the semipermeable constraints perform work on the chemical species.
+#pagebreak()
+The final entropy depends on the specific molar mass ratio of the gases.
+
+#expl_page([
+  Analyzing the forces on the coupled piston units reveals that the partial pressure of gas B pushing left on the first membrane is exactly balanced by the partial pressure of gas B pushing right on the final rigid boundary sheet. The net force on the connected rod system is zero throughout the transition, meaning zero mechanical work is performed ($W = 0$).
+  
+  Since the mixing path is isothermal for ideal gas components, internal energy does not alter ($Delta U = 0$). Invoking the first law:
+  $ Q = Delta U - W = 0 => Q = T(S_f - S_i) = 0 => S_i = S_f $
+  This confirms Gibbs Theorem: the total entropy of an ideal mixture is identical to the sum of individual gas component entropies evaluated as if each component exclusively filled the complete volume alone.
+])
+
+// =========================================================================
+// PROBLEM 5.16
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+A refrigerator working with a coefficient of performance ($\text{COP}_R$) of 3.5 consumes 2.0 kWh of electrical energy in a single day. It maintains its cold compartment space at $4^circ C$ while rejecting heat to a kitchen environment at $20^circ C$. How much total entropy ($Delta S_"gen"$) is generated by this appliance setup in one day?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$19.6 " kJ/K"$
+#pagebreak()
+$110.6 " kJ/K"$
+#pagebreak()
+$-91.0 " kJ/K"$
+#pagebreak()
+$0 " kJ/K"$
+
+#expl_page([
+  Convert inputs to standard SI metric units:
+  $ W_"in" = 2.0 " kWh" = 2.0 times 10^3 " W" times 3600 " s" = 7.2 times 10^6 " J" \
+  T_L = 4^circ C = 277 " K", quad T_H = 20^circ C = 293 " K" $
+  
+  Using the efficiency index formula $\text{COP}_R = |Q_L| / W_"in"$:
+  $ |Q_L| = 3.5 times 7.2 times 10^6 " J" = 25.2 times 10^6 " J" => Q_L = -25.2 times 10^6 " J" $
+  
+  From energy conservation principles:
+  $ Q_H = |Q_L| + W_"in" = (25.2 + 7.2) times 10^6 " J" = 32.4 times 10^6 " J" $
+  
+  Sum the entropy variations of both thermal boundary zones:
+  $ Delta S_L = (-25.2 times 10^6 " J") / (277 " K") = -91.0 " kJ/K" \
+  Delta S_H = (32.4 times 10^6 " J") / (293 " K") = +110.6 " kJ/K" \
+  Delta S_"gen" = Delta S_L + Delta S_H = -91.0 + 110.6 = 19.6 " kJ/K" $
+])
+
+// =========================================================================
+// OLD EXAM PROBLEM
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+A mass of 1 kg of saturated water vapor at $100^circ C$ completely condenses into liquid water by transferring heat to the surrounding air, which remains at a constant temperature of $25^circ C$. The system reaches absolute thermal equilibrium at the end of the process. Given the latent heat of vaporization is $h = 2260 times 10^3 " J/kg"$, what is the total entropy change of the universe ($Delta S_"tot"$)?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+$+1639 " J/K"$
+#pagebreak()
+$-7000 " J/K"$
+#pagebreak()
+$+8639 " J/K"$
+#pagebreak()
+$-1639 " J/K"$
+
+#expl_page([
+  The total entropy change of the water consists of phase condensation and sensible subcooling:
+  $ Delta S_"H2O,1" = (-1 " kg" times 2260 times 10^3 " J/kg") / (373 " K") = -6059 " J/K" \
+  Delta S_"H2O,2" = integral_(373)^(298) m c_p dif T / T = 1 times 4190 times ln(298 / 373) = -941 " J/K" \
+  Delta S_"H2O" = -6059 - 941 = -7000 " J/K" $
+  
+  The surrounding air environment absorbs all energy rejected by the water mass:
+  $ Q_"air" = 2260 times 10^3 + (1 times 4190 times (100 - 25)) = 2574.25 times 10^3 " J" \
+  Delta S_"air" = (2574.25 times 10^3 " J") / (298 " K") = +8639 " J/K" $
+  
+  Net balance of the universe:
+  $ Delta S_"tot" = Delta S_"H2O" + Delta S_"air" = -7000 + 8639 = +1639 " J/K" $
+])
+
+// =========================================================================
+// THERMAL RADIATION II (COFFEE AND MILK)
+// =========================================================================
+#set page(width: q_width, height: auto, margin: q_margin)
+#set text(size: q_size)
+
+You have a hot cup of coffee in an open, well-insulated cylindrical thermos mug and a separate container of cold milk. You plan to drink the mixture after a short delay. To ensure the coffee is as hot as possible when you drink it, should you pour the milk in immediately or wait right before drinking it?
+
+#pagebreak()
+#set page(width: a_width, margin: a_margin)
+#set text(size: a_size)
+Pour the milk in immediately to lower the temperature early and minimize heat loss during the waiting period.
+#pagebreak()
+Wait and add the milk at the end to keep the thermal gradient high and speed up initial cooling.
+#pagebreak()
+It does not matter; the total energy lost by the fluid volume over time will be identical.
+#pagebreak()
+Pour the milk in slowly over the entire period to balance the convective heat transfer coefficient.
+
+#expl_page([
+  Heat loss to the surroundings via the open top surface of the mug occurs through convection and radiation:
+  - Convection: $\dot(Q) = alpha A Delta T$
+  - Radiation: $\dot(Q) = sigma A epsilon_"eff" (T^4 - T_0^4)$
+  
+  By mixing the cold milk into the hot coffee immediately, the fluid's initial temperature drops. This instantly reduces the temperature difference ($Delta T$) relative to the ambient air. Because the driving temperature gradient is smaller throughout the entire waiting period—and radiation drops significantly due to its fourth-power temperature dependence—the total heat lost to the environment is minimized, resulting in a higher final temperature.
+])

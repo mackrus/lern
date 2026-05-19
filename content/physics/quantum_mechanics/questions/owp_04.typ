@@ -21,4 +21,6 @@ $1/2$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/owp_04.typ")
-#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")
+#prereq_page([
+#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+])

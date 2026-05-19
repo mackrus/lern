@@ -21,4 +21,6 @@ $1/2 planck omega$
 #set text(size: a_size)
 $7/2 planck omega$
 #expl_page(include "../explanations/owp_03.typ")
-#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_unitary_matrices.typ"
+])

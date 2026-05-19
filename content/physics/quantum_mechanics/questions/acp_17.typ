@@ -26,4 +26,7 @@ The spin Hilbert space of a single particle is four-dimensional. What is the dim
 Explanation:
 
 For $N=4$, dimension is $N(N-1)/2 = 6$.
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_combinatorics_of_indistinguishable_particles.typ"
+#include "../prerequisites/core/adv_dimensionality.typ"
+])

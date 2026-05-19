@@ -21,4 +21,6 @@ $I/8$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/cp_09.typ")
-#prereq_page(include "../prerequisites/conceptual_practice.typ")
+#prereq_page([
+#include "../prerequisites/core/prac_maluss_law.typ"
+])

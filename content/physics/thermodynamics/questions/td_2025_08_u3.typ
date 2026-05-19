@@ -7,8 +7,7 @@
 
 One mole of monatomic ideal gas expands reversibly at constant temperature. It performs $1729$ J of work, and entropy increases by $5.763$ J/K. Determine the volume ratio ($V_2/V_1$) and the temperature.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Volume ratio = 2, $T = 300$ K
 #pagebreak()

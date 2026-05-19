@@ -21,4 +21,7 @@ $""^3 S, ""^3 P, ""^3 D$
 #set text(size: a_size)
 $""^1 P, ""^3 P, ""^1 F$
 #expl_page(include "../explanations/ao_03.typ")
-#prereq_page(include "../prerequisites/atoms_orbitals.typ")
+#prereq_page([
+#include "../prerequisites/core/ao_spectral_terms.typ"
+#include "../prerequisites/core/ao_equivalent_shells.typ"
+])

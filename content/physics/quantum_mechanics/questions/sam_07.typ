@@ -21,4 +21,6 @@ $Delta F = 2$
 #set text(size: a_size)
 $Delta M = 2$
 #expl_page(include "../explanations/sam_07.typ")
-#prereq_page(include "../prerequisites/spin_angular_momentum.typ")
+#prereq_page([
+#include "../prerequisites/core/sam_dipole_selection_rules.typ"
+])

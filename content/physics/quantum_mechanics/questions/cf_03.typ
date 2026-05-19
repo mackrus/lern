@@ -26,4 +26,6 @@ Nuclear finite size
 Explanation:
 
 Fine structure is primarily due to relativistic effects and the coupling between the electron's spin and its orbital angular momentum.
-#prereq_page(include "../prerequisites/conceptual_foundations.typ")
+#prereq_page([
+#include "../prerequisites/core/cf_fine_structure.typ"
+])

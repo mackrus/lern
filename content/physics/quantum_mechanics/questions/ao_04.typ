@@ -21,4 +21,6 @@ $""^1 G_4$
 #set text(size: a_size)
 $""^3 F_4$
 #expl_page(include "../explanations/ao_04.typ")
-#prereq_page(include "../prerequisites/atoms_orbitals.typ")
+#prereq_page([
+#include "../prerequisites/core/ao_hunds_rules.typ"
+])

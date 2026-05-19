@@ -21,4 +21,6 @@ $0, gamma$
 #set text(size: a_size)
 $gamma$
 #expl_page(include "../explanations/sam_01.typ")
-#prereq_page(include "../prerequisites/spin_angular_momentum.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_unitary_matrices.typ"
+])

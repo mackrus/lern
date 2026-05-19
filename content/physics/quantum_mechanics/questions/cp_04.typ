@@ -13,4 +13,6 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/cp_04.typ")
-#prereq_page(include "../prerequisites/conceptual_practice.typ")
+#prereq_page([
+#include "../prerequisites/core/prac_stationary_time-dependence.typ"
+])

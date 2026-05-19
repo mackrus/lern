@@ -179,3 +179,28 @@
 2. **Data Enrichment**: Iterated through all 185 records in `content/biology/växtkännedom/questions/library.json` and retrieved matching photos.
 3. **Database Reconstruction**: Programmatically recreated the `plants_gallery.db` SQLite database to store names, latin names, and retrieved URLs, ensuring a permanent and manageable source of truth.
 4. **Pipeline Verification**: Verified that the `generate_questions.py` script correctly aggregates the library from the newly reconstructed data.
+
+### Phase 28: Six Pieces (Planned)
+
+**Goal**: Introduce "Six easy pieces" and "Six not so easy pieces" modes to Physics courses, offering curated, randomized mini-quizzes.
+
+1.  **Question Tagging**:
+    -   Add a `difficulty` field (e.g., `"easy"`, `"hard"`) to all Physics question metadata JSONs.
+    -   Tag questions based on complexity and conceptual depth.
+2.  **Randomized Selection Logic**:
+    -   Implement a utility in the frontend to filter questions by difficulty and select 6 at random.
+    -   Ensure variety by shuffling the selection on each new session.
+3.  **Mode Integration**:
+    -   Add the new modes to the Physics mode selection screen.
+    -   Update the quiz initialization pipeline to handle subsets of questions.
+
+### Phase 29: Quiz Descriptions (Planned)
+
+**Goal**: Provide short, informative descriptions for all quizzes across all categories to improve user guidance.
+
+1.  **Description Metadata**:
+    -   Introduce a `description` field for each course/quiz set in the metadata aggregation.
+    -   Add descriptions to Physics courses and the Biology `library.json`.
+2.  **UI Display**:
+    -   Update the course and mode selection screens to display these descriptions.
+    -   Implement consistent styling that adapts to the current theme (Physics vs. Biology).

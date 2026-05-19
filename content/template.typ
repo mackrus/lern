@@ -4,7 +4,7 @@
 #let q_margin = 1cm
 
 #let a_width = 10cm
-#let a_size = 23pt
+#let a_size = 24pt
 #let a_margin = 0.4cm
 
 #let i_width = 28cm

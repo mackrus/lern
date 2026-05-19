@@ -26,4 +26,6 @@ $1/5$
 Explanation:
 
 $bar.v A bar.v^2 (1^2 + 2^2 + bar.v 2i bar.v^2) = A^2(1+4+4) = 9 A^2 = 1 => A = 1/3$.
-#prereq_page(include "../prerequisites/spin_1_systems.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_unitary_matrices.typ"
+])

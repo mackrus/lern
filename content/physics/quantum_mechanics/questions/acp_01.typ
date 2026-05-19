@@ -21,4 +21,7 @@ $1$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/acp_01.typ")
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_operator_algebra.typ"
+#include "../prerequisites/core/adv_expectation_values_of_products.typ"
+])

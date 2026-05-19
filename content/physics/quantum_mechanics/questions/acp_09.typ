@@ -18,4 +18,7 @@ False
 Explanation:
 
 False for superpositions of traveling waves (e.g. standing waves).
-#prereq_page(include "../prerequisites/conceptual_practice.typ")
+#prereq_page([
+#include "../prerequisites/core/prac_born_rule.typ"
+#include "../prerequisites/core/prac_probability_current.typ"
+])

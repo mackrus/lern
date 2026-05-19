@@ -13,4 +13,6 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/acp_16.typ")
-#prereq_page(include "../prerequisites/spin_angular_momentum.typ")
+#prereq_page([
+#include "../prerequisites/core/sam_spin-1_2_operators.typ"
+])

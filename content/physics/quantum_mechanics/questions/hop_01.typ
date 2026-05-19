@@ -21,4 +21,8 @@ $gamma n^3$
 #set text(size: a_size)
 $2 gamma (n+1)^3$
 #expl_page(include "../explanations/hop_01.typ")
-#prereq_page(include "../prerequisites/harmonic_perturbation.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_expectation_values_of_products.typ"
+#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+#include "../prerequisites/core/prac_infinite_well_spectrum.typ"
+])

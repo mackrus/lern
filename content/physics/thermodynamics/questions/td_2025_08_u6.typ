@@ -7,8 +7,7 @@
 
 A car drives down a 10% slope at 30 km/h. All braking energy is transferred to the four brake discs and released via radiation. Calculate the discs' temperature.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 T approx 924 K
 #pagebreak()

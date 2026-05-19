@@ -13,4 +13,7 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/cp_08.typ")
-#prereq_page(include "../prerequisites/atoms_orbitals.typ")
+#prereq_page([
+#include "../prerequisites/core/ao_aufbau_principle.typ"
+#include "../prerequisites/core/sam_addition_of_angular_momentum.typ"
+])

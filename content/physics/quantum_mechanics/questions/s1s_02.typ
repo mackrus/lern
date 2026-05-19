@@ -26,4 +26,6 @@ $planck$
 Explanation:
 
 $chevron.l S_z chevron.r = sum p_m m planck = 1/9(1) + 4/9(0) + 4/9(-1) = -3/9 planck = -1/3 planck$.
-#prereq_page(include "../prerequisites/spin_1_systems.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_unitary_matrices.typ"
+])

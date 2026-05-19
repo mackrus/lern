@@ -25,4 +25,6 @@ Length
 #set text(size: a_size)
 Electric potential
 #expl_page(include "../explanations/acp_07.typ")
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_units.typ"
+])

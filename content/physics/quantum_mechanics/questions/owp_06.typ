@@ -26,4 +26,6 @@ $n planck$
 Explanation:
 
 For eigenstates, $sigma_x sigma_p = (n+1/2) planck$. The minimum value is $planck/2$ for the ground state.
-#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")
+#prereq_page([
+#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+])

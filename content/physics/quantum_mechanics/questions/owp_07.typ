@@ -21,4 +21,6 @@ $1/L$
 #set text(size: a_size)
 $sqrt(3/L)$
 #expl_page(include "../explanations/owp_07.typ")
-#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_spectrum_normalization.typ"
+])

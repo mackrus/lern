@@ -7,8 +7,7 @@
 
 Show that $(partial F / partial P)_V = -(S kappa) / beta$ with compressibility $kappa = -1/V (partial V / partial P)_T$ and volume expansion coefficient $beta = 1/V (partial V / partial T)_P$.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Identity proven via cyclic relation
 #pagebreak()

@@ -7,8 +7,7 @@
 
 Show that $(partial T / partial P)_S = (T beta V) / C_p$.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Identity proven via cyclic identity
 #pagebreak()

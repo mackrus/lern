@@ -21,4 +21,6 @@ When $t = 0$
 #set text(size: a_size)
 Never
 #expl_page(include "../explanations/owp_09.typ")
-#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")
+#prereq_page([
+#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+])

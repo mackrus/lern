@@ -18,4 +18,6 @@ False
 Explanation:
 
 Teleportation transfers information, but strictly requires a classical channel bounded by $c$.
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_quantum_teleportation.typ"
+])

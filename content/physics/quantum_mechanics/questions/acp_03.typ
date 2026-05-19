@@ -18,4 +18,6 @@ False
 Explanation:
 
 Bell's inequality is *violated* by quantum mechanics.
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_bell's_inequality.typ"
+])

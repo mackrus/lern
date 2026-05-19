@@ -21,4 +21,6 @@ $n a^dagger$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/owp_01.typ")
-#prereq_page(include "../prerequisites/oscillator_wavepacket.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_operator_algebra.typ"
+])

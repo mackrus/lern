@@ -21,4 +21,6 @@ $d Y / d phi = i m Y$
 #set text(size: a_size)
 $d^2 Y / d phi^2 = 0$
 #expl_page(include "../explanations/ao_01.typ")
-#prereq_page(include "../prerequisites/atoms_orbitals.typ")
+#prereq_page([
+#include "../prerequisites/core/ao_2d_laplacian.typ"
+])

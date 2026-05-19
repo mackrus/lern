@@ -1,0 +1,3 @@
+- *Work ($W = 0$):* The boundary wall is rigid, meaning no volume change occurs ($d V = 0$) and no shaft or electrical work crosses the boundary.
+  - *Heat ($Q = 0$):* The tank walls are perfectly insulated (adiabatic).
+  - *Internal Energy ($Delta U > 0$):* According to the first law ($Delta U = Q + W$), the total energy of the closed system remains constant. However, the ordered macroscopic rotational kinetic energy of the fluid is completely degraded via fluid viscous friction into disordered thermal motion. Since macroscopic kinetic energy is external to the definition of thermodynamic *internal energy*, this transition represents a net increase in the internal energy ($U$) of the system.

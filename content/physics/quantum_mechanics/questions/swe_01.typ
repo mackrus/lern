@@ -26,4 +26,8 @@ $5 E_1$
 Explanation:
 
 $chevron.l E chevron.r = sum bar.v c_n bar.v^2 E_n = 1/4 E_1 + 1/4 (4 E_1) + 1/2 (9 E_1) = (1/4 + 1 + 9/2) E_1 = (1/4 + 4/4 + 18/4) E_1 = 23/4 E_1$.
-#prereq_page(include "../prerequisites/conceptual_practice.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_expectation_values_of_products.typ"
+#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+#include "../prerequisites/core/prac_infinite_well_spectrum.typ"
+])

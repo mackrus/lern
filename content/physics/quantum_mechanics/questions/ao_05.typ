@@ -21,4 +21,6 @@ $Y(0) = 0$
 #set text(size: a_size)
 $Y'(0) = 0$
 #expl_page(include "../explanations/ao_05.typ")
-#prereq_page(include "../prerequisites/atoms_orbitals.typ")
+#prereq_page([
+#include "../prerequisites/core/ao_boundary_conditions.typ"
+])

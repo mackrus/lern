@@ -21,4 +21,6 @@ $sigma_A sigma_B > 0$
 #set text(size: a_size)
 All of the above
 #expl_page(include "../explanations/acp_14.typ")
-#prereq_page(include "../prerequisites/conceptual_practice.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_unitary_matrices.typ"
+])

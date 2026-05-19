@@ -21,4 +21,6 @@ $1$
 #set text(size: a_size)
 $-1$
 #expl_page(include "../explanations/acp_12.typ")
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_unitary_matrices.typ"
+])

@@ -13,4 +13,7 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/acp_06.typ")
-#prereq_page(include "../prerequisites/advanced_conceptual.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_dimensionality.typ"
+#include "../prerequisites/core/adv_units.typ"
+])

@@ -21,4 +21,6 @@ $k cot(k a) = kappa tanh(kappa b)$
 #set text(size: a_size)
 None
 #expl_page(include "../explanations/pwe_02.typ")
-#prereq_page(include "../prerequisites/potential_wells.typ")
+#prereq_page([
+#include "../prerequisites/core/pw_odd_state_transcendental_equation.typ"
+])

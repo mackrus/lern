@@ -21,4 +21,6 @@ For a Caesium atom in the $6s^1$ state with nuclear spin $I=7/2$: What is the va
 #set text(size: a_size)
 8
 #expl_page(include "../explanations/sam_05.typ")
-#prereq_page(include "../prerequisites/spin_angular_momentum.typ")
+#prereq_page([
+#include "../prerequisites/core/sam_addition_of_angular_momentum.typ"
+])

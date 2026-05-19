@@ -7,8 +7,7 @@
 
 Two equal amounts ($n$) of the same liquid at $T_1$ and $T_2$ are mixed in an adiabatic system. Show that the entropy change is $Delta S = 2 n c ln( (T_1 + T_2) / (2 sqrt(T_1 * T_2)) )$.
 
-#pagebreak()
-#set page(width: a_width, margin: a_margin)
+#set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Equilibrium temperature $T_f = (T_1 + T_2) / 2$
 #pagebreak()

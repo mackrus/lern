@@ -21,4 +21,9 @@ $L^2/s$
 #set text(size: a_size)
 $1/L$
 #expl_page(include "../explanations/cp_10.typ")
-#prereq_page(include "../prerequisites/conceptual_practice.typ")
+#prereq_page([
+#include "../prerequisites/core/adv_dimensionality.typ"
+#include "../prerequisites/core/adv_units.typ"
+#include "../prerequisites/core/prac_born_rule.typ"
+#include "../prerequisites/core/prac_probability_current.typ"
+])
