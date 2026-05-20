@@ -38,7 +38,7 @@ export const State = {
             showAlts: toggleAltBtn && toggleAltBtn.dataset.state === "shown",
             selectedTopics: this.currentSavedState ? this.currentSavedState.selectedTopics : null,
             examEndTime: this.currentExamEndTime,
-            questions: this.currentMode === "biology_custom" ? this.currentQuestionsList : null,
+            questions: ["biology_custom", "practice", "six_easy", "six_hard"].includes(this.currentMode) ? this.currentQuestionsList : null,
             statsUpdated: this.currentSavedState ? this.currentSavedState.statsUpdated : false,
             bioParams: this.currentSavedState ? this.currentSavedState.bioParams : null
         };

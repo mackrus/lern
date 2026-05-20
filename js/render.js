@@ -25,8 +25,8 @@ import {
     get_explanation_html_by_index,
     get_references_json_by_index
 } from "../pkg/lern.js";
-import { State } from "./state.js";
-import { UI } from "./ui.js";
+import { State } from "./state.js?v=8";
+import { UI } from "./ui.js?v=8";
 
 export const Renderer = {
     renderQuiz() {
@@ -346,7 +346,7 @@ export const Renderer = {
         const restartBtn = document.getElementById("restart-btn");
         if (restartBtn) {
             restartBtn.onclick = () => {
-                import("./navigation.js").then(m => m.Navigation.showMenu());
+                import("./navigation.js?v=8").then(m => m.Navigation.showMenu());
             };
         }
 
@@ -422,12 +422,13 @@ export const Renderer = {
     },
 
     async restartPractice(weaknesses) {
-        const { State } = await import("./state.js");
-        const { Navigation } = await import("./navigation.js");
+        const { State } = await import("./state.js?v=8");
+        const { Navigation } = await import("./navigation.js?v=8");
         
         if (State.currentMode === "biology_custom" && State.currentSavedState.bioParams) {
             const { qAttr, aAttr, limit } = State.currentSavedState.bioParams;
-            const { Biology } = await import("./biology.js");
+            const { Biology } = await import("./biology.js?v=8");
+
             Biology.startQuiz(qAttr, aAttr, limit);
         } else {
             Navigation.startQuiz(State.currentCourse, "topic", { selectedTopics: weaknesses });

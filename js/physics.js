@@ -1,5 +1,5 @@
-import { State } from "./state.js";
-import { Navigation } from "./navigation.js";
+import { State } from "./state.js?v=8";
+import { Navigation } from "./navigation.js?v=8";
 
 export const Physics = {
     renderModeSelection(courseName) {
@@ -20,6 +20,8 @@ export const Physics = {
         const labels = new Set(questions.map(q => q.label).filter(Boolean));
 
         document.getElementById("mode-topic").onclick = () => this.showTopicSelection(courseName);
+        document.getElementById("mode-six-easy").onclick = () => Navigation.startQuiz(courseName, "six_easy");
+        document.getElementById("mode-six-hard").onclick = () => Navigation.startQuiz(courseName, "six_hard");
 
         const practiceBtn = document.getElementById("mode-practice");
         if (labels.has("practice")) {
@@ -36,6 +38,31 @@ export const Physics = {
         } else {
             examBtn.style.display = "none";
         }
+
+        // Setup hover description handlers
+        const modeDescriptionEl = document.getElementById("mode-description");
+        const defaultText = "Hover over a mode below to see how it works.";
+
+        const setModeDesc = (text) => {
+            if (modeDescriptionEl) modeDescriptionEl.innerHTML = text;
+        };
+
+        const resetModeDesc = () => {
+            if (modeDescriptionEl) modeDescriptionEl.innerText = defaultText;
+        };
+
+        const setupHover = (btn, htmlText) => {
+            if (btn) {
+                btn.onmouseover = () => setModeDesc(htmlText);
+                btn.onmouseout = () => resetModeDesc();
+            }
+        };
+
+        setupHover(document.getElementById("mode-topic"), "<strong>Topic Traversal</strong>: Select specific subtopics to target your study. Generates a custom quiz containing only questions from the selected areas.");
+        setupHover(document.getElementById("mode-six-easy"), "<strong>Six easy pieces</strong>: A relaxed session of 6 randomly selected easy questions. Great for a quick review of fundamental concepts.");
+        setupHover(document.getElementById("mode-six-hard"), "<strong>Six not so easy pieces</strong>: A challenging session of 6 randomly selected hard questions. Test your deep understanding of advanced topics.");
+        setupHover(practiceBtn, "<strong>Practice Mode</strong>: A general practice session drawing from all available questions in the course, allowing you to practice at your own pace.");
+        setupHover(examBtn, "<strong>Exam Mode</strong>: A timed mock exam with a set number of questions. Questions are graded all at once at the end. Simulates real exam conditions.");
     },
 
     showTopicSelection(courseName) {
