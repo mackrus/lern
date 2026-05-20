@@ -169,7 +169,7 @@
 2. **Breadcrumb Navigation**: Ensure users can navigate back from a sub-course to the category or main menu.
 3. **State Management Alignment**: Update `State` saving/loading to correctly track the nested course structure.
 
-### Phase 26: General Polish & Performance Optimization (Planned)
+### Phase 26: General Polish & Performance Optimization (Skipped)
 
 ### Phase 27: Biology Data Recovery & Enrichment (Completed)
 
@@ -184,23 +184,23 @@
 
 **Goal**: Introduce "Six easy pieces" and "Six not so easy pieces" modes to Physics courses, offering curated, randomized mini-quizzes.
 
-1.  **Question Tagging**:
-    -   Add a `difficulty` field (e.g., `"easy"`, `"hard"`) to all Physics question metadata JSONs.
-    -   Tag questions based on complexity and conceptual depth.
-2.  **Randomized Selection Logic**:
-    -   Implement a utility in the frontend to filter questions by difficulty and select 6 at random.
-    -   Ensure variety by shuffling the selection on each new session.
-3.  **Mode Integration**:
-    -   Add the new modes to the Physics mode selection screen.
-    -   Update the quiz initialization pipeline to handle subsets of questions.
+1. **Question Tagging**:
+    - Add a `difficulty` field (e.g., `"easy"`, `"hard"`) to all Physics question metadata JSONs.
+    - Tag questions based on complexity and conceptual depth.
+2. **Randomized Selection Logic**:
+    - Implement a utility in the frontend to filter questions by difficulty and select 6 at random.
+    - Ensure variety by shuffling the selection on each new session.
+3. **Mode Integration**:
+    - Add the new modes to the Physics mode selection screen.
+    - Update the quiz initialization pipeline to handle subsets of questions.
 
 ### Phase 29: Quiz Descriptions (Planned)
 
 **Goal**: Provide short, informative descriptions for all quizzes across all categories to improve user guidance.
 
-1.  **Description Metadata**:
-    -   Introduce a `description` field for each course/quiz set in the metadata aggregation.
-    -   Add descriptions to Physics courses and the Biology `library.json`.
-2.  **UI Display**:
-    -   Update the course and mode selection screens to display these descriptions.
-    -   Implement consistent styling that adapts to the current theme (Physics vs. Biology).
+1. **Description Metadata**:
+    - Introduce a `description` field for each course/quiz set in the metadata aggregation.
+    - Add descriptions to Physics courses and the Biology `library.json`.
+2. **UI Display**:
+    - Update the course and mode selection screens to display these descriptions.
+    - Implement consistent styling that adapts to the current theme (Physics vs. Biology).

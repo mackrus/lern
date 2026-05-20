@@ -1,5 +1,5 @@
-import { State } from "./state.js";
-import { Navigation } from "./navigation.js";
+import { State } from "./state.js?v=8";
+import { Navigation } from "./navigation.js?v=8";
 
 export const Biology = {
     renderSelector(courseName) {
@@ -25,6 +25,9 @@ export const Biology = {
                 </div>
 
                 <h2 style="text-align: center; margin-bottom: 1.5rem;">2. Select Identification Mode</h2>
+                <div style="margin: 0 auto 2.5rem auto; max-width: 600px; border-left: 2px solid var(--accent-color); padding-left: 1.2rem; min-height: 4rem; display: flex; align-items: center; box-sizing: border-box;">
+                    <p id="bio-mode-description" style="margin: 0; font-style: italic; opacity: 0.85; line-height: 1.6; font-size: 1.1rem; text-align: left;"></p>
+                </div>
                 <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; max-width: 600px;">
                         <button class="alternative" id="bio-btn-1">Common ↔ Latin</button>
@@ -52,12 +55,47 @@ export const Biology = {
             };
         });
 
-        document.getElementById("bio-btn-1").onclick = () => this.startQuiz('common_name', 'latin_name', selectedLimit);
-        document.getElementById("bio-btn-2").onclick = () => this.startQuiz('latin_name', 'common_name', selectedLimit);
-        document.getElementById("bio-btn-3").onclick = () => this.startQuiz('photo_url', 'common_name', selectedLimit);
-        document.getElementById("bio-btn-4").onclick = () => this.startQuiz('common_name', 'photo_url', selectedLimit);
-        document.getElementById("bio-btn-5").onclick = () => this.startQuiz('photo_url', 'latin_name', selectedLimit);
-        document.getElementById("bio-btn-6").onclick = () => this.startQuiz('latin_name', 'photo_url', selectedLimit);
+        const btn1 = document.getElementById("bio-btn-1");
+        const btn2 = document.getElementById("bio-btn-2");
+        const btn3 = document.getElementById("bio-btn-3");
+        const btn4 = document.getElementById("bio-btn-4");
+        const btn5 = document.getElementById("bio-btn-5");
+        const btn6 = document.getElementById("bio-btn-6");
+
+        btn1.onclick = () => this.startQuiz('common_name', 'latin_name', selectedLimit);
+        btn2.onclick = () => this.startQuiz('latin_name', 'common_name', selectedLimit);
+        btn3.onclick = () => this.startQuiz('photo_url', 'common_name', selectedLimit);
+        btn4.onclick = () => this.startQuiz('common_name', 'photo_url', selectedLimit);
+        btn5.onclick = () => this.startQuiz('photo_url', 'latin_name', selectedLimit);
+        btn6.onclick = () => this.startQuiz('latin_name', 'photo_url', selectedLimit);
+
+        // Setup hover description handlers
+        const bioModeDescEl = document.getElementById("bio-mode-description");
+        const defaultBioText = "Hover over a mode below to see how it works.";
+
+        const setBioModeDesc = (text) => {
+            if (bioModeDescEl) bioModeDescEl.innerHTML = text;
+        };
+
+        const resetBioModeDesc = () => {
+            if (bioModeDescEl) bioModeDescEl.innerText = defaultBioText;
+        };
+
+        resetBioModeDesc();
+
+        const setupBioHover = (btn, htmlText) => {
+            if (btn) {
+                btn.onmouseover = () => setBioModeDesc(htmlText);
+                btn.onmouseout = () => resetBioModeDesc();
+            }
+        };
+
+        setupBioHover(btn1, "<strong>Common ↔ Latin</strong>: Type the botanical Latin name when given the Swedish common name of a plant.");
+        setupBioHover(btn2, "<strong>Latin ↔ Common</strong>: Type the Swedish common name when given the botanical Latin name of a plant.");
+        setupBioHover(btn3, "<strong>Photo ↔ Common</strong>: Identify the plant from a photo by typing its Swedish common name.");
+        setupBioHover(btn4, "<strong>Common ↔ Photo</strong>: Pick the correct plant photo from 4 multiple-choice options for a given Swedish common name.");
+        setupBioHover(btn5, "<strong>Photo ↔ Latin</strong>: Identify the plant from a photo by typing its botanical Latin name.");
+        setupBioHover(btn6, "<strong>Latin ↔ Photo</strong>: Pick the correct plant photo from 4 multiple-choice options for a given botanical Latin name.");
     },
 
     startQuiz(qAttr, aAttr, limit) {

@@ -1,6 +1,6 @@
-import { State } from "./state.js";
-import { UI } from "./ui.js";
-import { Renderer } from "./render.js";
+import { State } from "./state.js?v=8";
+import { UI } from "./ui.js?v=8";
+import { Renderer } from "./render.js?v=8";
 import { 
     init_quiz, 
     restore_quiz_state,
@@ -98,7 +98,13 @@ export const Navigation = {
         document.getElementById("back-to-categories").onclick = () => this.showMenu();
 
         const category = State.coursesData[categoryName];
+        
+        // Find if any course in this category has a description
+        const courseDescriptionEl = document.getElementById("course-description");
+        if (courseDescriptionEl) courseDescriptionEl.innerText = "";
+
         for (const courseName in category) {
+            const courseInfo = category[courseName];
             const container = document.createElement("div");
             container.className = "course-item-container";
             container.style.marginBottom = "1rem";
@@ -116,6 +122,15 @@ export const Navigation = {
 
             btn.innerText = courseName + (isInProgress ? " (In Progress)" : "");
             
+            btn.onmouseover = () => {
+                if (courseDescriptionEl && courseInfo.description) {
+                    courseDescriptionEl.innerText = courseInfo.description;
+                }
+            };
+            btn.onmouseout = () => {
+                if (courseDescriptionEl) courseDescriptionEl.innerText = "";
+            };
+
             btn.onclick = () => {
                 if (isInProgress) {
                     this.startQuiz(courseName, progress.mode, progress);
@@ -175,6 +190,11 @@ export const Navigation = {
 
         UI.updateCourseTheme(categoryName);
         this.hideAllSections();
+
+        const modeDescriptionEl = document.getElementById("mode-description");
+        if (modeDescriptionEl) {
+            modeDescriptionEl.innerText = "Hover over a mode below to see how it works.";
+        }
         
         if (categoryName && categoryName.toLowerCase().includes("biology")) {
             this.renderBiologyModeSelector(courseName);
@@ -217,13 +237,11 @@ export const Navigation = {
 
         let questions = [];
         
-        if (mode === "biology_custom" && state && state.questions) {
+        if (state && state.questions) {
             questions = state.questions;
         } else if (categoryName === "Biology") {
-            // Biology fallback - shouldn't usually happen with dynamic generation
             questions = courseInfo.data || [];
         } else {
-            // Physics or other static courses
             questions = courseInfo ? (courseInfo.data || []) : [];
         }
         
@@ -232,6 +250,10 @@ export const Navigation = {
             questions = questions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
         } else if (mode === "practice") {
             questions = questions.filter(q => q.label === "practice").sort(() => 0.5 - Math.random()).slice(0, 10);
+        } else if (mode === "six_easy") {
+            questions = questions.filter(q => q.difficulty === "easy").sort(() => 0.5 - Math.random()).slice(0, 6);
+        } else if (mode === "six_hard") {
+            questions = questions.filter(q => q.difficulty === "hard").sort(() => 0.5 - Math.random()).slice(0, 6);
         } else if (mode === "exam") {
             questions = questions.filter(q => q.label === "exam");
             State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
@@ -341,11 +363,11 @@ export const Navigation = {
     },
 
     renderBiologyModeSelector(courseName) {
-        import("./biology.js").then(m => m.Biology.renderSelector(courseName));
+        import("./biology.js?v=8").then(m => m.Biology.renderSelector(courseName));
     },
 
     renderPhysicsModeSelector(courseName) {
-        import("./physics.js").then(m => {
+        import("./physics.js?v=8").then(m => {
             m.Physics.renderModeSelection(courseName);
             // Ensure back button in topic selection goes back to sub-courses
             const backToCourses = document.getElementById("back-to-courses");

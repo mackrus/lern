@@ -1,9 +1,9 @@
 import init from "../pkg/lern.js";
-import { State } from "./state.js";
-import { UI } from "./ui.js";
-import { Navigation } from "./navigation.js";
-import { Renderer } from "./render.js";
-import { Biology } from "./biology.js";
+import { State } from "./state.js?v=8";
+import { UI } from "./ui.js?v=8";
+import { Navigation } from "./navigation.js?v=8";
+import { Renderer } from "./render.js?v=8";
+import { Biology } from "./biology.js?v=8";
 import { 
     grade_quiz, 
     next_question, 

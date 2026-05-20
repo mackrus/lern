@@ -23,6 +23,13 @@ for category in os.listdir(content_root):
         if not os.path.exists(questions_path):
             continue
 
+        # Load course description
+        course_desc = ""
+        course_json_path = os.path.join(course_path, "course.json")
+        if os.path.exists(course_json_path):
+            with open(course_json_path, "r", encoding="utf-8") as f:
+                course_desc = json.load(f).get("description", "")
+
         # Check for flexible library format
         lib_path = os.path.join(questions_path, "library.json")
         if os.path.exists(lib_path):
@@ -32,6 +39,7 @@ for category in os.listdir(content_root):
             library[category.title()][display_name] = {
                 "type": "flexible",
                 "data": library_data,
+                "description": course_desc,
             }
             continue
 
@@ -120,6 +128,7 @@ for category in os.listdir(content_root):
                 {
                     "id": base,
                     "label": metadata.get("label"),
+                    "difficulty": metadata.get("difficulty", "medium"),
                     "topics": metadata.get("topics", []),
                     "references": metadata.get("references", []),
                     "question_html": question_html,
@@ -133,9 +142,16 @@ for category in os.listdir(content_root):
 
         if course_questions:
             display_name = course_dir.replace("_", " ").title()
+            course_metadata = {}
+            course_metadata_path = os.path.join(course_path, "course.json")
+            if os.path.exists(course_metadata_path):
+                with open(course_metadata_path, "r") as f:
+                    course_metadata = json.load(f)
+            
             library[category.title()][display_name] = {
                 "type": "static",
                 "data": course_questions,
+                **course_metadata
             }
 
 with open("dist/questions.json", "w") as out:
