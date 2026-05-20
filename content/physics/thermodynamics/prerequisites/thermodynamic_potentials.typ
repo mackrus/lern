@@ -10,7 +10,7 @@ Thermodynamic potentials describe the state of a system and relate variables lik
 
 == Maxwell Relations
 These are equalities between partial derivatives of state functions, such as:
-- $(partial T / partial V)_S = -(partial P / partial S)_V$
-- $(partial T / partial P)_S = (partial V / partial S)_P$
-- $(partial S / partial V)_T = (partial P / partial T)_V$
-- $(partial S / partial P)_T = -(partial V / partial T)_P$
+- $((partial T) / (partial V))_S = -((partial P) / (partial S))_V$
+- $((partial T) / (partial P))_S = ((partial V) / (partial S))_P$
+- $((partial S) / (partial V))_T = ((partial P) / (partial T))_V$
+- $((partial S) / (partial P))_T = -((partial V) / (partial T))_P$

@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 
-Show that $(partial^2 G / partial P^2)_T = -1 / (partial^2 F / partial V^2)_T$.
+Show that $((partial^2 G) / (partial P^2))_T = -1 / ((partial^2 F) / (partial V^2))_T$.
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)

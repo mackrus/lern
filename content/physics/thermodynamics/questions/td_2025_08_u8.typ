@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 
-Show that $(partial T / partial P)_S = (T beta V) / C_p$.
+Show that $((partial T) / (partial P))_S = (T beta V) / C_p$.
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
