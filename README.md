@@ -1,10 +1,12 @@
 # Lern
 
-Interactive math and physics learning platform. Minimalist, high-fidelity, and privacy-focused.
+Interactive math, physics, and biology learning platform. Minimalist, high-fidelity, and privacy-focused.
+
+Live Demo: [https://mackrus.github.io/lern/](https://mackrus.github.io/lern/)
 
 ## Overview
 
-**Lern** is a modern web application for practicing physics and mathematics through interactive quizzes. It combines the high-fidelity typesetting of **Typst** with the performance of **Rust** and **WebAssembly** to deliver a "crisp" and professional learning experience.
+**Lern** is a modern web application for practicing physics, mathematics, and botany through interactive quizzes. It combines the high-fidelity typesetting of **Typst** with the performance of **Rust** and **WebAssembly** to deliver a crisp and professional learning experience.
 
 Inspired by platforms like Brilliant.com, Lern focuses on a modern aesthetic: monospace fonts, sharp edges, and zero-distraction layouts.
 
@@ -18,10 +20,12 @@ Inspired by platforms like Brilliant.com, Lern focuses on a modern aesthetic: mo
 
 ## Key Features
 
-- **Interactive Quizzes**: 80+ questions across Quantum Mechanics and Thermodynamics.
+- **Physics & Math Quizzes**: 80+ questions across Quantum Mechanics and Thermodynamics.
+- **Botanical Identification (Biology)**: Sweden plant species matching featuring Swedish common names, botanical Latin names, and photo galleries.
+- **Flexible Training Modes**: Select from multiple quiz modes (Topic Traversal, Six easy pieces, Six not so easy pieces, Practice, Exam) with dynamic hover guides explaining how each mode works.
 - **High-Fidelity Math**: Every question and alternative is rendered using Typst's native math engine.
-- **Topic-Based Learning**: Filter questions by granular topics like "Spin", "Entropy", or "Harmonic Oscillator".
-- **Textbook References**: Integrated "Where do i read about this?" sidebar pointing to standard texts (**Griffiths** for QM, **Finn's** for Thermo).
+- **Topic-Based Learning**: Filter questions by granular topics like Spin, Entropy, or Harmonic Oscillator.
+- **Textbook References**: Integrated "Where do I read about this?" sidebar pointing to standard texts (Griffiths for QM, Finn's for Thermo).
 - **Performance Analytics**: Track your strengths and weaknesses across different topics over time.
 - **Privacy First**: Everything is stored locally. No cookies, no tracking, no accounts required.
 - **Themes**: Minimalist Dark and Light modes.
