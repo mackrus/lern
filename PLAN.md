@@ -7,7 +7,7 @@
 - `src/lib.rs` & `src/quiz.rs`: Core Rust logic and WASM bindings.
 - `generate_questions.py`: Aggregator for Typst SVGs and question metadata.
 - `build.sh`: Orchestrates compilation and WASM building.
-- `dist/index.html` & `dist/app.js`: Frontend UI and interactivity.
+- `dist/index.html` & `dist/app.js`: Frontend UI and interactivity. (This need updating)
 
 ## Future Implementation Steps
 
@@ -180,7 +180,7 @@
 3. **Database Reconstruction**: Programmatically recreated the `plants_gallery.db` SQLite database to store names, latin names, and retrieved URLs, ensuring a permanent and manageable source of truth.
 4. **Pipeline Verification**: Verified that the `generate_questions.py` script correctly aggregates the library from the newly reconstructed data.
 
-### Phase 28: Six Pieces (Planned)
+### Phase 28: Six Pieces (Completed)
 
 **Goal**: Introduce "Six easy pieces" and "Six not so easy pieces" modes to Physics courses, offering curated, randomized mini-quizzes.
 
@@ -194,7 +194,7 @@
     - Add the new modes to the Physics mode selection screen.
     - Update the quiz initialization pipeline to handle subsets of questions.
 
-### Phase 29: Quiz Descriptions (Planned)
+### Phase 29: Quiz Descriptions (Completed)
 
 **Goal**: Provide short, informative descriptions for all quizzes across all categories to improve user guidance.
 
@@ -204,3 +204,5 @@
 2. **UI Display**:
     - Update the course and mode selection screens to display these descriptions.
     - Implement consistent styling that adapts to the current theme (Physics vs. Biology).
+
+### Phase 30: General Polish & Performance Optimization (Planned)
