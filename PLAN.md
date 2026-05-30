@@ -206,3 +206,36 @@
     - Implement consistent styling that adapts to the current theme (Physics vs. Biology).
 
 ### Phase 30: General Polish & Performance Optimization (Planned)
+
+### Phase 31: Växt-Refinement (In Progress)
+
+**Goal**: Refine the biology course structure, rename it to "Växtkännedom (Svenska)", translate its content into Swedish, and add spelling correction with partial grading and diff highlights.
+
+1. **Course Renaming & Localization**:
+    - Rename `content/biology/växtkännedom` directory to `content/biology/växtkännedom_(svenska)`.
+    - Rename the course dynamically to `Växtkännedom (Svenska)`.
+    - Localize course description, quiz interface buttons, headers, results, statistics, and sidebar elements to Swedish when playing this course.
+2. **Text Input vs Multiple Choice Selector**:
+    - Replace the biology setup screen's 6 fixed buttons with interactive choices:
+        - Selection of identification attributes pairing (e.g. Common Name ↔ Latin, Photo ↔ Common, Photo ↔ Latin).
+        - Selection of quiz format: Text Input (Fritext) or Multiple Choice (Flervalsalternativ).
+3. **Misspelling Analysis & Partial Scoring**:
+    - Calculate character distance (Levenshtein) in the Rust WASM module to grade text-input answers.
+    - If user answer is slightly misspelled but close (similarity ratio >= 0.7), award partial points.
+    - Change Rust WASM scoring return types to float (`f64`) to handle partial points.
+    - Display character-level diffs in the UI results review page to show exactly where letters were inserted or missing.
+
+### Phase 32: Canvas Authentication (Planned)
+
+**Goal**: Implement a fully client-side user authentication using university credentials from Uppsala University or SLU via the Canvas API.
+
+1. **Authentication Flow (Static Client-Side)**:
+    - Add a login/auth dialog to the settings or main menu.
+    - Provide a dropdown selector for the university: Uppsala University (`https://uppsala.instructure.com`) or Swedish University of Agricultural Sciences (SLU) (`https://slu.instructure.com`).
+    - Allow users to input their Canvas developer access token (manually generated under Canvas Account settings) and save it securely in `localStorage`.
+2. **Direct API Verification & CORS**:
+    - Perform a direct client-side fetch call to the Canvas `/api/v1/users/self/profile` endpoint using the token.
+    - Rely on Canvas's native CORS support (which allows requests with credentials/tokens from any origin) to bypass browser CORS blocks on static hosts (like GitHub Pages).
+    - Cache authentication state locally and display the logged-in user's profile in the header/settings.
+3. **Authorized Access Control**:
+    - Restrict access to course content or cumulative stats to authenticated users belonging to Uppsala or SLU.

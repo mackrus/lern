@@ -1,6 +1,6 @@
 import init from "../pkg/lern.js";
 import { State } from "./state.js?v=8";
-import { UI } from "./ui.js?v=8";
+import { UI, translate } from "./ui.js?v=8";
 import { Navigation } from "./navigation.js?v=8";
 import { Renderer } from "./render.js?v=8";
 import { Biology } from "./biology.js?v=8";
@@ -117,16 +117,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("copy-prompt-btn").onclick = async (e) => {
         e.preventDefault();
-        const questionRaw = get_current_question_raw() || "Question data missing.";
-        const explanationRaw = get_current_question_explanation_raw() || "No explanation provided.";
-        const courseName = State.currentCourse || "physics";
-        const prompt = `Please further explain the following ${courseName} problem and its solution, use simple language and don't make things more complicated than they need to be:\n\nQuestion:\n${questionRaw}\n\nExplanation:\n${explanationRaw}`;
+        const isSe = State.currentCourse === "Växtkännedom (Svenska)";
+        const questionRaw = get_current_question_raw() || (isSe ? "Frågedata saknas." : "Question data missing.");
+        const explanationRaw = get_current_question_explanation_raw() || (isSe ? "Ingen förklaring angiven." : "No explanation provided.");
+        
+        let prompt = "";
+        if (isSe) {
+            prompt = `Vänligen förklara följande problem och dess lösning ytterligare. Använd ett enkelt språk och gör inte saker mer komplicerade än de behöver vara:\n\nFråga:\n${questionRaw}\n\nFörklaring:\n${explanationRaw}`;
+        } else {
+            const courseName = State.currentCourse || "physics";
+            prompt = `Please further explain the following ${courseName} problem and its solution, use simple language and don't make things more complicated than they need to be:\n\nQuestion:\n${questionRaw}\n\nExplanation:\n${explanationRaw}`;
+        }
         
         try {
             await navigator.clipboard.writeText(prompt);
             const btn = document.getElementById("copy-prompt-btn");
             const originalText = btn.innerText;
-            btn.innerText = "Copied!";
+            btn.innerText = translate("copied", isSe);
             setTimeout(() => btn.innerText = originalText, 2000);
         } catch (err) {
             console.error("Failed to copy:", err);

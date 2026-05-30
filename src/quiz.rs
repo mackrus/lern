@@ -32,7 +32,7 @@ pub struct Question {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TopicStats {
     pub topic: String,
-    pub correct: usize,
+    pub correct: f64,
     pub total: usize,
 }
 
@@ -144,61 +144,29 @@ impl Quiz {
         self.is_graded = true;
     }
 
-    pub fn get_score(&self) -> usize {
+    pub fn get_score(&self) -> f64 {
         if !self.is_graded {
-            return 0;
+            return 0.0;
         }
-        let mut score = 0;
+        let mut score = 0.0;
         for (i, question) in self.questions.iter().enumerate() {
             let selected = self.selections.get(i).and_then(|s| s.as_ref());
-            if let Some(sel) = selected {
-                if question.is_text_input.unwrap_or(false) {
-                    if let Some(expected) = &question.expected_answer {
-                        if normalize_answer(sel) == normalize_answer(expected) {
-                            score += 1;
-                        }
-                    }
-                } else if let Ok(idx) = sel.parse::<usize>() {
-                    if let Some(alt) = question.alternatives.get(idx) {
-                        if alt.is_correct {
-                            score += 1;
-                        }
-                    }
-                }
-            }
+            score += grade_question(question, selected.map(|s| s.as_str()));
         }
         score
     }
 
     pub fn get_topic_stats(&self) -> Vec<TopicStats> {
-        let mut stats: std::collections::HashMap<String, (usize, usize)> =
+        let mut stats: std::collections::HashMap<String, (f64, usize)> =
             std::collections::HashMap::new();
         for (i, question) in self.questions.iter().enumerate() {
             let selected = self.selections.get(i).and_then(|s| s.as_ref());
-            let mut is_correct = false;
-
-            if let Some(sel) = selected {
-                if question.is_text_input.unwrap_or(false) {
-                    if let Some(expected) = &question.expected_answer {
-                        if normalize_answer(sel) == normalize_answer(expected) {
-                            is_correct = true;
-                        }
-                    }
-                } else if let Ok(idx) = sel.parse::<usize>() {
-                    if let Some(alt) = question.alternatives.get(idx) {
-                        if alt.is_correct {
-                            is_correct = true;
-                        }
-                    }
-                }
-            }
+            let score = grade_question(question, selected.map(|s| s.as_str()));
 
             for topic in &question.topics {
-                let entry = stats.entry(topic.clone()).or_insert((0, 0));
+                let entry = stats.entry(topic.clone()).or_insert((0.0, 0));
                 entry.1 += 1;
-                if is_correct {
-                    entry.0 += 1;
-                }
+                entry.0 += score;
             }
         }
 
@@ -221,25 +189,8 @@ impl Quiz {
         let mut indices = Vec::new();
         for (i, question) in self.questions.iter().enumerate() {
             let selected = self.selections.get(i).and_then(|s| s.as_ref());
-            let mut is_correct = false;
-
-            if let Some(sel) = selected {
-                if question.is_text_input.unwrap_or(false) {
-                    if let Some(expected) = &question.expected_answer {
-                        if normalize_answer(sel) == normalize_answer(expected) {
-                            is_correct = true;
-                        }
-                    }
-                } else if let Ok(idx) = sel.parse::<usize>() {
-                    if let Some(alt) = question.alternatives.get(idx) {
-                        if alt.is_correct {
-                            is_correct = true;
-                        }
-                    }
-                }
-            }
-
-            if !is_correct {
+            let score = grade_question(question, selected.map(|s| s.as_str()));
+            if score < 1.0 {
                 indices.push(i);
             }
         }
@@ -251,8 +202,75 @@ impl Quiz {
     }
 }
 
+fn levenshtein_distance(s1: &str, s2: &str) -> usize {
+    let v1: Vec<char> = s1.chars().collect();
+    let v2: Vec<char> = s2.chars().collect();
+    let len1 = v1.len();
+    let len2 = v2.len();
+    
+    if len1 == 0 { return len2; }
+    if len2 == 0 { return len1; }
+    
+    let mut dp = vec![vec![0; len2 + 1]; len1 + 1];
+    
+    for i in 0..=len1 {
+        dp[i][0] = i;
+    }
+    for j in 0..=len2 {
+        dp[0][j] = j;
+    }
+    
+    for i in 1..=len1 {
+        for j in 1..=len2 {
+            let cost = if v1[i - 1] == v2[j - 1] { 0 } else { 1 };
+            dp[i][j] = std::cmp::min(
+                std::cmp::min(dp[i - 1][j] + 1, dp[i][j - 1] + 1),
+                dp[i - 1][j - 1] + cost
+            );
+        }
+    }
+    
+    dp[len1][len2]
+}
+
+fn similarity_ratio(s1: &str, s2: &str) -> f64 {
+    let len1 = s1.chars().count();
+    let len2 = s2.chars().count();
+    if len1 == 0 && len2 == 0 {
+        return 1.0;
+    }
+    let max_len = std::cmp::max(len1, len2);
+    let dist = levenshtein_distance(s1, s2);
+    1.0 - (dist as f64) / (max_len as f64)
+}
+
+fn grade_question(question: &Question, selected: Option<&str>) -> f64 {
+    if let Some(sel) = selected {
+        if question.is_text_input.unwrap_or(false) {
+            if let Some(expected) = &question.expected_answer {
+                let sel_norm = normalize_answer(sel);
+                let exp_norm = normalize_answer(expected);
+                if sel_norm == exp_norm {
+                    return 1.0;
+                }
+                let ratio = similarity_ratio(&sel_norm, &exp_norm);
+                if ratio >= 0.7 {
+                    return 0.5;
+                }
+            }
+        } else if let Ok(idx) = sel.parse::<usize>() {
+            if let Some(alt) = question.alternatives.get(idx) {
+                if alt.is_correct {
+                    return 1.0;
+                }
+            }
+        }
+    }
+    0.0
+}
+
 fn normalize_answer(s: &str) -> String {
-    s.trim()
+s.trim()
         .to_lowercase()
         .replace('’', "'")
         .replace('‘', "'")
@@ -311,12 +329,12 @@ mod tests {
             .unwrap();
         quiz.select_answer(correct_idx.to_string());
         assert_eq!(quiz.get_current_selection(), Some(correct_idx.to_string()));
-        assert_eq!(quiz.get_score(), 0, "score should be 0 before grading");
+        assert_eq!(quiz.get_score(), 0.0, "score should be 0 before grading");
         assert!(!quiz.is_graded);
 
         quiz.grade();
         assert!(quiz.is_graded);
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 1.0);
     }
 
     #[test]
@@ -331,7 +349,7 @@ mod tests {
             .position(|a| !a.is_correct)
             .unwrap();
         quiz.select_answer(wrong_idx.to_string());
-        assert_eq!(quiz.get_score(), 0);
+        assert_eq!(quiz.get_score(), 0.0);
         quiz.grade();
         assert_eq!(quiz.incorrect_question_indices(), vec![0]);
     }
@@ -381,7 +399,7 @@ mod tests {
 
         quiz.select_answer(correct_idx.to_string());
         quiz.grade();
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 1.0);
         assert!(quiz.incorrect_question_indices().is_empty());
 
         // Verify deterministic shuffle consistency (same ID -> same correct_idx)
@@ -468,7 +486,7 @@ mod tests {
         assert_eq!(quiz.total_questions(), 0);
         assert_eq!(quiz.current_question_index(), 0);
         assert!(quiz.current_question().is_none());
-        assert_eq!(quiz.get_score(), 0);
+        assert_eq!(quiz.get_score(), 0.0);
         assert!(!quiz.can_go_back());
 
         // Navigation on empty quiz should not panic
@@ -535,7 +553,7 @@ mod tests {
 
         quiz.select_answer(correct_idx.to_string());
         quiz.grade();
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 1.0);
 
         // Attempt to change answer after grading — should be ignored
         quiz.select_answer(wrong_idx.to_string());
@@ -544,7 +562,7 @@ mod tests {
             Some(correct_idx.to_string()),
             "Selection should remain locked after grading"
         );
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 1.0);
     }
 
     #[test]
@@ -586,10 +604,10 @@ mod tests {
 
         let score = quiz.get_score();
         let incorrect = quiz.incorrect_question_indices();
-        assert_eq!(score, 2);
+        assert_eq!(score, 2.0);
         assert_eq!(incorrect.len(), 1);
         assert_eq!(
-            score + incorrect.len(),
+            (score as usize) + incorrect.len(),
             quiz.total_questions(),
             "score + incorrect should equal total for a fully answered quiz"
         );
@@ -641,7 +659,7 @@ mod tests {
         let score_before = quiz.get_score();
         let incorrect_before = quiz.incorrect_question_indices();
 
-        assert_eq!(score_before, 0, "get_score returns 0 before grading");
+        assert_eq!(score_before, 0.0, "get_score returns 0 before grading");
         assert!(
             incorrect_before.is_empty(),
             "incorrect_question_indices returns empty before grading"
@@ -651,7 +669,7 @@ mod tests {
         quiz.grade();
         let score_after = quiz.get_score();
         let incorrect_after = quiz.incorrect_question_indices();
-        assert_eq!(score_after, 1);
+        assert_eq!(score_after, 1.0);
         assert!(incorrect_after.is_empty());
     }
 
@@ -663,7 +681,7 @@ mod tests {
         // Exact match (case-insensitive, trimmed)
         quiz.select_answer("  mitochondria  ".to_string());
         quiz.grade();
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 1.0);
     }
 
     #[test]
@@ -686,7 +704,7 @@ mod tests {
         let mut quiz = Quiz::new(vec![q]);
         quiz.select_answer("anything".to_string());
         quiz.grade();
-        assert_eq!(quiz.get_score(), 0);
+        assert_eq!(quiz.get_score(), 0.0);
     }
 
     #[test]
@@ -717,9 +735,9 @@ mod tests {
         let physics = stats.iter().find(|s| s.topic == "Physics").unwrap();
 
         assert_eq!(math.total, 2);
-        assert_eq!(math.correct, 1);
+        assert_eq!(math.correct, 1.0);
         assert_eq!(physics.total, 1);
-        assert_eq!(physics.correct, 1);
+        assert_eq!(physics.correct, 1.0);
     }
 
     #[test]
@@ -763,7 +781,7 @@ mod tests {
 
         quiz.select_answer("999".to_string()); // index 999 doesn't exist
         quiz.grade();
-        assert_eq!(quiz.get_score(), 0, "Out-of-bounds alternative index should score 0");
+        assert_eq!(quiz.get_score(), 0.0, "Out-of-bounds alternative index should score 0");
 
         let incorrect = quiz.incorrect_question_indices();
         assert_eq!(incorrect, vec![0]);
@@ -777,7 +795,7 @@ mod tests {
 
         quiz.select_answer("not_a_number".to_string());
         quiz.grade();
-        assert_eq!(quiz.get_score(), 0, "Non-numeric selection should score 0 for MC");
+        assert_eq!(quiz.get_score(), 0.0, "Non-numeric selection should score 0 for MC");
     }
 
     #[test]
@@ -836,10 +854,10 @@ mod tests {
         quiz.select_answer(idx.to_string());
 
         quiz.grade();
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 1.0);
 
         quiz.grade(); // Grade again
-        assert_eq!(quiz.get_score(), 1);
+        assert_eq!(quiz.get_score(), 1.0);
         assert!(quiz.is_graded);
     }
 
@@ -862,12 +880,12 @@ mod tests {
         quiz.select_answer("42".to_string());
 
         quiz.grade();
-        assert_eq!(quiz.get_score(), 2);
+        assert_eq!(quiz.get_score(), 2.0);
         assert!(quiz.incorrect_question_indices().is_empty());
 
         let stats = quiz.get_topic_stats();
         let mixed = stats.iter().find(|s| s.topic == "Mixed").unwrap();
-        assert_eq!(mixed.correct, 2);
+        assert_eq!(mixed.correct, 2.0);
         assert_eq!(mixed.total, 2);
     }
 
@@ -886,7 +904,7 @@ mod tests {
 
         quiz.select_answer("0".to_string());
         quiz.grade();
-        assert_eq!(quiz.get_score(), 0);
+        assert_eq!(quiz.get_score(), 0.0);
         assert_eq!(quiz.incorrect_question_indices(), vec![0]);
     }
 
@@ -898,7 +916,7 @@ mod tests {
 
         quiz.select_answer("0".to_string());
         quiz.grade();
-        assert_eq!(quiz.get_score(), 0);
+        assert_eq!(quiz.get_score(), 0.0);
     }
 
     #[test]
@@ -923,16 +941,6 @@ mod tests {
         assert_eq!(quiz.get_current_selection(), Some("0".to_string()));
     }
 
-    /// Simulates the practice mode bug for Thermodynamics:
-    /// All 16 thermodynamics questions have label="exam", none have label="practice".
-    /// The JS frontend (navigation.js:234) filters with `q.label === "practice"`,
-    /// producing an empty list, so the quiz silently fails to start.
-    /// Reproduces the thermodynamics practice mode issue:
-    /// All thermodynamics questions have label="exam", none have label="practice".
-    /// The UI (physics.js) now hides mode buttons when no questions match,
-    /// preventing users from entering an empty quiz. This test verifies that
-    /// the label-based filtering correctly produces zero results, confirming
-    /// the UI must gate on available labels.
     #[test]
     fn test_practice_mode_no_matching_label_thermodynamics() {
         // Simulate thermodynamics: all questions labeled "exam", none "practice"
@@ -969,5 +977,33 @@ mod tests {
             .filter(|q| q.label.as_deref() == Some("exam"))
             .collect();
         assert_eq!(exam_questions.len(), 16, "All questions are exam-labeled");
+    }
+
+    #[test]
+    fn test_levenshtein_partial_grading() {
+        let q = make_text_question("lev1", vec!["Bio"], "korkgran");
+        let mut quiz = Quiz::new(vec![q]);
+
+        // Exact match -> 1.0 points
+        quiz.select_answer("korkgran".to_string());
+        quiz.grade();
+        assert_eq!(quiz.get_score(), 1.0);
+
+        // Spelling error slightly off (similarity ratio >= 0.7) -> 0.5 points
+        // korkgarn vs korkgran has ratio 0.75
+        let mut quiz2 = Quiz::new(vec![make_text_question("lev1", vec!["Bio"], "korkgran")]);
+        quiz2.select_answer("korkgarn".to_string());
+        quiz2.grade();
+        assert_eq!(quiz2.get_score(), 0.5);
+        // It should be considered incorrect/partial, so it's in incorrect indices
+        assert_eq!(quiz2.incorrect_question_indices(), vec![0]);
+
+        // Spelling error completely off (similarity ratio < 0.7) -> 0.0 points
+        // kork vs korkgran has ratio 4/8 = 0.5 < 0.7
+        let mut quiz3 = Quiz::new(vec![make_text_question("lev1", vec!["Bio"], "korkgran")]);
+        quiz3.select_answer("kork".to_string());
+        quiz3.grade();
+        assert_eq!(quiz3.get_score(), 0.0);
+        assert_eq!(quiz3.incorrect_question_indices(), vec![0]);
     }
 }

@@ -206,9 +206,9 @@ pub fn get_references_json_by_index(index: usize) -> Option<String> {
 }
 
 #[wasm_bindgen]
-pub fn get_score() -> usize {
+pub fn get_score() -> f64 {
     let state = QUIZ_STATE.lock().unwrap();
-    state.as_ref().map(|s| s.get_score()).unwrap_or(0)
+    state.as_ref().map(|s| s.get_score()).unwrap_or(0.0)
 }
 
 #[wasm_bindgen]
