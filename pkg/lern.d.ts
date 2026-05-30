@@ -95,9 +95,9 @@ export interface InitOutput {
     readonly grade_quiz: () => void;
     readonly get_current_question_index: () => number;
     readonly previous_question: () => void;
-    readonly get_score: () => number;
     readonly next_question: () => void;
     readonly set_question_index: (a: number) => void;
+    readonly get_score: () => number;
     readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;

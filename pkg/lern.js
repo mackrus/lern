@@ -212,7 +212,7 @@ export function get_references_json_by_index(index) {
  */
 export function get_score() {
     const ret = wasm.get_score();
-    return ret >>> 0;
+    return ret;
 }
 
 /**

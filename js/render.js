@@ -26,7 +26,104 @@ import {
     get_references_json_by_index
 } from "../pkg/lern.js";
 import { State } from "./state.js?v=8";
-import { UI } from "./ui.js?v=8";
+import { UI, translate } from "./ui.js?v=8";
+
+function jsLevenshtein(s1, s2) {
+    const len1 = s1.length;
+    const len2 = s2.length;
+    if (len1 === 0) return len2;
+    if (len2 === 0) return len1;
+    
+    const dp = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
+    for (let i = 0; i <= len1; i++) dp[i][0] = i;
+    for (let j = 0; j <= len2; j++) dp[0][j] = j;
+    
+    for (let i = 1; i <= len1; i++) {
+        for (let j = 1; j <= len2; j++) {
+            const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+            dp[i][j] = Math.min(
+                dp[i - 1][j] + 1,
+                dp[i][j - 1] + 1,
+                dp[i - 1][j - 1] + cost
+            );
+        }
+    }
+    return dp[len1][len2];
+}
+
+function diffStrings(userStr, correctStr) {
+    const s1 = userStr;
+    const s2 = correctStr;
+    const len1 = s1.length;
+    const len2 = s2.length;
+
+    const dp = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
+    for (let i = 0; i <= len1; i++) dp[i][0] = i;
+    for (let j = 0; j <= len2; j++) dp[0][j] = j;
+
+    for (let i = 1; i <= len1; i++) {
+        for (let j = 1; j <= len2; j++) {
+            if (s1[i - 1] === s2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = Math.min(
+                    dp[i - 1][j] + 1,
+                    dp[i][j - 1] + 1,
+                    dp[i - 1][j - 1] + 1
+                );
+            }
+        }
+    }
+
+    let i = len1;
+    let j = len2;
+    const edits = [];
+
+    while (i > 0 || j > 0) {
+        if (i > 0 && j > 0 && s1[i - 1] === s2[j - 1]) {
+            edits.push({ type: 'match', char: s1[i - 1] });
+            i--;
+            j--;
+        } else if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + 1) {
+            edits.push({ type: 'insert', char: s2[j - 1] });
+            edits.push({ type: 'delete', char: s1[i - 1] });
+            i--;
+            j--;
+        } else if (i > 0 && (j === 0 || dp[i][j] === dp[i - 1][j] + 1)) {
+            edits.push({ type: 'delete', char: s1[i - 1] });
+            i--;
+        } else if (j > 0 && (i === 0 || dp[i][j] === dp[i][j - 1] + 1)) {
+            edits.push({ type: 'insert', char: s2[j - 1] });
+            j--;
+        } else {
+            if (i > 0) {
+                edits.push({ type: 'delete', char: s1[i - 1] });
+                i--;
+            } else {
+                edits.push({ type: 'insert', char: s2[j - 1] });
+                j--;
+            }
+        }
+    }
+
+    edits.reverse();
+
+    let userHtml = "";
+    let correctHtml = "";
+
+    edits.forEach(edit => {
+        if (edit.type === 'match') {
+            userHtml += edit.char;
+            correctHtml += edit.char;
+        } else if (edit.type === 'delete') {
+            userHtml += `<span class="diff-delete">${edit.char}</span>`;
+        } else if (edit.type === 'insert') {
+            correctHtml += `<span class="diff-insert">${edit.char}</span>`;
+        }
+    });
+
+    return { userHtml, correctHtml };
+}
 
 export const Renderer = {
     renderQuiz() {
@@ -85,6 +182,13 @@ export const Renderer = {
             if (bioSelector) bioSelector.style.display = "none";
         }
 
+        // Apply translations
+        const backBtn = document.getElementById("back-to-menu");
+        if (backBtn) backBtn.innerText = translate("back_to_menu");
+        
+        const sidebarHeader = document.querySelector("#alternatives-area h3");
+        if (sidebarHeader) sidebarHeader.innerText = translate("your_answer_header");
+
         UI.fixSvgs();
     },
 
@@ -105,7 +209,11 @@ export const Renderer = {
             questionLabel.style.display = "none";
         }
 
-        document.getElementById("copy-prompt-btn").style.display = graded ? "none" : "block";
+        const copyPromptBtn = document.getElementById("copy-prompt-btn");
+        if (copyPromptBtn) {
+            copyPromptBtn.style.display = graded ? "none" : "block";
+            copyPromptBtn.innerText = translate("copy_prompt");
+        }
     },
 
     renderQuestionNavBar(currentIndex, total) {
@@ -161,7 +269,9 @@ export const Renderer = {
         const input = document.createElement("input");
         input.type = "text";
         input.id = "answer-input";
-        input.placeholder = "Type answer here...";
+        
+        const isSe = State.currentCourse === "Växtkännedom (Svenska)";
+        input.placeholder = isSe ? "Skriv ditt svar här..." : "Type answer here...";
         input.className = "alternative";
         
         const selection = get_current_selection() || "";
@@ -170,22 +280,55 @@ export const Renderer = {
 
         if (graded) {
             const expected = currentQuestion.expected_answer || "";
-            const isCorrect = selection && expected &&
-                selection.trim().toLowerCase() === expected.trim().toLowerCase();
-            input.classList.add(isCorrect ? "graded-correct" : "graded-incorrect");
+            
+            // Normalize for comparison
+            const selNorm = selection.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
+            const expNorm = expected.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
+            
+            const dist = jsLevenshtein(selNorm, expNorm);
+            const maxLen = Math.max(selNorm.length, expNorm.length);
+            const ratio = maxLen === 0 ? 1.0 : (1.0 - dist / maxLen);
+            
+            const isCorrect = ratio === 1.0;
+            const isPartial = !isCorrect && ratio >= 0.7;
+
+            if (isCorrect) {
+                input.classList.add("graded-correct");
+            } else if (isPartial) {
+                input.classList.add("graded-partial");
+            } else {
+                input.classList.add("graded-incorrect");
+            }
 
             container.appendChild(input);
 
             const summary = document.createElement("div");
             summary.className = "user-answer-summary";
+            
             if (selection) {
-                const answerClass = isCorrect ? "answer-correct" : "answer-incorrect";
-                summary.innerHTML = `<div><span class="label">Your answer:</span> <strong class="${answerClass}">${selection}</strong></div>`;
+                let answerClass = "answer-incorrect";
+                let statusText = "";
+                if (isCorrect) {
+                    answerClass = "answer-correct";
+                } else if (isPartial) {
+                    answerClass = "answer-partial";
+                    statusText = isSe ? " (Stavarfel - 0.5p)" : " (Misspelled - 0.5p)";
+                }
+                
+                const diffs = diffStrings(selection, expected);
+                
+                if (isCorrect) {
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${selection}</strong></div>`;
+                } else if (isPartial) {
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${diffs.userHtml}</strong>${statusText}</div>`;
+                    summary.innerHTML += `<div><span class="label">${translate("correct_spelling")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
+                } else {
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${diffs.userHtml}</strong></div>`;
+                    summary.innerHTML += `<div><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
+                }
             } else {
-                summary.innerHTML = `<div class="answer-missing">No answer given</div>`;
-            }
-            if (!isCorrect) {
-                summary.innerHTML += `<div><span class="label">Correct answer:</span> <strong class="answer-correct">${expected}</strong></div>`;
+                summary.innerHTML = `<div class="answer-missing">${translate("no_answer_given")}</div>`;
+                summary.innerHTML += `<div><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${expected}</strong></div>`;
             }
             container.appendChild(summary);
             return;
@@ -258,7 +401,9 @@ export const Renderer = {
         if (prereqHtml) {
             prereqBtn.style.display = "block";
             prereqDiv.innerHTML = prereqHtml;
-            prereqBtn.innerText = prereqDiv.style.display === "block" ? "Hide Prerequisites" : "Show Prerequisites";
+            prereqBtn.innerText = prereqDiv.style.display === "block" 
+                ? translate("hide_prereqs") 
+                : translate("show_prereqs");
         } else {
             prereqBtn.style.display = "none";
             prereqDiv.style.display = "none";
@@ -270,7 +415,9 @@ export const Renderer = {
         if (refs.length > 0) {
             refsBtn.style.display = "block";
             refsDiv.innerHTML = this.buildReferencesHtml(refs);
-            refsBtn.innerText = refsDiv.style.display === "block" ? "Hide References" : "Where do i read about this?";
+            refsBtn.innerText = refsDiv.style.display === "block" 
+                ? translate("hide_refs") 
+                : translate("read_about_this");
         } else {
             refsBtn.style.display = "none";
             refsDiv.style.display = "none";
@@ -287,7 +434,9 @@ export const Renderer = {
         } else {
             toggleAltBtn.style.display = "block";
             altArea.style.display = "block";
-            toggleAltBtn.innerText = toggleAltBtn.dataset.state === "shown" ? "Hide" : "Show";
+            toggleAltBtn.innerText = toggleAltBtn.dataset.state === "shown" 
+                ? translate("hide_alts") 
+                : translate("show_alts");
         }
         
         // Explanation
@@ -295,7 +444,10 @@ export const Renderer = {
         if (graded) {
             explanationDiv.style.display = "block";
             const currentIndex = get_current_question_index();
-            explanationDiv.innerHTML = get_explanation_html_by_index(currentIndex) || "No explanation available.";
+            const rawExplanation = get_explanation_html_by_index(currentIndex);
+            const isSe = State.currentCourse === "Växtkännedom (Svenska)";
+            const noExplanation = isSe ? "Ingen förklaring tillgänglig." : "No explanation available.";
+            explanationDiv.innerHTML = rawExplanation || noExplanation;
         } else {
             explanationDiv.style.display = "none";
             explanationDiv.innerHTML = "";
@@ -303,7 +455,7 @@ export const Renderer = {
     },
 
     buildReferencesHtml(refs) {
-        let html = "<h4 style='margin-top: 0; opacity: 0.8;'>Where do i read about this?</h4><ul style='margin-bottom: 0; padding-left: 1.5rem;'>";
+        let html = `<h4 style='margin-top: 0; opacity: 0.8;'>${translate("read_about_this")}</h4><ul style='margin-bottom: 0; padding-left: 1.5rem;'>`;
         refs.forEach(ref => {
             html += `<li><strong>${ref.book}</strong>, Chapter ${ref.chapter}${ref.topic ? ` (${ref.topic})` : ""}</li>`;
         });
@@ -330,6 +482,10 @@ export const Renderer = {
         prevBtn.style.display = currentIndex > 0 ? "block" : "none";
         nextBtn.style.display = currentIndex < total - 1 ? "block" : "none";
         gradeBtn.style.display = "block";
+
+        prevBtn.innerText = translate("prev_question");
+        nextBtn.innerText = translate("next_question");
+        gradeBtn.innerText = translate("grade_quiz");
     },
 
     renderFinalResults() {
@@ -340,15 +496,33 @@ export const Renderer = {
 
         finalResults.style.display = "block";
         document.getElementById("score-container").style.display = "block";
-        document.getElementById("final-score").innerText = `You scored ${score} out of ${total}`;
-        document.getElementById("percentage-score").innerText = `${percentage}% - ${UI.getRank(percentage)}`;
+        
+        const resultsHeader = finalResults.querySelector("h2");
+        if (resultsHeader) resultsHeader.innerText = translate("quiz_results");
+
+        document.getElementById("final-score").innerText = translate("scored_out_of")
+            .replace("{score}", score)
+            .replace("{total}", total);
+        
+        let rankKey = "rank_review";
+        if (percentage === 100) rankKey = "rank_perfect";
+        else if (percentage >= 90) rankKey = "rank_excellent";
+        else if (percentage >= 80) rankKey = "rank_great";
+        else if (percentage >= 70) rankKey = "rank_good";
+        else if (percentage >= 50) rankKey = "rank_practice";
+        const rankName = translate(rankKey);
+        document.getElementById("percentage-score").innerText = `${percentage}% - ${rankName}`;
 
         const restartBtn = document.getElementById("restart-btn");
         if (restartBtn) {
+            restartBtn.innerText = translate("back_to_menu_btn");
             restartBtn.onclick = () => {
                 import("./navigation.js?v=8").then(m => m.Navigation.showMenu());
             };
         }
+
+        const topicStatsHeader = document.querySelector("#topic-stats h3");
+        if (topicStatsHeader) topicStatsHeader.innerText = translate("topic_analysis");
 
         this.renderTopicStats(percentage);
         this.renderIncorrectReview();
@@ -396,10 +570,14 @@ export const Renderer = {
             return;
         }
 
+        const isSe = State.currentCourse === "Växtkännedom (Svenska)";
         recContainer.style.display = "block";
+        const recHeader = recContainer.querySelector("h3");
+        if (recHeader) recHeader.innerText = translate("next_steps");
+
         if (weaknesses.length > 0) {
             const p = document.createElement("p");
-            p.innerHTML = `<span class="weakness">Focus needed:</span> You should spend more time on <strong>${weaknesses.join(", ")}</strong>.`;
+            p.innerHTML = translate("focus_needed").replace("{topics}", weaknesses.join(", "));
             recList.appendChild(p);
 
             const btnContainer = document.createElement("div");
@@ -409,14 +587,14 @@ export const Renderer = {
 
             const practiceBtn = document.createElement("button");
             practiceBtn.className = "alternative";
-            practiceBtn.innerText = "Practice Weak Areas";
+            practiceBtn.innerText = translate("practice_weak");
             practiceBtn.onclick = () => this.restartPractice(weaknesses);
             
             btnContainer.appendChild(practiceBtn);
             recList.appendChild(btnContainer);
         } else if (strengths.length === topicStats.length && percentage >= 90) {
             const p = document.createElement("p");
-            p.innerHTML = `<span class="strength">Outstanding!</span> You have mastered all selected topics. Ready for the next challenge?`;
+            p.innerHTML = translate("mastered_all");
             recList.appendChild(p);
         }
     },
@@ -426,10 +604,10 @@ export const Renderer = {
         const { Navigation } = await import("./navigation.js?v=8");
         
         if (State.currentMode === "biology_custom" && State.currentSavedState.bioParams) {
-            const { qAttr, aAttr, limit } = State.currentSavedState.bioParams;
+            const { qAttr, aAttr, limit, isTextInput } = State.currentSavedState.bioParams;
             const { Biology } = await import("./biology.js?v=8");
 
-            Biology.startQuiz(qAttr, aAttr, limit);
+            Biology.startQuiz(qAttr, aAttr, limit, isTextInput, State.currentCourse === "Växtkännedom (Svenska)");
         } else {
             Navigation.startQuiz(State.currentCourse, "topic", { selectedTopics: weaknesses });
         }
@@ -444,6 +622,10 @@ export const Renderer = {
             incorrectReview.style.display = "none";
             return;
         }
+
+        const isSe = State.currentCourse === "Växtkännedom (Svenska)";
+        const incorrectHeader = incorrectReview.querySelector("h3");
+        if (incorrectHeader) incorrectHeader.innerText = translate("review_incorrect");
 
         const selectionsJson = get_selections_json();
         const selections = selectionsJson ? JSON.parse(selectionsJson) : [];
@@ -467,9 +649,24 @@ export const Renderer = {
             // Build user answer HTML
             let userAnswerHtml = "";
             if (sel === null || sel === undefined) {
-                userAnswerHtml = `<span class="answer-missing">No answer given</span>`;
+                userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span>`;
             } else if (question && question.is_text_input) {
-                userAnswerHtml = `<strong class="answer-incorrect">${sel}</strong>`;
+                const expected = question.expected_answer || "";
+                const selNorm = sel.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
+                const expNorm = expected.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
+                const dist = jsLevenshtein(selNorm, expNorm);
+                const maxLen = Math.max(selNorm.length, expNorm.length);
+                const ratio = maxLen === 0 ? 1.0 : (1.0 - dist / maxLen);
+                
+                const isPartial = ratio >= 0.7;
+                const diffs = diffStrings(sel, expected);
+                
+                if (isPartial) {
+                    const statusText = isSe ? " (Stavarfel - 0.5p)" : " (Misspelled - 0.5p)";
+                    userAnswerHtml = `<strong class="answer-partial">${diffs.userHtml}</strong> <span style="font-size:0.85rem; opacity:0.7;">${statusText}</span><br><span class="label">${translate("correct_spelling")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
+                } else {
+                    userAnswerHtml = `<strong class="answer-incorrect">${diffs.userHtml}</strong><br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
+                }
             } else {
                 // MC: get the alternative HTML via WASM (needs correct question context)
                 set_question_index(idx);
@@ -495,14 +692,16 @@ export const Renderer = {
                 }
             }
 
+            const noExplanation = isSe ? "Ingen förklaring tillgänglig." : "No explanation available.";
+
             item.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Question ${idx + 1}:</div>
+                <div style="font-weight: bold; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${translate("question_num").replace("{num}", idx + 1)}</div>
                 <div style="margin-bottom: 1.5rem;">${qHtml}</div>
                 <div class="user-answer-summary" style="margin-bottom: 1.5rem;">
-                    <div><span class="label">Your answer:</span> ${userAnswerHtml}</div>
+                    <div><span class="label">${translate("your_answer")}:</span> ${userAnswerHtml}</div>
                 </div>
                 <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
-                    <strong>Explanation:</strong><br>${eHtml || "No explanation available."}
+                    <strong>${translate("explanation")}:</strong><br>${eHtml || noExplanation}
                 </div>
             `;
             incorrectList.appendChild(item);

@@ -510,6 +510,14 @@
         .alternative.graded-incorrect:hover {
             transform: none;
         }
+        .alternative.graded-partial {
+            border-color: #ffaa00;
+            background-color: rgba(255, 170, 0, 0.08);
+            cursor: default;
+        }
+        .alternative.graded-partial:hover {
+            transform: none;
+        }
         .alternative.graded-neutral {
             cursor: default;
             opacity: 0.4;
@@ -536,9 +544,26 @@
         .user-answer-summary .answer-incorrect {
             color: #ff4444;
         }
+        .user-answer-summary .answer-partial {
+            color: #ffaa00;
+        }
         .user-answer-summary .answer-missing {
             opacity: 0.5;
             font-style: italic;
+        }
+        .diff-delete {
+            background-color: rgba(255, 68, 68, 0.2);
+            text-decoration: line-through;
+            color: #ff4444;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .diff-insert {
+            background-color: rgba(68, 255, 68, 0.2);
+            text-decoration: underline;
+            color: #44ff44;
+            padding: 0 2px;
+            border-radius: 2px;
         }
     </style>
 <body>

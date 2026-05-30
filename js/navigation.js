@@ -1,5 +1,5 @@
 import { State } from "./state.js?v=8";
-import { UI } from "./ui.js?v=8";
+import { UI, translate } from "./ui.js?v=8";
 import { Renderer } from "./render.js?v=8";
 import { 
     init_quiz, 
@@ -120,7 +120,8 @@ export const Navigation = {
             const progress = State.load(courseName);
             const isInProgress = progress && !progress.graded;
 
-            btn.innerText = courseName + (isInProgress ? " (In Progress)" : "");
+            const isSe = courseName === "Växtkännedom (Svenska)";
+            btn.innerText = courseName + (isInProgress ? translate("in_progress", isSe) : "");
             
             btn.onmouseover = () => {
                 if (courseDescriptionEl && courseInfo.description) {
@@ -161,7 +162,7 @@ export const Navigation = {
                 resetBtn.innerHTML = "↺";
                 resetBtn.onclick = (e) => {
                     e.stopPropagation();
-                    if (confirm(`Reset progress for ${courseName}?`)) {
+                    if (confirm(translate("confirm_reset_progress", isSe).replace("{course}", courseName))) {
                         State.clear(courseName);
                         this.showCategoryCourses(categoryName);
                     }
@@ -328,12 +329,14 @@ export const Navigation = {
         const closeBtn = document.getElementById("close-stats-btn");
         const resetBtn = document.getElementById("reset-stats-btn");
 
-        title.innerText = `${courseName} - Overall Progress`;
+        const isSe = courseName === "Växtkännedom (Svenska)";
+        title.innerText = `${courseName} - ${translate("overall_progress", isSe)}`;
         list.innerHTML = "";
 
         const stats = State.getCumulativeStats(courseName);
         if (!stats) {
-            list.innerHTML = "<p style='text-align: center; opacity: 0.7;'>No stats recorded yet.</p>";
+            const noStatsMsg = isSe ? "Ingen statistik registrerad ännu." : "No stats recorded yet.";
+            list.innerHTML = `<p style='text-align: center; opacity: 0.7;'>${noStatsMsg}</p>`;
         } else {
             Object.keys(stats).sort().forEach(topic => {
                 const data = stats[topic];
@@ -348,6 +351,8 @@ export const Navigation = {
             });
         }
 
+        resetBtn.innerText = translate("reset_all_stats", isSe);
+
         modal.style.display = "block";
         document.body.style.overflow = "hidden";
         closeBtn.onclick = () => {
@@ -355,7 +360,7 @@ export const Navigation = {
             document.body.style.overflow = "auto";
         };
         resetBtn.onclick = () => {
-            if (confirm(`Reset ALL stats for ${courseName}?`)) {
+            if (confirm(translate("confirm_reset_stats", isSe).replace("{course}", courseName))) {
                 State.resetCumulativeStats(courseName);
                 this.showCumulativeStatsView(courseName);
             }
