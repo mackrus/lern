@@ -15,5 +15,7 @@
             "topic": "The Fine Structure of Hydrogen"
         }
     ],
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "has_formulae": true,
+    "has_solution_steps": true
 }

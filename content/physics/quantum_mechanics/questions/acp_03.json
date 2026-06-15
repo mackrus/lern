@@ -15,5 +15,7 @@
             "topic": "Afterword"
         }
     ],
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "has_formulae": true,
+    "has_solution_steps": true
 }

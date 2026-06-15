@@ -350,23 +350,63 @@
 
         #prerequisites {
             background: var(--prereq-bg);
-            padding: 2.5rem;
             margin-top: 2rem;
             margin-bottom: 2.5rem;
-            border-left: 4px solid var(--text-color);
-            font-size: 1.5rem; /* Significant increase for readability */
             border-top: 1px solid var(--border-color);
             border-right: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
         }
 
-        #prerequisites h1, #prerequisites h2, #prerequisites h3 {
+        .study-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--surface-color);
+        }
+
+        .study-tab-btn {
+            background: none;
+            border: none;
+            border-right: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.75rem 1.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.6;
+            transition: opacity 0.2s, background-color 0.2s;
+            margin: 0 !important;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .study-tab-btn:hover {
+            opacity: 1;
+            background-color: var(--hover-color);
+        }
+
+        .study-tab-btn.active {
+            opacity: 1;
+            font-weight: bold;
+            background-color: var(--prereq-bg);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .study-content {
+            padding: 2.5rem;
+            font-size: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .study-content h1, .study-content h2, .study-content h3 {
             margin-top: 1.5rem;
             margin-bottom: 1rem;
             font-size: 1.8rem;
         }
 
-        #prerequisites ul, #prerequisites ol {
+        .study-content ul, .study-content ol {
             padding-left: 2rem;
         }
 
@@ -650,7 +690,7 @@
                     <div id="question">Loading...</div>
                     
                     <div class="controls-container" style="display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-bottom: 2rem; align-items: center;">
-                        <button id="prereq-btn" style="display: none; margin: 0; font-size: 1.2rem; font-weight: bold;">Show Prerequisites</button>
+                        <button id="prereq-btn" style="display: none; margin: 0; font-size: 1.2rem; font-weight: bold;">Show Study Guide</button>
                         <button id="copy-prompt-btn" style="margin: 0; margin-left: auto; font-size: 0.85rem; opacity: 0.6; letter-spacing: 0.02em;">Copy as Prompt</button>
                     </div>
                     <div id="prerequisites" style="display: none;"></div>
@@ -699,11 +739,6 @@
                         </div>
                         <div id="alternatives"></div>
                     </div>
-
-                    <button id="refs-btn" class="sidebar-btn" style="display: none;">Where do i read about this?</button>
-                    <aside id="references" class="sidebar-section" style="display: none;">
-                        <!-- References injected here -->
-                    </aside>
                 </div>
             </div>
         </div>

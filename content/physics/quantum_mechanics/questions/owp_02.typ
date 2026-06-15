@@ -21,6 +21,8 @@ $ sin(x) $
 #set text(size: a_size)
 $ 1/sqrt(L) $
 #expl_page(include "../explanations/owp_02.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#steps_page(include "../solution_steps/owp_02.typ")
 #prereq_page([
-#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+#include "../prerequisites/core/ow_eigenstate_uncertainty.typ"
 ])

@@ -30,9 +30,24 @@
   body
 }
 
+#let formulae_page(body) = {
+  pagebreak()
+  set page(width: i_width, height: auto, margin: i_margin)
+  set text(size: i_size)
+  body
+}
+
+#let steps_page(body) = {
+  pagebreak()
+  set page(width: i_width, height: auto, margin: i_margin)
+  set text(size: i_size)
+  body
+}
+
 #let expl_page(body) = {
   pagebreak()
   set page(width: q_width, height: auto, margin: q_margin)
   set text(size: q_size)
   body
 }
+

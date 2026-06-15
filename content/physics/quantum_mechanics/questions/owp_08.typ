@@ -26,6 +26,8 @@ $L$
 Explanation:
 
 By symmetry of the wavefunction about the origin.
+#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#steps_page(include "../solution_steps/owp_08.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_expectation_values_of_products.typ"
 ])

@@ -24,7 +24,6 @@ export const State = {
         if (!selections) return;
 
         const prereqDiv = document.getElementById("prerequisites");
-        const refsDiv = document.getElementById("references");
         const toggleAltBtn = document.getElementById("toggle-alt-btn");
 
         const state = {
@@ -34,7 +33,6 @@ export const State = {
             selections: selections,
             graded: is_graded(),
             showPrereqs: prereqDiv && prereqDiv.style.display === "block",
-            showRefs: refsDiv && refsDiv.style.display === "block",
             showAlts: toggleAltBtn && toggleAltBtn.dataset.state === "shown",
             selectedTopics: this.currentSavedState ? this.currentSavedState.selectedTopics : null,
             examEndTime: this.currentExamEndTime,

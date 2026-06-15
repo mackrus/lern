@@ -18,6 +18,8 @@ False
 Explanation:
 
 The quantity is $planck / (m_e c^2)$.
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/acp_11.typ")
 #prereq_page([
-#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+#include "../prerequisites/core/adv_units.typ"
 ])

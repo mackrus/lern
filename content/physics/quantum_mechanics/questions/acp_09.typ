@@ -18,6 +18,8 @@ False
 Explanation:
 
 False for superpositions of traveling waves (e.g. standing waves).
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/acp_09.typ")
 #prereq_page([
 #include "../prerequisites/core/prac_born_rule.typ"
 #include "../prerequisites/core/prac_probability_current.typ"

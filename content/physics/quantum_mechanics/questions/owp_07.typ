@@ -21,6 +21,8 @@ $1/L$
 #set text(size: a_size)
 $sqrt(3/L)$
 #expl_page(include "../explanations/owp_07.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#steps_page(include "../solution_steps/owp_07.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_spectrum_normalization.typ"
 ])

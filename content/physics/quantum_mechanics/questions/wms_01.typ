@@ -21,6 +21,8 @@ Only $E_1, E_2, E_3$ are possible
 #set text(size: a_size)
 Only the ground state is possible
 #expl_page(include "../explanations/wms_01.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#steps_page(include "../solution_steps/wms_01.typ")
 #prereq_page([
-#include "../prerequisites/core/adv_unitary_matrices.typ"
+#include "../prerequisites/core/cf_postulates.typ"
 ])

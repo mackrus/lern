@@ -26,6 +26,8 @@ Measurement results are eigenvalues of the operator
 Explanation:
 
 Time evolution is governed by the Schrödinger Equation, not the Heat Equation.
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/cf_01.typ")
 #prereq_page([
-#include "../prerequisites/core/adv_unitary_matrices.typ"
+#include "../prerequisites/core/cf_postulates.typ"
 ])

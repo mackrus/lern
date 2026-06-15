@@ -315,6 +315,8 @@ export const Biology = {
                 question_html: `<div style="text-align: center; margin-bottom: 1rem; opacity: 0.8;">${prompt}</div>${renderQ(qValue)}`,
                 question_raw: `${prompt} ${qValue}`,
                 prerequisites_html: null,
+                formulae_html: null,
+                solution_steps_html: null,
                 explanation_html: `<div style="text-align: center;">${explanationPrefix} <br>${renderA(aValue)}</div>`,
                 explanation_raw: aValue,
                 is_text_input: isTextInput,

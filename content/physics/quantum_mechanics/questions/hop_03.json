@@ -3,6 +3,8 @@
     "label": "exam",
     "num_alternatives": 4,
     "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
     "topics": [
         "Harmonic Oscillator",
         "Perturbation Theory",

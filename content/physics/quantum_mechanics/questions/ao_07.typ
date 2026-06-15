@@ -21,6 +21,8 @@ $lambda = Delta E / (L dot S)$
 #set text(size: a_size)
 $lambda = Delta E / n$
 #expl_page(include "../explanations/ao_07.typ")
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/ao_07.typ")
 #prereq_page([
 #include "../prerequisites/core/ao_spin-orbit_splitting.typ"
 ])

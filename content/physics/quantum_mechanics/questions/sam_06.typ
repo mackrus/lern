@@ -26,6 +26,8 @@ $3/2, 5/2$
 Explanation:
 
 $j = bar.v l - s bar.v, dots, l + s = bar.v 1 - 1/2 bar.v, 1 + 1/2 = 1/2, 3/2$.
+#formulae_page(include "../formulae/spin_angular_momentum.typ")
+#steps_page(include "../solution_steps/sam_06.typ")
 #prereq_page([
 #include "../prerequisites/core/sam_addition_of_angular_momentum.typ"
 ])

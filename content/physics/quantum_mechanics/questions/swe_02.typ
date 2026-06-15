@@ -21,6 +21,8 @@ $1/sqrt(2)$
 #set text(size: a_size)
 0
 #expl_page(include "../explanations/swe_02.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#steps_page(include "../solution_steps/swe_02.typ")
 #prereq_page([
-#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+#include "../prerequisites/core/prac_stationary_time-dependence.typ"
 ])

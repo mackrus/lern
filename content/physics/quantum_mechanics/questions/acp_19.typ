@@ -13,6 +13,8 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/acp_19.typ")
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/acp_19.typ")
 #prereq_page([
-#include "../prerequisites/core/adv_unitary_matrices.typ"
+#include "../prerequisites/core/ow_variational_principle.typ"
 ])

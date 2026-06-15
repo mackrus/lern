@@ -22,4 +22,6 @@ $Delta H = 3832$ J, $Delta U = 3000$ J
 #pagebreak()
 $Delta H = 3000$ J, $Delta U = 3832$ J
 #expl_page(include "../explanations/td_2025_06_u2.typ")
+#formulae_page(include "../formulae/td_2025_06_u2.typ")
+#steps_page(include "../solution_steps/td_2025_06_u2.typ")
 #prereq_page(include "../prerequisites/ideal_gas_states.typ")

@@ -18,6 +18,8 @@ False
 Explanation:
 
 Normal operators map to orthogonal eigenbases.
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/acp_04.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_normal_operators.typ"
 ])

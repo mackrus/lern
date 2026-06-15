@@ -2,6 +2,8 @@
     "correct_index": 0,
     "num_alternatives": 4,
     "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
     "label": "exam",
     "topics": [
         "First Law",

@@ -15,5 +15,7 @@
             "topic": "The Infinite Square Well"
         }
     ],
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "has_formulae": true,
+    "has_solution_steps": true
 }

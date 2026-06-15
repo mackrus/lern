@@ -21,6 +21,8 @@ $P(r)$ must go to infinity as $r -> 0$
 #set text(size: a_size)
 $P(r)$ must be constant
 #expl_page(include "../explanations/ao_08.typ")
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/ao_08.typ")
 #prereq_page([
 #include "../prerequisites/core/ao_asymptotic_convergence.typ"
 ])

@@ -21,6 +21,8 @@ It depends on where the position measurement result was found
 #set text(size: a_size)
 $1/2$
 #expl_page(include "../explanations/wms_02.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#steps_page(include "../solution_steps/wms_02.typ")
 #prereq_page([
 #include "../prerequisites/core/cf_postulates.typ"
 ])

@@ -74,15 +74,36 @@ for category in os.listdir(content_root):
 
             num_alts = metadata.get("num_alternatives", 4)
             has_expl = metadata.get("has_explanation", False)
+            has_formulae = metadata.get("has_formulae", False)
+            has_solution_steps = metadata.get("has_solution_steps", False)
+            has_prereqs = metadata.get("has_prerequisites", True)
 
             question_html = page_contents[0]
-            prerequisites_html = page_contents[-1]
             alternative_contents = page_contents[1 : 1 + num_alts]
 
-            if has_expl and len(page_contents) > num_alts + 1:
-                explanation_html = page_contents[num_alts + 1]
-            else:
-                explanation_html = None
+            page_idx = 1 + num_alts
+
+            explanation_html = None
+            if has_expl and len(page_contents) > page_idx:
+                explanation_html = page_contents[page_idx]
+                page_idx += 1
+
+            formulae_html = None
+            if has_formulae and len(page_contents) > page_idx:
+                formulae_html = page_contents[page_idx]
+                page_idx += 1
+
+            solution_steps_html = None
+            if has_solution_steps and len(page_contents) > page_idx:
+                solution_steps_html = page_contents[page_idx]
+                page_idx += 1
+
+            prerequisites_html = None
+            if has_prereqs and len(page_contents) > page_idx:
+                prerequisites_html = page_contents[page_idx]
+                page_idx += 1
+            elif has_prereqs and not has_formulae and not has_solution_steps:
+                prerequisites_html = page_contents[-1]
 
             alternatives = []
             for i, content in enumerate(alternative_contents):
@@ -134,6 +155,8 @@ for category in os.listdir(content_root):
                     "question_html": question_html,
                     "question_raw": question_raw,
                     "prerequisites_html": prerequisites_html,
+                    "formulae_html": formulae_html,
+                    "solution_steps_html": solution_steps_html,
                     "explanation_html": explanation_html,
                     "explanation_raw": explanation_raw,
                     "alternatives": alternatives,

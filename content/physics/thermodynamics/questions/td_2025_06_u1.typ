@@ -23,4 +23,6 @@ Net work is zero for the cycle
 #pagebreak()
 Internal energy change is non-zero for the cycle
 #expl_page(include "../explanations/td_2025_06_u1.typ")
+#formulae_page(include "../formulae/td_2025_06_u1.typ")
+#steps_page(include "../solution_steps/td_2025_06_u1.typ")
 #prereq_page(include "../prerequisites/ideal_gas_states.typ")

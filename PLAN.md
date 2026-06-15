@@ -225,7 +225,32 @@
     - Change Rust WASM scoring return types to float (`f64`) to handle partial points.
     - Display character-level diffs in the UI results review page to show exactly where letters were inserted or missing.
 
-### Phase 32: Canvas Authentication (Planned)
+### Phase 32: Prerequisites & Study Guides (Completed)
+
+**Goal**: Extend question metadata and the quiz UI to support three structured helper tabs: Prerequisites, Formulae, and Solution Steps, helping users study the underlying theory without revealing direct answers.
+
+1. **Modular File Structure**:
+    - Update the question file/metadata schema to support four main components: `Question`, `Formulae`, `Solution Steps`, and `Prerequisites`.
+    - Ensure the build aggregator (`generate_questions.py`) and Rust WASM models parse and expose these new fields in a modular, optional manner.
+2. **Content Definitions**:
+    - **Prerequisites**: Bullet points detailing the theoretical background and conceptual pre-requisites required to solve the problem (e.g., explaining when to use the chain rule). Tells the user what to study before attempting.
+    - **Formulae**: A curated list of equations and identities relevant to the problem, mimicking a standard exam formula sheet.
+    - **Solution Steps**: An abstract, step-by-step methodology outlining the techniques used to solve the problem (e.g., "1. Perform partial fraction decomposition, 2. Integrate both sides, 3. Solve for s") without revealing the final values or direct answer.
+3. **Consistent UI Design**:
+    - Implement a clean, unobtrusive tabbed interface (or collapsible sections) within the quiz screen to switch between these three helpers.
+    - Ensure the design is fully responsive, visually matches the active course theme, and does not distract from the primary question area.
+
+### Phase 33: Content Refinement (Completed)
+
+**Goal**: Verify all quiz question contents, metadata files, and templates for consistency and correctness across both Physics and Biology modules.
+
+1. **Metadata Consistency Check**:
+    - Verified that all questions in Quantum Mechanics and Thermodynamics have correct corresponding metadata tags, including difficulty, topics, references, and study guide flags.
+2. **Template & Rendering Alignment**:
+    - Ensured typography, layout constraints, and text size constraints match perfectly in compiled typst assets.
+    - Validated that no pagebreak or compilation overflow issues exist in any course modules.
+
+### Phase 34: Canvas Authentication (Planned)
 
 **Goal**: Implement a fully client-side user authentication using university credentials from Uppsala University or SLU via the Canvas API.
 

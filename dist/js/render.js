@@ -10,6 +10,8 @@ import {
     get_current_question_explanation_raw,
     get_current_question_references_json,
     get_current_question_prerequisites_html,
+    get_current_question_formulae_html,
+    get_current_question_solution_steps_html,
     get_total_questions,
     get_selections_json,
     set_question_index,
@@ -392,35 +394,61 @@ export const Renderer = {
     renderControls(currentQuestion, graded) {
         const prereqBtn = document.getElementById("prereq-btn");
         const prereqDiv = document.getElementById("prerequisites");
-        const refsBtn = document.getElementById("refs-btn");
-        const refsDiv = document.getElementById("references");
         const toggleAltBtn = document.getElementById("toggle-alt-btn");
 
-        // Prerequisites
+        // Prerequisites, Formulae, Solution Steps, and References (Study Guide)
         const prereqHtml = get_current_question_prerequisites_html();
-        if (prereqHtml) {
+        const formulaeHtml = get_current_question_formulae_html();
+        const stepsHtml = get_current_question_solution_steps_html();
+        const refsJson = get_current_question_references_json();
+        const refs = refsJson ? JSON.parse(refsJson) : [];
+
+        const tabs = [];
+        if (prereqHtml) tabs.push({ id: "prereqs", labelKey: "tab_prerequisites", html: prereqHtml });
+        if (formulaeHtml) tabs.push({ id: "formulae", labelKey: "tab_formulae", html: formulaeHtml });
+        if (stepsHtml) tabs.push({ id: "steps", labelKey: "tab_solution_steps", html: stepsHtml });
+        if (refs && refs.length > 0) {
+            const refsHtml = this.buildReferencesHtml(refs);
+            tabs.push({ id: "references", labelKey: "tab_references", html: refsHtml });
+        }
+
+        if (tabs.length > 0) {
             prereqBtn.style.display = "block";
-            prereqDiv.innerHTML = prereqHtml;
             prereqBtn.innerText = prereqDiv.style.display === "block" 
-                ? translate("hide_prereqs") 
-                : translate("show_prereqs");
+                ? translate("hide_study_guide") 
+                : translate("show_study_guide");
+            
+            if (prereqDiv.style.display === "block") {
+                let activeTabId = prereqDiv.dataset.activeTab;
+                if (!activeTabId || !tabs.some(t => t.id === activeTabId)) {
+                    activeTabId = tabs[0].id;
+                }
+                prereqDiv.dataset.activeTab = activeTabId;
+                const activeTab = tabs.find(t => t.id === activeTabId);
+
+                let tabsHtmlStr = "";
+                if (tabs.length > 1) {
+                    tabsHtmlStr = `<div class="study-tabs">` + tabs.map(t => `
+                        <button class="study-tab-btn ${t.id === activeTabId ? 'active' : ''}" data-tab="${t.id}">
+                            ${translate(t.labelKey)}
+                        </button>
+                    `).join("") + `</div>`;
+                }
+
+                prereqDiv.innerHTML = tabsHtmlStr + `<div class="study-content">${activeTab.html}</div>`;
+
+                prereqDiv.querySelectorAll(".study-tab-btn").forEach(btn => {
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        prereqDiv.dataset.activeTab = btn.dataset.tab;
+                        this.renderControls(currentQuestion, graded);
+                        UI.fixSvgs();
+                    };
+                });
+            }
         } else {
             prereqBtn.style.display = "none";
             prereqDiv.style.display = "none";
-        }
-
-        // References
-        const refsJson = get_current_question_references_json();
-        const refs = refsJson ? JSON.parse(refsJson) : [];
-        if (refs.length > 0) {
-            refsBtn.style.display = "block";
-            refsDiv.innerHTML = this.buildReferencesHtml(refs);
-            refsBtn.innerText = refsDiv.style.display === "block" 
-                ? translate("hide_refs") 
-                : translate("read_about_this");
-        } else {
-            refsBtn.style.display = "none";
-            refsDiv.style.display = "none";
         }
 
         // Toggle Alternatives Button

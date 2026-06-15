@@ -13,6 +13,12 @@ export function translate(key, isSwedish) {
         "hide_alts": "Dölj",
         "show_prereqs": "Visa förkunskaper",
         "hide_prereqs": "Dölj förkunskaper",
+        "show_study_guide": "Visa studiehjälp",
+        "hide_study_guide": "Dölj studiehjälp",
+        "tab_prerequisites": "Förkunskaper",
+        "tab_formulae": "Formelsamling",
+        "tab_solution_steps": "Lösningssteg",
+        "tab_references": "Referenser",
         "copy_prompt": "Kopiera som prompt",
         "copied": "Kopierad!",
         "read_about_this": "Var kan jag läsa om detta?",
@@ -53,6 +59,12 @@ export function translate(key, isSwedish) {
         "hide_alts": "Hide",
         "show_prereqs": "Show Prerequisites",
         "hide_prereqs": "Hide Prerequisites",
+        "show_study_guide": "Show Study Guide",
+        "hide_study_guide": "Hide Study Guide",
+        "tab_prerequisites": "Prerequisites",
+        "tab_formulae": "Formulae",
+        "tab_solution_steps": "Solution Steps",
+        "tab_references": "References",
         "copy_prompt": "Copy as Prompt",
         "copied": "Copied!",
         "read_about_this": "Where do i read about this?",
@@ -158,7 +170,7 @@ export const UI = {
                 svg.style.margin = "0 auto";
             } else {
                 svg.style.maxWidth = "100%";
-                svg.style.width = "auto";
+                svg.style.width = "";
                 svg.style.height = "auto";
                 svg.style.margin = "0";
             }

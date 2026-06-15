@@ -21,6 +21,8 @@ $""^1 G_4$
 #set text(size: a_size)
 $""^3 F_4$
 #expl_page(include "../explanations/ao_04.typ")
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/ao_04.typ")
 #prereq_page([
 #include "../prerequisites/core/ao_hunds_rules.typ"
 ])

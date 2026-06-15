@@ -26,6 +26,8 @@ $1/5$
 Explanation:
 
 $bar.v A bar.v^2 (1^2 + 2^2 + bar.v 2i bar.v^2) = A^2(1+4+4) = 9 A^2 = 1 => A = 1/3$.
+#formulae_page(include "../formulae/spin_angular_momentum.typ")
+#steps_page(include "../solution_steps/s1s_01.typ")
 #prereq_page([
-#include "../prerequisites/core/adv_unitary_matrices.typ"
+#include "../prerequisites/core/s1s_normalization_condition.typ"
 ])

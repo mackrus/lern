@@ -21,6 +21,8 @@ $I/8$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/cp_09.typ")
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/cp_09.typ")
 #prereq_page([
 #include "../prerequisites/core/prac_maluss_law.typ"
 ])

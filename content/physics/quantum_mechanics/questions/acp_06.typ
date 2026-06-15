@@ -13,6 +13,8 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/acp_06.typ")
+#formulae_page(include "../formulae/operators_commutators.typ")
+#steps_page(include "../solution_steps/acp_06.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_dimensionality.typ"
 #include "../prerequisites/core/adv_units.typ"

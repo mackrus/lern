@@ -26,6 +26,8 @@ $n planck$
 Explanation:
 
 For eigenstates, $sigma_x sigma_p = (n+1/2) planck$. The minimum value is $planck/2$ for the ground state.
+#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#steps_page(include "../solution_steps/owp_06.typ")
 #prereq_page([
-#include "../prerequisites/core/prac_plancks_radiation_law.typ"
+#include "../prerequisites/core/ow_eigenstate_uncertainty.typ"
 ])
