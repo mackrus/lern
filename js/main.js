@@ -147,13 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
         Renderer.renderQuiz();
     };
 
-    document.getElementById("refs-btn").onclick = () => {
-        const div = document.getElementById("references");
-        div.style.display = div.style.display === "none" ? "block" : "none";
-        State.save();
-        Renderer.renderQuiz();
-    };
-
     document.getElementById("toggle-alt-btn").onclick = (e) => {
         const btn = document.getElementById("toggle-alt-btn");
         btn.dataset.state = btn.dataset.state === "shown" ? "hidden" : "shown";

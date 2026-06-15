@@ -11,6 +11,8 @@ export function get_current_question_explanation_html(): string | undefined;
 
 export function get_current_question_explanation_raw(): string | undefined;
 
+export function get_current_question_formulae_html(): string | undefined;
+
 export function get_current_question_html(): string | undefined;
 
 export function get_current_question_id(): string | undefined;
@@ -24,6 +26,8 @@ export function get_current_question_prerequisites_html(): string | undefined;
 export function get_current_question_raw(): string | undefined;
 
 export function get_current_question_references_json(): string | undefined;
+
+export function get_current_question_solution_steps_html(): string | undefined;
 
 export function get_current_selection(): string | undefined;
 
@@ -72,12 +76,14 @@ export interface InitOutput {
     readonly get_alternatives_count: () => number;
     readonly get_current_question_explanation_html: () => [number, number];
     readonly get_current_question_explanation_raw: () => [number, number];
+    readonly get_current_question_formulae_html: () => [number, number];
     readonly get_current_question_html: () => [number, number];
     readonly get_current_question_id: () => [number, number];
     readonly get_current_question_label: () => [number, number];
     readonly get_current_question_prerequisites_html: () => [number, number];
     readonly get_current_question_raw: () => [number, number];
     readonly get_current_question_references_json: () => [number, number];
+    readonly get_current_question_solution_steps_html: () => [number, number];
     readonly get_current_selection: () => [number, number];
     readonly get_explanation_html_by_index: (a: number) => [number, number];
     readonly get_incorrect_indices: () => [number, number];

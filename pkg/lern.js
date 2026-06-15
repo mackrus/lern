@@ -59,6 +59,19 @@ export function get_current_question_explanation_raw() {
 /**
  * @returns {string | undefined}
  */
+export function get_current_question_formulae_html() {
+    const ret = wasm.get_current_question_formulae_html();
+    let v1;
+    if (ret[0] !== 0) {
+        v1 = getStringFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    }
+    return v1;
+}
+
+/**
+ * @returns {string | undefined}
+ */
 export function get_current_question_html() {
     const ret = wasm.get_current_question_html();
     let v1;
@@ -134,6 +147,19 @@ export function get_current_question_raw() {
  */
 export function get_current_question_references_json() {
     const ret = wasm.get_current_question_references_json();
+    let v1;
+    if (ret[0] !== 0) {
+        v1 = getStringFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    }
+    return v1;
+}
+
+/**
+ * @returns {string | undefined}
+ */
+export function get_current_question_solution_steps_html() {
+    const ret = wasm.get_current_question_solution_steps_html();
     let v1;
     if (ret[0] !== 0) {
         v1 = getStringFromWasm0(ret[0], ret[1]).slice();
