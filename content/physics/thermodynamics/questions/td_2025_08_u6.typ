@@ -17,4 +17,4 @@ T approx 500 K
 #pagebreak()
 T approx 300 K
 #expl_page(include "../explanations/td_2025_08_u6.typ")
-#prereq_page(include "../prerequisites/heat_engines.typ")
+#prereq_page(include "../prerequisites/heat_transfer_modes.typ")

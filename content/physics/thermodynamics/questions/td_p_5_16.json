@@ -5,8 +5,16 @@
     "has_explanation": true,
     "label": "practice",
     "topics": [
-        "Physics/Thermodynamics",
-        "Practice"
+        "Refrigerators",
+        "Coefficient of Performance",
+        "Second Law of Thermodynamics"
     ],
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "4",
+            "topic": "The Second Law of Thermodynamics"
+        }
+    ]
 }

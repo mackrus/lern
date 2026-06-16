@@ -5,8 +5,16 @@
     "has_explanation": true,
     "label": "practice",
     "topics": [
-        "Physics/Thermodynamics",
-        "Practice"
+        "Heat Capacity",
+        "Entropy Calculation",
+        "Ideal Gas"
     ],
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "5",
+            "topic": "Entropy"
+        }
+    ]
 }

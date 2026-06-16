@@ -5,8 +5,16 @@
     "has_explanation": true,
     "label": "practice",
     "topics": [
-        "Physics/Thermodynamics",
-        "Practice"
+        "Adiabatic Relations",
+        "Ideal Gas",
+        "Reversible Process"
     ],
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "3",
+            "topic": "The First Law of Thermodynamics"
+        }
+    ]
 }

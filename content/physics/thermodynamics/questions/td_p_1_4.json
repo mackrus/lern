@@ -5,8 +5,15 @@
     "has_explanation": true,
     "label": "practice",
     "topics": [
-        "Physics/Thermodynamics",
-        "Practice"
+        "Thermometry",
+        "Resistance Thermometer"
     ],
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "references": [
+        {
+            "book": "Finn's Thermal Physics",
+            "chapter": "1",
+            "topic": "Temperature"
+        }
+    ]
 }

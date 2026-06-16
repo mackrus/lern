@@ -19,4 +19,4 @@ $V_1 = 0.0011 " m"^3$ and $V_2 = 0.0013 " m"^3$
 $V_1 = 0.0011 " m"^3$ and $V_2 = 0.0011 " m"^3$
 
 #expl_page(include "../explanations/td_p_1_2.typ")
-#prereq_page(include "../prerequisites/thermometry.typ")
+#prereq_page(include "../prerequisites/ideal_gas_states.typ")

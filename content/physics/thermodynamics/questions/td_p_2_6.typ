@@ -8,11 +8,11 @@ Two moles of an ideal gas initially at $P_1 = 1.0 " atm"$ and $T_1 = 300 " K"$ u
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
-$+1951.7 " J"$
+$+1927.0 " J"$
 #pagebreak()
-$-1951.7 " J"$
+$-1927.0 " J"$
 #pagebreak()
-$+4963.7 " J"$
+$+4988.4 " J"$
 #pagebreak()
 $-6915.4 " J"$
 

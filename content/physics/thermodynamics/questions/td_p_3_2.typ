@@ -17,4 +17,4 @@ $W = 0$, $Q < 0$, and internal energy $U$ decreases.
 $W = 0$, $Q = 0$, and internal energy $U$ stays perfectly constant.
 
 #expl_page(include "../explanations/td_p_3_2.typ")
-#prereq_page(include "../prerequisites/ideal_gas_states.typ")
+#prereq_page(include "../prerequisites/heat_engines.typ")
