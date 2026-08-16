@@ -12,7 +12,7 @@ Ocean basins are drastically deeper in the west
 #pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
-The latitudinal gradient of the Coriolis parameter ($beta = partial f / partial y > 0$) causes western intensification of wind-driven gyres
+The latitudinal gradient of the Coriolis parameter ($beta = (partial f) / (partial y) > 0$) causes western intensification of wind-driven gyres
 #pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)

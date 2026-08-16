@@ -7,13 +7,13 @@ Explanation:
 $ integral.cont_C bold(F) dot d bold(r) = integral.double_S (nabla times bold(F)) dot d bold(S) $.
 
 2. Compute the curl of $bold(F)$:
-$ nabla times bold(F) = det(mat(bold(i), bold(j), bold(k); partial / (partial x), partial / (partial y), partial / (partial z); z^2 - y^2, x^2 - z^2, y^2 - x^2)) $
+$ nabla times bold(F) = det(mat(bold(i), bold(j), bold(k); (partial) / (partial x), (partial) / (partial y), (partial) / (partial z); z^2 - y^2, x^2 - z^2, y^2 - x^2)) $
 $ = bold(i)(2y - (-2z)) - bold(j)(-2x - 2z) + bold(k)(2x - (-2y)) $
 $ = chevron.l 2y + 2z, 2z + 2x, 2x + 2y chevron.r $.
 
 3. Parameterize the plane surface $S$ as $z = 3/2 - x - y$.
 The upward oriented normal vector element is:
-$ d bold(S) = chevron.l -partial z / partial x, -partial z / partial y, 1 chevron.r d x d y = chevron.l 1, 1, 1 chevron.r d x d y $.
+$ d bold(S) = chevron.l - (partial z) / (partial x), - (partial z) / (partial y), 1 chevron.r d x d y = chevron.l 1, 1, 1 chevron.r d x d y $.
 
 4. Evaluate the dot product:
 $ (nabla times bold(F)) dot d bold(S) = ( (2y + 2z)(1) + (2z + 2x)(1) + (2x + 2y)(1) ) d x d y $

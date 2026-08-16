@@ -281,7 +281,7 @@
   [Why are western boundary currents (e.g. Gulf Stream, Kuroshio) much faster and narrower than eastern boundary currents?],
   (
     [(A) Ocean basins are drastically deeper in the west],
-    [(B) The latitudinal gradient of the Coriolis parameter ($beta = partial f / partial y > 0$) causes western intensification of wind-driven gyres],
+    [(B) The latitudinal gradient of the Coriolis parameter ($beta = (partial f) / (partial y) > 0$) causes western intensification of wind-driven gyres],
     [(C) Rapid continental drift in the west pulls the water column],
     [(D) Equatorial thermal expansion drives flow only along western boundaries]
   ),

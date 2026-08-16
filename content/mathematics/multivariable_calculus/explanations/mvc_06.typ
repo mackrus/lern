@@ -14,9 +14,9 @@ Let $u = x + y$ and $v = x - y$.
 The transformed region $S$ in the $u v$-plane is the rectangle $1 \le u \le 3$ and $-1 \le v \le 1$.
 
 3. Compute the Jacobian determinant of the transformation:
-$ partial(u, v) / partial(x, y) = det(mat(partial u / partial x, partial u / partial y; partial v / partial x, partial v / partial y)) = det(mat(1, 1; 1, -1)) = -2 $.
+$ (partial(u, v)) / (partial(x, y)) = det(mat((partial u) / (partial x), (partial u) / (partial y); (partial v) / (partial x), (partial v) / (partial y))) = det(mat(1, 1; 1, -1)) = -2 $.
 Therefore, the absolute value of the Jacobian is:
-$ |J(u, v)| = | partial(x, y) / partial(u, v) | = 1 / | partial(u, v) / partial(x, y) | = 1/2 $.
+$ |J(u, v)| = | (partial(x, y)) / (partial(u, v)) | = 1 / | (partial(u, v)) / (partial(x, y)) | = 1/2 $.
 
 4. Set up and evaluate the transformed double integral:
 $ integral.double_R (x + y)^2 e^(x - y) d A = integral.double_S u^2 e^v |J(u, v)| d u d v $

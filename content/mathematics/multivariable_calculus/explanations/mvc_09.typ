@@ -7,7 +7,7 @@ Explanation:
 $ integral.double_S bold(F) dot d bold(S) = integral.triple_V (nabla dot bold(F)) d V $.
 
 2. Compute the divergence of $bold(F)$:
-$ nabla dot bold(F) = partial / (partial x) (x^3 + e^(y sin(z))) + partial / (partial y) (y^3 + ln(z^2 + 1)) + partial / (partial z) (z^3 + tan(x y)) $
+$ nabla dot bold(F) = (partial) / (partial x) (x^3 + e^(y sin(z))) + (partial) / (partial y) (y^3 + ln(z^2 + 1)) + (partial) / (partial z) (z^3 + tan(x y)) $
 $ = 3 x^2 + 3 y^2 + 3 z^2 = 3(x^2 + y^2 + z^2) $.
 
 3. Convert to spherical coordinates:
