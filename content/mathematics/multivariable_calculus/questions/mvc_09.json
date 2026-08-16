@@ -1,0 +1,15 @@
+{
+    "correct_index": 0,
+    "label": "practice",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "topics": [
+        "Divergence Theorem",
+        "Surface Integrals",
+        "Spherical Coordinates"
+    ],
+    "references": [],
+    "difficulty": "hard",
+    "has_formulae": true,
+    "has_solution_steps": true
+}

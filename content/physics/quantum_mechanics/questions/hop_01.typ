@@ -21,6 +21,6 @@ $gamma n^3$
 #set text(size: a_size)
 $2 gamma (n+1)^3$
 #expl_page(include "../explanations/hop_01.typ")
-#formulae_page(include "../formulae/hop_shared.typ")
+#formulae_page(include "../formulae/hop_shared_core.typ")
 #steps_page(include "../solution_steps/hop_01.typ")
 #prereq_page(include "../prerequisites/harmonic_oscillator_perturbation.typ")

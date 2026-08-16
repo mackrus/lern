@@ -21,9 +21,8 @@ $1$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/acp_01.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
+#formulae_page(include "../formulae/operators_commutators_core.typ")
 #steps_page(include "../solution_steps/acp_01.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_operator_algebra.typ"
-#include "../prerequisites/core/adv_expectation_values_of_products.typ"
 ])

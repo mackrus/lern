@@ -21,7 +21,6 @@ $""^3 S, ""^3 P, ""^3 D$
 #set text(size: a_size)
 $""^1 P, ""^3 P, ""^1 F$
 #expl_page(include "../explanations/ao_03.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/ao_03.typ")
 #prereq_page([
 #include "../prerequisites/core/ao_spectral_terms.typ"

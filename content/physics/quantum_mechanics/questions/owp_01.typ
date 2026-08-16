@@ -21,7 +21,7 @@ $n a^dagger$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/owp_01.typ")
-#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/owp_01.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_operator_algebra.typ"

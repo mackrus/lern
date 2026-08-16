@@ -55,7 +55,7 @@ def update_question(filename):
             involved_prefixes.append(prefix)
 
     # Check for already-atomic includes to re-evaluate them
-    for prefix in atomic_db.keys():
+    for prefix in atomic_db:
         if f"core/{prefix}_" in content:
             if prefix not in involved_prefixes:
                 involved_prefixes.append(prefix)

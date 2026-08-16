@@ -18,7 +18,6 @@ False
 Explanation:
 
 Bell's inequality is *violated* by quantum mechanics.
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/acp_03.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_bell's_inequality.typ"

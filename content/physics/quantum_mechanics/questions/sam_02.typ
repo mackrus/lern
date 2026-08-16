@@ -21,7 +21,7 @@ $1/8$
 #set text(size: a_size)
 $0$
 #expl_page(include "../explanations/sam_02.typ")
-#formulae_page(include "../formulae/spin_angular_momentum.typ")
+#formulae_page(include "../formulae/spin_angular_momentum_core.typ")
 #steps_page(include "../solution_steps/sam_02.typ")
 #prereq_page([
 #include "../prerequisites/core/sam_spin-1_2_operators.typ"

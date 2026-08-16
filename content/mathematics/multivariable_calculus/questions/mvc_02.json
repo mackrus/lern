@@ -1,0 +1,14 @@
+{
+    "correct_index": 0,
+    "label": "practice",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "topics": [
+        "Directional Derivatives",
+        "Vector Calculus"
+    ],
+    "references": [],
+    "difficulty": "easy",
+    "has_formulae": true,
+    "has_solution_steps": true
+}

@@ -253,7 +253,7 @@ export const Biology = {
         };
     },
 
-    startQuiz(qAttr, aAttr, limit, isTextInput, isSe) {
+    generateQuestion(plant, index, qAttr, aAttr, isTextInput, isSe, courseData) {
         const attrNames = isSe ? { 
             common_name: "Svenskt namn", 
             latin_name: "Vetenskapligt namn", 
@@ -264,6 +264,89 @@ export const Biology = {
             photo_url: "Photo" 
         };
         
+        const qValue = plant[qAttr];
+        const aValue = plant[aAttr];
+        
+        const isAnswerPhoto = aAttr === 'photo_url';
+        let prompt;
+        if (isTextInput) {
+            prompt = isSe 
+                ? `Ange rätt <strong>${attrNames[aAttr].toLowerCase()}</strong> för denna växt:`
+                : `Write down the <strong>${attrNames[aAttr]}</strong> for this plant:`;
+        } else {
+            prompt = isSe
+                ? `Välj rätt <strong>${attrNames[aAttr].toLowerCase()}</strong> för denna växt:`
+                : `Pick the correct <strong>${attrNames[aAttr]}</strong> for this plant:`;
+        }
+
+        const renderQ = (val) => {
+            if (qAttr === 'photo_url') return `<img src="${val}" style="max-width:100%; height:auto; display:block; margin: 20px auto; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">`;
+            return `<div style="font-size: 1.5rem; text-align: center; margin: 20px 0;"><strong>${val}</strong></div>`;
+        };
+        
+        const renderA = (val) => {
+            if (aAttr === 'photo_url') return `<img src="${val}" style="max-width:200px; display:inline-block; vertical-align: middle;">`;
+            return `<strong>${val}</strong>`;
+        };
+
+        const plantLabel = `${plant.common_name} (${plant.latin_name})`;
+        const explanationPrefix = isSe ? "Rätt svar:" : "Correct answer:";
+
+        const q = {
+            id: `plant_${index}_${qAttr}_${aAttr}`,
+            label: isSe ? "Växtidentifiering" : "Plant Identification",
+            topics: [plantLabel],
+            references: [],
+            question_html: `<div style="text-align: center; margin-bottom: 1rem; opacity: 0.8;">${prompt}</div>${renderQ(qValue)}`,
+            question_raw: `${prompt} ${qValue}`,
+            prerequisites_html: null,
+            formulae_html: null,
+            solution_steps_html: null,
+            explanation_html: `<div style="text-align: center;">${explanationPrefix} <br>${renderA(aValue)}</div>`,
+            explanation_raw: aValue,
+            is_text_input: isTextInput,
+            expected_answer: isTextInput ? aValue : null,
+            alternatives: [],
+            plantIndex: plant.index
+        };
+
+        if (!isTextInput) {
+            // Populate MC alternatives
+            const alternatives = [];
+            alternatives.push({
+                content_html: isAnswerPhoto 
+                    ? `<img src="${aValue}" style="max-width:100%; height:auto; border-radius: 2px;">`
+                    : renderA(aValue),
+                is_correct: true
+            });
+
+            // Deterministic distractor selection based on plant index
+            const distractors = [];
+            let idx = (plant.index + 1) % courseData.length;
+            while (distractors.length < 3) {
+                const candidate = courseData[idx];
+                if (candidate[aAttr] !== aValue && !distractors.some(d => d[aAttr] === candidate[aAttr])) {
+                    distractors.push(candidate);
+                }
+                idx = (idx + 1) % courseData.length;
+            }
+            
+            distractors.forEach(d => {
+                alternatives.push({
+                    content_html: isAnswerPhoto 
+                        ? `<img src="${d[aAttr]}" style="max-width:100%; height:auto; border-radius: 2px;">`
+                        : renderA(d[aAttr]),
+                    is_correct: false
+                });
+            });
+            
+            q.alternatives = alternatives;
+        }
+
+        return q;
+    },
+
+    startQuiz(qAttr, aAttr, limit, isTextInput, isSe) {
         let courseData = [];
         const courseName = State.currentCourse;
         for (const cat in State.coursesData) {
@@ -273,85 +356,15 @@ export const Biology = {
             }
         }
         
-        let shuffledLibrary = [...courseData].sort(() => 0.5 - Math.random());
+        const courseDataWithIndex = courseData.map((plant, idx) => ({ ...plant, index: idx }));
+        
+        let shuffledLibrary = [...courseDataWithIndex].sort(() => 0.5 - Math.random());
         if (limit > 0) {
             shuffledLibrary = shuffledLibrary.slice(0, limit);
         }
         
         const questions = shuffledLibrary.map((plant, index) => {
-            const qValue = plant[qAttr];
-            const aValue = plant[aAttr];
-            
-            const isAnswerPhoto = aAttr === 'photo_url';
-            let prompt;
-            if (isTextInput) {
-                prompt = isSe 
-                    ? `Ange rätt <strong>${attrNames[aAttr].toLowerCase()}</strong> för denna växt:`
-                    : `Write down the <strong>${attrNames[aAttr]}</strong> for this plant:`;
-            } else {
-                prompt = isSe
-                    ? `Välj rätt <strong>${attrNames[aAttr].toLowerCase()}</strong> för denna växt:`
-                    : `Pick the correct <strong>${attrNames[aAttr]}</strong> for this plant:`;
-            }
-
-            const renderQ = (val) => {
-                if (qAttr === 'photo_url') return `<img src="${val}" style="max-width:100%; height:auto; display:block; margin: 20px auto; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">`;
-                return `<div style="font-size: 1.5rem; text-align: center; margin: 20px 0;"><strong>${val}</strong></div>`;
-            };
-            
-            const renderA = (val) => {
-                if (aAttr === 'photo_url') return `<img src="${val}" style="max-width:200px; display:inline-block; vertical-align: middle;">`;
-                return `<strong>${val}</strong>`;
-            };
-
-            const plantLabel = `${plant.common_name} (${plant.latin_name})`;
-            const explanationPrefix = isSe ? "Rätt svar:" : "Correct answer:";
-
-            const q = {
-                id: `plant_${index}_${qAttr}_${aAttr}_${Date.now()}`,
-                label: isSe ? "Växtidentifiering" : "Plant Identification",
-                topics: [plantLabel],
-                references: [],
-                question_html: `<div style="text-align: center; margin-bottom: 1rem; opacity: 0.8;">${prompt}</div>${renderQ(qValue)}`,
-                question_raw: `${prompt} ${qValue}`,
-                prerequisites_html: null,
-                formulae_html: null,
-                solution_steps_html: null,
-                explanation_html: `<div style="text-align: center;">${explanationPrefix} <br>${renderA(aValue)}</div>`,
-                explanation_raw: aValue,
-                is_text_input: isTextInput,
-                expected_answer: isTextInput ? aValue : null,
-                alternatives: []
-            };
-
-            if (!isTextInput) {
-                // Populate MC alternatives
-                const alternatives = [];
-                alternatives.push({
-                    content_html: isAnswerPhoto 
-                        ? `<img src="${aValue}" style="max-width:100%; height:auto; border-radius: 2px;">`
-                        : renderA(aValue),
-                    is_correct: true
-                });
-
-                let distractors = [...courseData]
-                    .filter(p => p[aAttr] !== aValue)
-                    .sort(() => 0.5 - Math.random())
-                    .slice(0, 3);
-                
-                distractors.forEach(d => {
-                    alternatives.push({
-                        content_html: isAnswerPhoto 
-                            ? `<img src="${d[aAttr]}" style="max-width:100%; height:auto; border-radius: 2px;">`
-                            : renderA(d[aAttr]),
-                        is_correct: false
-                    });
-                });
-                
-                q.alternatives = alternatives;
-            }
-
-            return q;
+            return this.generateQuestion(plant, index, qAttr, aAttr, isTextInput, isSe, courseDataWithIndex);
         });
 
         Navigation.startQuiz(courseName, "biology_custom", { 
@@ -360,3 +373,6 @@ export const Biology = {
         });
     }
 };
+
+State.Biology = Biology;
+

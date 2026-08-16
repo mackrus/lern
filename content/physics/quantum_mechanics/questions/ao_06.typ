@@ -21,7 +21,6 @@ In the context of many-electron atoms and the central field approximation: Deter
 #set text(size: a_size)
 [Ar] $4s^2$
 #expl_page(include "../explanations/ao_06.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/ao_06.typ")
 #prereq_page([
 #include "../prerequisites/core/ao_aufbau_principle.typ"

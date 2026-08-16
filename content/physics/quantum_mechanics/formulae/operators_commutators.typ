@@ -10,7 +10,7 @@
 
 - *Canonical Commutation Relation:*
   $ [x, p] = i planck $
-  $ p = -i planck d/(d x) quad text("(position representation)") $
+  $ p = -i planck dif / (dif x) quad text("(position representation)") $
 
 - *Hermitian & Unitary Operators:*
   - Hermitian ($A = A^dagger$): $chevron.l A psi | phi chevron.r = chevron.l psi | A phi chevron.r$ (real eigenvalues).

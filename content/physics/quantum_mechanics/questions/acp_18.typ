@@ -21,7 +21,6 @@ Spectrum of $A$ is degenerate
 #set text(size: a_size)
 There exists an operator on the second particle for which measurement is deterministic
 #expl_page(include "../explanations/acp_18.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/acp_18.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_entangled_subsystems.typ"

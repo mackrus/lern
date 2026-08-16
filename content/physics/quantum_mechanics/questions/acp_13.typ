@@ -21,8 +21,8 @@ Any basis that diagonalizes it must be orthogonal
 #set text(size: a_size)
 None of the above
 #expl_page(include "../explanations/acp_13.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/acp_13.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_unitary_matrices.typ"
+#include "../prerequisites/core/prac_hermitian_operators.typ"
 ])

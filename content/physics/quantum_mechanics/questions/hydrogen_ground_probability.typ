@@ -25,7 +25,7 @@ $9 / 16$
 #set text(size: a_size)
 $3 pi / 16$
 
-#formulae_page(include "../formulae/hydrogen_atom.typ")
+#formulae_page(include "../formulae/hydrogen_atom_core.typ")
 #steps_page(include "../solution_steps/hydrogen_ground_probability.typ")
 #prereq_page([
 *Prerequisites for Hydrogen Energy Probabilities:*

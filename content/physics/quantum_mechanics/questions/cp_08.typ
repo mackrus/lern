@@ -13,7 +13,6 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/cp_08.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/cp_08.typ")
 #prereq_page([
 #include "../prerequisites/core/ao_aufbau_principle.typ"

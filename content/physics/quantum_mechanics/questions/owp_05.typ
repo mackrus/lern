@@ -21,7 +21,7 @@ Euler's identity
 #set text(size: a_size)
 Taylor expansion
 #expl_page(include "../explanations/owp_05.typ")
-#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/owp_05.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_operator_algebra.typ"

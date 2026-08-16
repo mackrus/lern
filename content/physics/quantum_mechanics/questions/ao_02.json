@@ -17,6 +17,6 @@
         }
     ],
     "difficulty": "hard",
-    "has_formulae": true,
+    "has_formulae": false,
     "has_solution_steps": true
 }

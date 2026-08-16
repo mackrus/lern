@@ -21,7 +21,7 @@ $k cot(k a) = kappa tanh(kappa b)$
 #set text(size: a_size)
 None
 #expl_page(include "../explanations/pwe_02.typ")
-#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/pwe_02.typ")
 #prereq_page([
 #include "../prerequisites/core/pw_odd_state_transcendental_equation.typ"

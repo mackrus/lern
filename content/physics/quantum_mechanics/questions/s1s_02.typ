@@ -26,7 +26,7 @@ $planck$
 Explanation:
 
 $chevron.l S_z chevron.r = sum p_m m planck = 1/9(1) + 4/9(0) + 4/9(-1) = -3/9 planck = -1/3 planck$.
-#formulae_page(include "../formulae/spin_angular_momentum.typ")
+#formulae_page(include "../formulae/spin_angular_momentum_core.typ")
 #steps_page(include "../solution_steps/s1s_02.typ")
 #prereq_page([
 #include "../prerequisites/core/s1s_expectation_values.typ"

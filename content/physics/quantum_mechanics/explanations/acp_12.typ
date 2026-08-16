@@ -3,4 +3,4 @@
 #set text(size: i_size)
 Explanation:
 
-For a matrix to be unitary, the inner product of its columns must vanish: $(1)(2i) + (2)(beta) = 0 => 2i + 2beta = 0 => beta = -i$.
+For a matrix to be unitary, the inner product of its columns must vanish: $1^* dot 2 + (2i)^(* ) dot beta = 0 => 2 - 2i beta = 0 => i beta = 1 => beta = -i$.

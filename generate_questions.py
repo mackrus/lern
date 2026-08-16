@@ -1,5 +1,5 @@
-import os
 import json
+import os
 import re
 
 # Structure: { "Category": { "course_name": [questions] } }
@@ -170,11 +170,11 @@ for category in os.listdir(content_root):
             if os.path.exists(course_metadata_path):
                 with open(course_metadata_path, "r") as f:
                     course_metadata = json.load(f)
-            
+
             library[category.title()][display_name] = {
                 "type": "static",
                 "data": course_questions,
-                **course_metadata
+                **course_metadata,
             }
 
 with open("dist/questions.json", "w") as out:

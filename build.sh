@@ -1,14 +1,13 @@
 #!/bin/bash
 set -e
 
-# Delete any previous svg files to avoid duplicates
-find dist -name "*.svg" -delete
-rm -rf dist/content
 mkdir -p dist/content
 
-# Compile main questions from content/*/questions/*.typ
-find content -path "*/questions/*.typ" -not -name "*.temp.typ" | while read -r f; do
+# Compile questions from content/*/questions/*.typ modified within the last 3 hours (180 minutes)
+find content -path "*/questions/*.typ" -not -name "*.temp.typ" -mmin -180 | while read -r f; do
     filename=$(basename "$f" .typ)
+    # Remove previous SVGs for this specific question before recompiling
+    rm -f "dist/content/${filename}-"*.svg
     echo "Compiling $f to dist/content/$filename-{p}.svg"
     typst compile "$f" "dist/content/$filename-{p}.svg" --format svg --root .
 done

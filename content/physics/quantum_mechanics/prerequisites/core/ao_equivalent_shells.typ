@@ -1,4 +1,4 @@
 #import "/content/template.typ": *
 #set page(width: i_width, height: auto, margin: i_margin)
 #set text(size: i_size)
-*Equivalent Shells:* For identical electrons in the same configuration (e.g., $p^2$), antisymmetric total state requirements eliminate asymmetric combinations, restricting terms to those where $L+S$ is even.
+*Equivalent Shells:* For electrons in the same subshell (equivalent electrons), the Pauli exclusion principle requires the overall wavefunction (combining spatial and spin components) to be completely antisymmetric under particle exchange, eliminating certain $L$ and $S$ combinations.

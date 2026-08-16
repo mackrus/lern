@@ -13,7 +13,6 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/cp_01.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/cp_01.typ")
 #prereq_page([
 #include "../prerequisites/core/prac_heisenberg_uncertainty_principle.typ"

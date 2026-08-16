@@ -3,4 +3,4 @@
 #set text(size: i_size)
 Explanation:
 
-Periodic boundary conditions in polar coordinates require the angular function to smoothly loop after $2 pi$, necessitating $e^(i m phi)$ solutions derived from $d^2Y/d phi^2 = -m^2Y$.
+Periodic boundary conditions in polar coordinates require the angular function to smoothly loop after $2 pi$, necessitating $e^(i m phi)$ solutions derived from $dif^2 Y / (dif phi^2) = -m^2 Y$.

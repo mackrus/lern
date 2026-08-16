@@ -21,7 +21,7 @@ $k cot(k a) = kappa tanh(kappa(b-a))$
 #set text(size: a_size)
 $k tan(k a) = kappa tanh(kappa b)$
 #expl_page(include "../explanations/pwe_01.typ")
-#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/pwe_01.typ")
 #prereq_page([
 #include "../prerequisites/core/pw_even_state_transcendental_equation.typ"

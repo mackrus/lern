@@ -1,0 +1,22 @@
+{
+    "correct_index": 2,
+    "label": "exam",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "has_prerequisites": false,
+    "topics": [
+        "Carbon Cycle",
+        "Biogeochemical Cycles",
+        "Greenhouse Gases"
+    ],
+    "references": [
+        {
+            "book": "Climate Science & Modelling",
+            "chapter": "Part 4",
+            "topic": "Carbon Cycle & Feedbacks"
+        }
+    ],
+    "difficulty": "easy"
+}

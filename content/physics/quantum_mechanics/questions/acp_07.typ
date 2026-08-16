@@ -25,7 +25,6 @@ Length
 #set text(size: a_size)
 Electric potential
 #expl_page(include "../explanations/acp_07.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/acp_07.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_units.typ"

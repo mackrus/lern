@@ -239,7 +239,35 @@ export const Navigation = {
         let questions = [];
         
         if (state && state.questions) {
-            questions = state.questions;
+            if (categoryName === "Biology") {
+                if (state.questions.length > 0 && typeof state.questions[0] === "number") {
+                    const bioParams = state.bioParams;
+                    const courseData = courseInfo ? (courseInfo.data || []).map((plant, idx) => ({ ...plant, index: idx })) : [];
+                    if (bioParams && courseData.length > 0 && State.Biology) {
+                        const isSe = courseName === "Växtkännedom (Svenska)";
+                        questions = state.questions.map((plantIndex, idx) => {
+                            const plant = courseData[plantIndex];
+                            if (!plant) return null;
+                            return State.Biology.generateQuestion(
+                                plant, 
+                                idx, 
+                                bioParams.qAttr, 
+                                bioParams.aAttr, 
+                                bioParams.isTextInput, 
+                                isSe,
+                                courseData
+                            );
+                        }).filter(Boolean);
+                    }
+                } else {
+                    questions = state.questions;
+                }
+            } else if (categoryName !== "Biology" && state.questions.length > 0 && typeof state.questions[0] === "string") {
+                const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
+                questions = state.questions.map(id => fullQuestions.find(q => q.id === id)).filter(Boolean);
+            } else {
+                questions = state.questions;
+            }
         } else if (categoryName === "Biology") {
             questions = courseInfo.data || [];
         } else {

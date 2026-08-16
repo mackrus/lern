@@ -1,7 +1,8 @@
 import json
-import sqlite3
-import httpx
 import re
+import sqlite3
+
+import httpx
 
 LIBRARY_PATH = "content/biology/växtkännedom/questions/library.json"
 DB_PATH = "content/biology/växtkännedom/questions/plants_gallery.db"

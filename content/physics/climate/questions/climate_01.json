@@ -1,0 +1,22 @@
+{
+    "correct_index": 1,
+    "label": "exam",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "has_prerequisites": false,
+    "topics": [
+        "Radiation Balance",
+        "Energy Balance Models",
+        "Greenhouse Effect"
+    ],
+    "references": [
+        {
+            "book": "Climate Science & Modelling",
+            "chapter": "Part 1",
+            "topic": "Radiation Balance & EBMs"
+        }
+    ],
+    "difficulty": "easy"
+}

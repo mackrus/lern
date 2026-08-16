@@ -26,7 +26,6 @@ Young's experiment
 Explanation:
 
 The Stern-Gerlach experiment demonstrated the quantization of magnetic moment (and thus spin).
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/cf_04.typ")
 #prereq_page([
 #include "../prerequisites/core/cf_real_experiments.typ"

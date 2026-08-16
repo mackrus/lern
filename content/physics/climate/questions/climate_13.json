@@ -1,0 +1,22 @@
+{
+    "correct_index": 1,
+    "label": "exam",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "has_prerequisites": false,
+    "topics": [
+        "Atmospheric Dynamics",
+        "Circulation",
+        "Atmospheric Structure"
+    ],
+    "references": [
+        {
+            "book": "Climate Science & Modelling",
+            "chapter": "Part 2",
+            "topic": "Atmospheric Structure & Dynamics"
+        }
+    ],
+    "difficulty": "medium"
+}

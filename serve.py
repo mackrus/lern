@@ -1,8 +1,9 @@
+#!/usr/bin/env python3
 import http.server
-import socketserver
-import webbrowser
 import os
+import socketserver
 import sys
+import webbrowser
 
 PORT = 8000
 DIRECTORY = "dist"

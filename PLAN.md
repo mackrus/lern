@@ -264,3 +264,43 @@
     - Cache authentication state locally and display the logged-in user's profile in the header/settings.
 3. **Authorized Access Control**:
     - Restrict access to course content or cumulative stats to authenticated users belonging to Uppsala or SLU.
+
+### Phase 35: Storage Optimization (Completed)
+
+**Goal**: Optimize the persistent local storage architecture to be minimal, elegant, and scalable, ensuring users can save progress across all current and future modules without ever exceeding the browser's local storage quota.
+
+1. **Course Progression Refactoring**:
+    - Standardize progress tracking across all modules to store only minimal state variables (e.g., current index, selections, score, and lightweight question IDs) rather than full question objects.
+    - Dynamically reconstruct and look up question assets from the compiled `questions.json` database on startup.
+2. **Sweden Biology Optimization**:
+    - Avoid saving dynamically generated question HTML, prompts, and alternative lists in `localStorage` for the Swedish Biology course.
+    - Save only the session parameters (attributes, pairings, formats, limits) and an array of selected plant identifiers/indices. Recreate the question objects dynamically from these identifiers when resuming.
+3. **Storage Cleanup & Migration**:
+    - Build a migration utility to clean up older, bulky state structures from existing users' `localStorage`.
+    - Implement a structured key audit to purge orphaned keys or stale progress files.
+
+### Phase 36: Quantum Mechanics Content Polish & Spoiler Prevention (Completed)
+
+**Goal**: Resolve pedagogical issues by preventing prerequisites from spoiling answers and reducing cognitive load in formula sheets.
+
+1. **Prerequisite Spoiler Remediation**:
+    - Rephrased `prac_heisenberg_uncertainty_principle.typ` to define uncertainty conceptually without showing the final inequality limit.
+    - Rephrased `adv_operator_algebra.typ` to state the commutator product rule and canonical relation $[a, a^\dagger] = 1$ rather than explicitly deriving the commutator $[a^\dagger a, a] = -a$.
+    - Rephrased `adv_unitary_matrices.typ` to define a unitary matrix and its orthonormal basis properties without carrying out the explicit matrix element derivation.
+    - Rephrased `ow_eigenstate_uncertainty.typ` to define uncertainties conceptually without spelling out the exact product $(n + 1/2)\hbar$ for a number state.
+    - Rephrased `adv_hermitian_and_unitary_conditions.typ` to define eigenvalue restrictions for Hermitian and unitary operators without spelling out the eigenvalues $\pm 1$.
+    - Rephrased `sam_measurement_probabilities.typ` to define the Born rule projection probability conceptually without the explicit $\cos^2(\theta/2)$ formula.
+    - Fixed a prerequisite mismatch in `questions/owp_02.typ` by replacing `ow_eigenstate_uncertainty.typ` with the conceptually correct `ow_ground_state.typ`.
+2. **Formula Sheet Optimization**:
+    - Split the monolithic topic formula sheets (`operators_commutators.typ`, `spin_angular_momentum.typ`, `potential_wells_wavefunctions.typ`, `hydrogen_atom.typ`, `hop_shared.typ`) into distinct "Core" and "Contextual" helper files.
+    - Updated all Typst question files to load only the "Core" formula sheet, reducing cognitive clutter for the student.
+
+### Phase 37: Quantum Module Corrections (Completed)
+
+**Goal**: Systematically audited and corrected all 72 Quantum Mechanics questions, answers, prerequisites, and solution steps.
+
+1. **Incremental Audit**:
+    - Checked all Quantum Mechanics module questions and their associated metadata, explanations, and prerequisites.
+2. **Error Logging & Progress Tracking**:
+    - Recorded all audited files and exact corrections applied in `coorections.txt`.
+    - Removed irrelevant formula sheets and prerequisites from conceptual questions, corrected mathematical expressions in explanations, fixed typos in prerequisite math formulas, and rephrased 18 prerequisite files to prevent direct question spoiling.

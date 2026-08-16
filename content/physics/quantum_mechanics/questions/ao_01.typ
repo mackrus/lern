@@ -7,21 +7,20 @@ Consider a 2D Hydrogen-like atom described by the Schrödinger equation in polar
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$d^2 Y / d phi^2 = - m^2 Y$
+$dif^2 Y / (dif phi^2) = - m^2 Y$
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$d^2 Y / d phi^2 = - l(l+1) Y$
+$dif^2 Y / (dif phi^2) = - l(l+1) Y$
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$d Y / d phi = i m Y$
+$dif Y / (dif phi) = i m Y$
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$d^2 Y / d phi^2 = 0$
+$dif^2 Y / (dif phi^2) = 0$
 #expl_page(include "../explanations/ao_01.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/ao_01.typ")
 #prereq_page([
 #include "../prerequisites/core/ao_2d_laplacian.typ"

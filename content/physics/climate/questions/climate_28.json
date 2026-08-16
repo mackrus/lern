@@ -1,0 +1,22 @@
+{
+    "correct_index": 1,
+    "label": "exam",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "has_prerequisites": false,
+    "topics": [
+        "Paleoclimate",
+        "Milankovitch Cycles",
+        "Climate Projections"
+    ],
+    "references": [
+        {
+            "book": "Climate Science & Modelling",
+            "chapter": "Part 5",
+            "topic": "Paleoclimate & Scenarios"
+        }
+    ],
+    "difficulty": "medium"
+}

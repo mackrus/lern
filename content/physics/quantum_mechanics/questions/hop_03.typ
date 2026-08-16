@@ -26,6 +26,6 @@ $planck omega$
 Explanation:
 
 The denominator is $E_n^((0)) - E_(n+6)^((0)) = (n+1/2)planck omega - (n+6+1/2)planck omega = -6 planck omega$.
-#formulae_page(include "../formulae/hop_shared.typ")
+#formulae_page(include "../formulae/hop_shared_core.typ")
 #steps_page(include "../solution_steps/hop_03.typ")
 #prereq_page(include "../prerequisites/harmonic_oscillator_perturbation.typ")

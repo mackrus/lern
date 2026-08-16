@@ -51,3 +51,12 @@
   body
 }
 
+// Chemical compound shorthand
+#let CO = $upright("CO")$
+#let CH = $upright("CH")$
+#let CaCO = $upright("CaCO")$
+#let HCO = $upright("HCO")$
+#let N_2O = $upright("N")_2 upright("O")$
+#let H_2CO = $upright("H")_2 upright("CO")$
+#let H_2O = $upright("H")_2 upright("O")$
+

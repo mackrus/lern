@@ -1,0 +1,45 @@
+=== Quantum Mechanics Module Audit Logs ===
+Checked files: 1 to 72 (Full module audited)
+Last audited question: wms_02
+
+Checked files list:
+- content/physics/quantum_mechanics/questions/acp_01.typ to acp_20.typ (Audited and corrected where needed)
+- content/physics/quantum_mechanics/questions/ao_01.typ to ao_08.typ (Audited and corrected where needed)
+- content/physics/quantum_mechanics/questions/cf_01.typ to cf_04.typ (Audited and corrected where needed)
+- content/physics/quantum_mechanics/questions/cp_01.typ to cp_10.typ (Audited and corrected where needed)
+- content/physics/quantum_mechanics/questions/hop_01.typ to hop_03.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/hsp_01.typ to hsp_02.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/hydrogen_ground_probability.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/owp_01.typ to owp_09.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/pwe_01.typ to pwe_02.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/s1s_01.typ to s1s_02.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/sam_01.typ to sam_07.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/swe_01.typ to swe_02.typ (Audited and verified)
+- content/physics/quantum_mechanics/questions/wms_01.typ to wms_02.typ (Audited and verified)
+
+Shared Prerequisites Audited:
+- content/physics/quantum_mechanics/prerequisites/core/adv_expectation_values_of_products.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/adv_normal_operators.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/adv_dimensionality.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/adv_units.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/prac_probability_current.typ (Corrected - Removed spoiler, fixed formula syntax error)
+- content/physics/quantum_mechanics/prerequisites/core/adv_combinatorics_of_indistinguishable_particles.typ (Corrected - Removed spoiler, fixed typst syntax)
+- content/physics/quantum_mechanics/prerequisites/core/prac_commutators.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/adv_spectrum_normalization.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/ow_variational_principle.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/adv_wkb_approximation.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/ao_aufbau_principle.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/ao_equivalent_shells.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/ao_boundary_conditions.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/ao_spin-orbit_splitting.typ (Corrected - Fixed formula syntax typo, rephrased)
+- content/physics/quantum_mechanics/prerequisites/core/ao_asymptotic_convergence.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/cf_postulates.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/cf_double_slit.typ (Corrected - Removed spoiler)
+- content/physics/quantum_mechanics/prerequisites/core/cf_real_experiments.typ (Corrected - Removed spoiler)
+
+Detailed Corrections Applied:
+1. Removed irrelevant formulae page inclusions (`operators_commutators_core.typ`) and disabled `has_formulae` in JSON metadata for all conceptual questions (including `acp_02`, `acp_03`, `acp_05` to `acp_10`, `acp_11`, `acp_12`, `acp_13`, `acp_15` to `acp_20`, `ao_01` to `ao_08`, `cf_01` to `cf_04`, and `cp_01` to `cp_10`).
+2. Removed irrelevant prerequisite inclusions (like `adv_expectation_values_of_products.typ`, `adv_dimensionality.typ`, and `adv_units.typ`) from multiple questions.
+3. Corrected mathematical inner product expression in explanations/acp_12.typ.
+4. Fixed typst formula syntax in `prac_probability_current.typ`, `adv_combinatorics_of_indistinguishable_particles.typ`, and `ao_spin-orbit_splitting.typ`.
+5. Rephrased 18 shared prerequisite files to conceptually define key points rather than directly spoiling answers.

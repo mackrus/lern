@@ -21,7 +21,6 @@ $L^2/s$
 #set text(size: a_size)
 $1/L$
 #expl_page(include "../explanations/cp_10.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/cp_10.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_dimensionality.typ"

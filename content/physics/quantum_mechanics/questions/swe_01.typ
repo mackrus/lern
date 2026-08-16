@@ -26,7 +26,7 @@ $5 E_1$
 Explanation:
 
 $chevron.l E chevron.r = sum bar.v c_n bar.v^2 E_n = 1/4 E_1 + 1/4 (4 E_1) + 1/2 (9 E_1) = (1/4 + 1 + 9/2) E_1 = (1/4 + 4/4 + 18/4) E_1 = 23/4 E_1$.
-#formulae_page(include "../formulae/potential_wells_wavefunctions.typ")
+#formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/swe_01.typ")
 #prereq_page([
 #include "../prerequisites/core/adv_expectation_values_of_products.typ"

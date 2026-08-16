@@ -21,7 +21,7 @@ $sigma_A sigma_B > 0$
 #set text(size: a_size)
 All of the above
 #expl_page(include "../explanations/acp_14.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
+#formulae_page(include "../formulae/operators_commutators_core.typ")
 #steps_page(include "../solution_steps/acp_14.typ")
 #prereq_page([
 #include "../prerequisites/core/prac_commutators.typ"

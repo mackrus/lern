@@ -1,0 +1,244 @@
+MULTIVARIABLE CALCULUS MODULE: PRACTICE QUESTIONS & STUDY GUIDE BANK
+INSTRUCTIONS: Use this structured text file to generate Typst question files (.typ) and metadata configurations (.json) for the Multivariable Calculus module. Each entry is segmented strictly into Question, Prerequisites, Formulae, and Solution Steps. Skip the references block during conversion as it will be populated programmatically later.
+
+================================================================================
+QUESTION 1: DIRECTIONAL DERIVATIVES, GRADIENTS, AND TANGENT PLANES
+================================================================================
+QUESTION:
+Let f(x, y, z) = x^2*y + y*z^2 + z*x^2. 
+1. Compute the gradient of f at the point P(1, -1, 2).
+2. Find the directional derivative of f at P(1, -1, 2) in the direction of the vector v = 2*i - j + 2*k.
+3. Determine the equation of the tangent plane to the level surface f(x, y, z) = 1 at the point P(1, -1, 2).
+
+PREREQUISITES:
+- Definition of partial derivatives and the gradient vector in R^3.
+- Definition of the directional derivative for a differentiable function.
+- Geometric interpretation of the gradient as the normal vector to a level surface.
+
+FORMULAE:
+- Gradient: grad(f) = <df/dx, df/dy, df/dz>
+- Directional Derivative: D_u f(P) = grad(f)(P) . u, where u = v / ||v|| is the unit vector.
+- Tangent Plane to f(x,y,z) = c at (x0, y0, z0): 
+  (df/dx)(P)*(x - x0) + (df/dy)(P)*(y - y0) + (df/dz)(P)*(z - z0) = 0
+
+SOLUTION STEPS:
+1. Compute the partial derivatives of f(x, y, z):
+   df/dx = 2*x*y + 2*z*x
+   df/dy = x^2 + z^2
+   df/dz = 2*y*z + x^2
+2. Evaluate these partial derivatives at P(1, -1, 2):
+   df/dx(1, -1, 2) = 2(1)(-1) + 2(2)(1) = -2 + 4 = 2
+   df/dy(1, -1, 2) = (1)^2 + (2)^2 = 1 + 4 = 5
+   df/dz(1, -1, 2) = 2(-1)(2) + (1)^2 = -4 + 1 = -3
+   Thus, grad(f)(1, -1, 2) = <2, 5, -3>.
+3. Normalize the direction vector v = <2, -1, 2>:
+   ||v|| = sqrt(2^2 + (-1)^2 + 2^2) = sqrt(4 + 1 + 4) = sqrt(9) = 3
+   u = <2/3, -1/3, 2/3>
+4. Compute the directional derivative:
+   D_u f(1, -1, 2) = grad(f)(1, -1, 2) . u = <2, 5, -3> . <2/3, -1/3, 2/3>
+   D_u f(1, -1, 2) = (2)(2/3) + (5)(-1/3) + (-3)(2/3) = 4/3 - 5/3 - 6/3 = -7/3.
+5. Construct the equation of the tangent plane using the normal vector n = grad(f)(P) = <2, 5, -3>:
+   2*(x - 1) + 5*(y - (-1)) - 3*(z - 2) = 0
+   2*x - 2 + 5*y + 5 - 3*z + 6 = 0
+   2*x + 5*y - 3*z + 9 = 0 -> 2*x + 5*y - 3*z = -9.
+
+================================================================================
+QUESTION 2: CONSTRAINED OPTIMIZATION VIA LAGRANGE MULTIPLIERS (TWO CONSTRAINTS)
+================================================================================
+QUESTION:
+Find the maximum and minimum distances from the origin (0, 0, 0) to the curve of intersection formed by the ellipsoid x^2 + 2*y^2 + z^2 = 10 and the plane x + y + z = 1.
+
+PREREQUISITES:
+- Objective function formulation for distance problems (minimizing/maximizing the square of distance f(x,y,z) = x^2 + y^2 + z^2).
+- Method of Lagrange Multipliers with multiple constraints: grad(f) = lambda * grad(g) + mu * grad(h).
+- Solving systems of linear and non-linear algebraic equations.
+
+FORMULAE:
+- Objective function: f(x, y, z) = x^2 + y^2 + z^2
+- Constraint 1: g(x, y, z) = x^2 + 2*y^2 + z^2 - 10 = 0
+- Constraint 2: h(x, y, z) = x + y + z - 1 = 0
+- Lagrange equations: 
+  2*x = lambda*(2*x) + mu
+  2*y = lambda*(4*y) + mu
+  2*z = lambda*(2*z) + mu
+
+SOLUTION STEPS:
+1. Set up the vector equation grad(f) = lambda * grad(g) + mu * grad(h):
+   (Eq 1) 2*x = 2*lambda*x + mu
+   (Eq 2) 2*y = 4*lambda*y + mu
+   (Eq 3) 2*z = 2*lambda*z + mu
+2. Isolate mu or find relationships between variables by subtraction:
+   Subtract (Eq 3) from (Eq 1):
+   2*x - 2*z = 2*lambda*x - 2*lambda*z  =>  2*(x - z)*(1 - lambda) = 0
+3. Analyze Case 1: lambda = 1
+   If lambda = 1, then (Eq 1) gives 2*x = 2*x + mu => mu = 0.
+   Then (Eq 2) becomes 2*y = 4*y => 2*y = 0 => y = 0.
+   Substitute y = 0 into the constraints:
+   Constraint 2: x + 0 + z = 1 => z = 1 - x
+   Constraint 1: x^2 + 0 + (1 - x)^2 = 10 => x^2 + 1 - 2*x + x^2 = 10 => 2*x^2 - 2*x - 9 = 0
+   Using the quadratic formula: x = (2 +/- sqrt(4 - 4(2)(-9))) / 4 = (2 +/- sqrt(76)) / 4 = (1 +/- sqrt(19)) / 2.
+   Since z = 1 - x, the corresponding z values are z = (1 -/+ sqrt(19)) / 2.
+   Compute f(x, y, z) for these points: x^2 + z^2 = [ (1+sqrt(19))^2 + (1-sqrt(19))^2 ] / 4 = [ (1 + 2*sqrt(19) + 19) + (1 - 2*sqrt(19) + 19) ] / 4 = 40 / 4 = 10.
+   Distance = sqrt(10).
+4. Analyze Case 2: x = z
+   If x = z, substitute into Constraint 2: 2*x + y = 1 => y = 1 - 2*x.
+   Substitute into Constraint 1: x^2 + 2*(1 - 2*x)^2 + x^2 = 10
+   2*x^2 + 2*(1 - 4*x + 4*x^2) = 10 => 2*x^2 + 2 - 8*x + 8*x^2 = 10 => 10*x^2 - 8*x - 8 = 0 => 5*x^2 - 4*x - 4 = 0.
+   Solve for x: x = (4 +/- sqrt(16 - 4(5)(-4))) / 10 = (4 +/- sqrt(96)) / 10 = (2 +/- 2*sqrt(6)) / 5.
+   Compute the value of f(x,y,z) = 2*x^2 + y^2 directly:
+   Since 5*x^2 = 4*x + 4 => x^2 = (4*x + 4)/5.
+   y = 1 - 2*x => y^2 = 1 - 4*x + 4*x^2.
+   f(x,y,z) = 2*x^2 + (1 - 4*x + 4*x^2) = 6*x^2 - 4*x + 1.
+   Substitute x^2 = (4*x+4)/5: f = 6*(4*x+4)/5 - 4*x + 1 = (24*x + 24 - 20*x + 5)/5 = (4*x + 29)/5.
+   Evaluate for both values of x:
+   For x = (2 + 2*sqrt(6))/5: f = (4*(2 + 2*sqrt(6))/5 + 29)/5 = (8 + 8*sqrt(6) + 145)/25 = (153 + 8*sqrt(6))/25 approx (153 + 19.59)/25 = 6.90.
+   For x = (2 - 2*sqrt(6))/5: f = (4*(2 - 2*sqrt(6))/5 + 29)/5 = (153 - 8*sqrt(6))/25 approx (153 - 19.59)/25 = 5.34.
+5. Compare the values to find minimum and maximum distances:
+   Max distance squared = 10 => Max distance = sqrt(10) approx 3.16.
+   Min distance squared = (153 - 8*sqrt(6))/25 => Min distance = sqrt(153 - 8*sqrt(6))/5 approx 2.31.
+
+================================================================================
+QUESTION 3: DOUBLE INTEGRATION VIA GENERAL COORDINATE TRANSFORMATION (JACOBIAN)
+================================================================================
+QUESTION:
+Evaluate the double integral \iint_R (x + y)^2 * e^(x - y) dA, where R is the square region bounded by the vertices (1, 0), (2, 1), (1, 2), and (0, 1).
+
+PREREQUISITES:
+- Change of variables in double integrals.
+- Calculating the Jacobian determinant for a linear transformation.
+- Finding transformed boundaries in the uv-plane.
+
+FORMULAE:
+- Transformation formulas: u = x + y, v = x - y.
+- Inverse Jacobian determinant: d(x,y)/d(u,v) = 1 / | d(u,v)/d(x,y) |
+- Change of variables theorem: \iint_R f(x,y) dx dy = \iint_S f(x(u,v), y(u,v)) |J(u,v)| du dv
+
+SOLUTION STEPS:
+1. Identify the natural transformation based on the integrand and boundaries:
+   Let u = x + y
+   Let v = x - y
+2. Find the boundaries of the region R in terms of x and y, and transform them to u and v:
+   The line segment from (1,0) to (2,1) has the equation: y - 0 = ((1-0)/(2-1))*(x - 1) => y = x - 1 => x - y = 1 => v = 1.
+   The line segment from (0,1) to (1,2) has the equation: y - 1 = ((2-1)/(1-0))*(x - 0) => y = x + 1 => x - y = -1 => v = -1.
+   The line segment from (1,0) to (0,1) has the equation: y - 0 = ((1-0)/(0-1))*(x - 1) => y = -x + 1 => x + y = 1 => u = 1.
+   The line segment from (2,1) to (1,2) has the equation: y - 1 = ((2-1)/(1-2))*(x - 2) => y - 1 = -(x - 2) => x + y = 3 => u = 3.
+   Thus, the transformed region S in the uv-plane is a rectangle defined by: 1 <= u <= 3 and -1 <= v <= 1.
+3. Compute the Jacobian of the transformation. First find the partial derivatives of u and v with respect to x and y:
+   du/dx = 1, du/dy = 1
+   dv/dx = 1, dv/dy = -1
+   The determinant d(u,v)/d(x,y) = (1)(-1) - (1)(1) = -2.
+   Therefore, the absolute value of the Jacobian |J(u,v)| = |d(x,y)/d(u,v)| = |1 / (-2)| = 1/2.
+4. Set up and evaluate the transformed integral:
+   \int_{-1}^{1} \int_{1}^{3} u^2 * e^v * (1/2) du dv
+   = 1/2 * [ \int_{1}^{3} u^2 du ] * [ \int_{-1}^{1} e^v dv ]
+5. Complete the one-dimensional integrations:
+   \int_{1}^{3} u^2 du = [ u^3 / 3 ]_1^3 = (27/3) - (1/3) = 26/3.
+   \int_{-1}^{1} e^v dv = [ e^v ]_{-1}^1 = e^1 - e^(-1).
+6. Multiply the components together:
+   Total Value = 1/2 * (26/3) * (e - e^(-1)) = (13/3) * (e - 1/e) = 13*(e^2 - 1) / (3*e).
+
+================================================================================
+QUESTION 4: LINE INTEGRALS AND GREEN'S THEOREM IN THE PLANE
+================================================================================
+QUESTION:
+Evaluate the line integral \oint_C (y^3 - ln(x^2 + 1)) dx + (3*x*y^2 + cos(y^2)) dy, where C is the positively oriented boundary of the semi-annular region D situated between the circles x^2 + y^2 = 1 and x^2 + y^2 = 4 in the upper half-plane (y >= 0).
+
+PREREQUISITES:
+- Statement and hypothesis of Green's Theorem (region must be bounded, piecewise smooth, and positively oriented).
+- Conversion of double integrals from Cartesian coordinates to polar coordinates.
+
+FORMULAE:
+- Green's Theorem: \oint_C P dx + Q dy = \iint_D (dQ/dx - dP/dy) dA
+- Polar coordinates conversion: x = r*cos(theta), y = r*sin(theta), dA = r dr dtheta.
+
+SOLUTION STEPS:
+1. Identify component functions P and Q from the given line integral:
+   P(x, y) = y^3 - ln(x^2 + 1)
+   Q(x, y) = 3*x*y^2 + cos(y^2)
+2. Compute the required partial derivatives:
+   dQ/dx = d/dx (3*x*y^2 + cos(y^2)) = 3*y^2
+   dP/dy = d/dy (y^3 - ln(x^2 + 1)) = 3*y^2
+3. Calculate the integrand for the double integral:
+   dQ/dx - dP/dy = 3*y^2 - 3*y^2 = 0.
+4. Set up the resulting double integral over the domain D:
+   \iint_D 0 dA = 0.
+5. Conclude immediately that because the integrand vanishes identically across the entire interior domain, the line integral along the boundary curve C equals 0.
+
+================================================================================
+QUESTION 5: SURFACE INTEGRATION AND STOKES' THEOREM
+================================================================================
+QUESTION:
+Evaluate the line integral \oint_C F . dr, where F(x, y, z) = (z^2 - y^2) i + (x^2 - z^2) j + (y^2 - x^2) k and C is the boundary curve formed by the intersection of the unit cube [0,1] x [0,1] x [0,1] with the plane x + y + z = 3/2, oriented counterclockwise when viewed from above.
+
+PREREQUISITES:
+- Stokes' Theorem linking line integrals around closed curves to flux integrals of the curl over an bounded surface.
+- Vector cross product for computing curl(F).
+- Surface parameterization and normal vector evaluation for flat planes.
+
+FORMULAE:
+- Stokes' Theorem: \oint_C F . dr = \iint_S curl(F) . dS
+- Curl: curl(F) = det([i, j, k; d/dx, d/dy, d/dz; Fx, Fy, Fz])
+- Downward/Upward normal vector for a plane Ax + By + Cz = D is n = <A, B, C> / sqrt(A^2 + B^2 + C^2).
+
+SOLUTION STEPS:
+1. Compute the curl of the vector field F:
+   curl(F) = < d/dy(y^2 - x^2) - d/dz(x^2 - z^2), d/dz(z^2 - y^2) - d/dx(y^2 - x^2), d/dx(x^2 - z^2) - d/dy(z^2 - y^2) >
+   curl(F) = < 2*y - (-2*z), 2*z - (-2*x), 2*x - (-2*y) > = < 2*y + 2*z, 2*z + 2*x, 2*x + 2*y >
+2. Parameterize the plane surface S bounded by the intersection with the cube:
+   The surface equation is z = 3/2 - x - y. 
+   The upward oriented normal vector element dS is given by: dS = < -dz/dx, -dz/dy, 1 > dx dy = < 1, 1, 1 > dx dy.
+3. Express curl(F) . dS as an algebraic expression in terms of x and y:
+   curl(F) . dS = (2*y + 2*z)(1) + (2*z + 2*x)(1) + (2*x + 2*y)(1) dx dy
+   = (4*x + 4*y + 4*z) dx dy
+4. Substitute the expression for z into this dot product:
+   4*x + 4*y + 4*(3/2 - x - y) = 4*x + 4*y + 6 - 4*x - 4*y = 6.
+5. Set up the double integral over the projection region R in the xy-plane:
+   \iint_S curl(F) . dS = \iint_R 6 dx dy = 6 * Area(R).
+6. Determine the geometric shape and area of the projection region R in the xy-plane:
+   The plane x + y + z = 3/2 intersects the cube boundaries. The projection region is a hexagon bounded by the lines:
+   x = 0, y = 0, x = 1, y = 1, and the projection lines where z=0 and z=1.
+   z = 0 => x + y = 3/2.
+   z = 1 => x + y = 1/2.
+   The region R is a unit square [0,1]x[0,1] with two corner triangles removed:
+   - Triangle 1 (bottom left): bounded by x=0, y=0, x+y=1/2. Area = 1/2 * (1/2) * (1/2) = 1/8.
+   - Triangle 2 (top right): bounded by x=1, y=1, x+y=3/2. This is identical by symmetry. Area = 1/8.
+   Area(R) = Area(Square) - 2 * (1/8) = 1 - 1/4 = 3/4.
+7. Compute final numerical value:
+   Integral = 6 * (3/4) = 18/4 = 9/2.
+
+================================================================================
+QUESTION 6: THE DIVERGENCE THEOREM (GAUSS'S THEOREM)
+================================================================================
+QUESTION:
+Compute the outward flux of the vector field F(x, y, z) = (x^3 + e^(y*sin(z))) i + (y^3 + ln(z^2 + 1)) j + (z^3 + tan(x*y)) k across the closed surface S of the solid sphere V defined by x^2 + y^2 + z^2 <= a^2.
+
+PREREQUISITES:
+- Statement of the Divergence Theorem (relating flux through a closed surface to volume integral of divergence).
+- Calculation of scalar divergence div(F).
+- Integration in spherical coordinates.
+
+FORMULAE:
+- Divergence Theorem: \iint_S F . dS = \iiint_V div(F) dV
+- Divergence: div(F) = dFx/dx + dFy/dy + dFz/dz
+- Spherical coordinates element: dV = rho^2 * sin(phi) drho dphi dtheta
+
+SOLUTION STEPS:
+1. Compute the divergence of the vector field F:
+   dFx/dx = d/dx (x^3 + e^(y*sin(z))) = 3*x^2
+   dFy/dy = d/dy (y^3 + ln(z^2 + 1)) = 3*y^2
+   dFz/dz = d/dz (z^3 + tan(x*y)) = 3*z^2
+   div(F) = 3*x^2 + 3*y^2 + 3*z^2 = 3*(x^2 + y^2 + z^2)
+2. Use the Divergence Theorem to convert the surface flux integral to a volume integral:
+   Flux = \iiint_V 3*(x^2 + y^2 + z^2) dV
+3. Convert the volume integral over the sphere into spherical coordinates:
+   x^2 + y^2 + z^2 = rho^2
+   The bounds for the solid sphere of radius a are: 0 <= rho <= a, 0 <= phi <= pi, 0 <= theta <= 2*pi.
+   Flux = \int_{0}^{2*pi} \int_{0}^{pi} \int_{0}^{a} 3*(rho^2) * (rho^2 * sin(phi)) drho dphi dtheta
+4. Separate the single-variable integrals:
+   Flux = 3 * [ \int_{0}^{2*pi} dtheta ] * [ \int_{0}^{pi} sin(phi) dphi ] * [ \int_{0}^{a} rho^4 drho ]
+5. Evaluate each separate definite integral:
+   \int_{0}^{2*pi} dtheta = 2*pi
+   \int_{0}^{pi} sin(phi) dphi = [ -cos(phi) ]_0^pi = -(-1) - (-1) = 2
+   \int_{0}^{a} rho^4 drho = [ rho^5 / 5 ]_0^a = a^5 / 5
+6. Synthesize the final result:
+   Flux = 3 * (2*pi) * (2) * (a^5 / 5) = (12 * pi * a^5) / 5.

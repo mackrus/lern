@@ -33,6 +33,9 @@ async function run() {
         
         State.coursesData = await response.json();
         
+        // Audit and migrate/clean up localStorage
+        State.migrateAndCleanup();
+        
         const lastCourse = State.getLastCourse();
         let lastCourseExists = false;
         let lastCategory = null;

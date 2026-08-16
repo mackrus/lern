@@ -13,7 +13,6 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/cp_02.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/cp_02.typ")
 #prereq_page([
 #include "../prerequisites/core/prac_plancks_radiation_law.typ"

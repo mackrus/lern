@@ -21,6 +21,6 @@ $bar.v n+6 chevron.r$, $bar.v n chevron.r$, and $bar.v n-6 chevron.r$
 #set text(size: a_size)
 None
 #expl_page(include "../explanations/hop_02.typ")
-#formulae_page(include "../formulae/hop_shared.typ")
+#formulae_page(include "../formulae/hop_shared_core.typ")
 #steps_page(include "../solution_steps/hop_02.typ")
 #prereq_page(include "../prerequisites/harmonic_oscillator_perturbation.typ")

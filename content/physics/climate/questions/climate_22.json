@@ -1,0 +1,22 @@
+{
+    "correct_index": 1,
+    "label": "exam",
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "has_prerequisites": false,
+    "topics": [
+        "Ocean Circulation",
+        "Carbonate Chemistry",
+        "Oceanography"
+    ],
+    "references": [
+        {
+            "book": "Climate Science & Modelling",
+            "chapter": "Part 3",
+            "topic": "Ocean Circulation & Chemistry"
+        }
+    ],
+    "difficulty": "medium"
+}

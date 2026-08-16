@@ -13,7 +13,6 @@ True
 #set text(size: a_size)
 False
 #expl_page(include "../explanations/cp_06.typ")
-#formulae_page(include "../formulae/operators_commutators.typ")
 #steps_page(include "../solution_steps/cp_06.typ")
 #prereq_page([
 #include "../prerequisites/core/prac_hermitian_operators.typ"
