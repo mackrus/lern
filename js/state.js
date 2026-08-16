@@ -36,7 +36,9 @@ export const State = {
             showAlts: toggleAltBtn && toggleAltBtn.dataset.state === "shown",
             selectedTopics: this.currentSavedState ? this.currentSavedState.selectedTopics : null,
             examEndTime: this.currentExamEndTime,
-            questions: ["biology_custom", "practice", "six_easy", "six_hard"].includes(this.currentMode) ? this.currentQuestionsList : null,
+            questions: ["biology_custom", "practice", "six_easy", "six_hard"].includes(this.currentMode) && this.currentQuestionsList
+                ? (this.currentCategory === "Biology" ? this.currentQuestionsList.map(q => q.plantIndex) : this.currentQuestionsList.map(q => q.id))
+                : null,
             statsUpdated: this.currentSavedState ? this.currentSavedState.statsUpdated : false,
             bioParams: this.currentSavedState ? this.currentSavedState.bioParams : null
         };
@@ -92,5 +94,89 @@ export const State = {
 
     resetCumulativeStats(courseName) {
         localStorage.removeItem(`lern_cumulative_stats_${courseName}`);
+    },
+
+    migrateAndCleanup() {
+        const currentCourses = new Set();
+        if (this.coursesData) {
+            for (const cat in this.coursesData) {
+                for (const courseName in this.coursesData[cat]) {
+                    currentCourses.add(courseName);
+                }
+            }
+        }
+
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key) continue;
+
+            if (key.startsWith("lern_progress_")) {
+                const courseName = key.replace("lern_progress_", "");
+                if (!currentCourses.has(courseName)) {
+                    keysToRemove.push(key);
+                    continue;
+                }
+                
+                try {
+                    const data = localStorage.getItem(key);
+                    if (data) {
+                        const state = JSON.parse(data);
+                        let modified = false;
+                        
+                        if (state.category === "Biology" && state.questions && state.questions.length > 0 && typeof state.questions[0] === "object") {
+                            console.log(`Migrating bulky biology progress for ${courseName}...`);
+                            state.questions = state.questions.map(q => {
+                                if (q && typeof q === "object") {
+                                    if (q.plantIndex !== undefined) return q.plantIndex;
+                                    
+                                    const match = q.id && q.id.match(/^plant_(\d+)_/);
+                                    if (match) {
+                                        return parseInt(match[1]);
+                                    }
+                                    
+                                    const plantLabel = q.topics && q.topics[0];
+                                    if (plantLabel) {
+                                        const latinNameMatch = plantLabel.match(/\(([^)]+)\)/);
+                                        if (latinNameMatch) {
+                                            const latinName = latinNameMatch[1];
+                                            const courseData = this.coursesData["Biology"]?.[courseName]?.data || [];
+                                            const idx = courseData.findIndex(p => p.latin_name === latinName);
+                                            if (idx !== -1) return idx;
+                                        }
+                                    }
+                                }
+                                return null;
+                            }).filter(val => val !== null);
+                            modified = true;
+                        }
+                        
+                        if (state.category !== "Biology" && state.questions && state.questions.length > 0 && typeof state.questions[0] === "object") {
+                            console.log(`Migrating bulky physics progress for ${courseName}...`);
+                            state.questions = state.questions.map(q => q && q.id).filter(Boolean);
+                            modified = true;
+                        }
+
+                        if (modified) {
+                            localStorage.setItem(key, JSON.stringify(state));
+                        }
+                    }
+                } catch (e) {
+                    console.error(`Failed to migrate progress key ${key}:`, e);
+                    keysToRemove.push(key);
+                }
+            }
+            else if (key.startsWith("lern_cumulative_stats_")) {
+                const courseName = key.replace("lern_cumulative_stats_", "");
+                if (!currentCourses.has(courseName)) {
+                    keysToRemove.push(key);
+                }
+            }
+        }
+
+        keysToRemove.forEach(key => {
+            console.log(`Purging stale/orphaned key: ${key}`);
+            localStorage.removeItem(key);
+        });
     }
 };
