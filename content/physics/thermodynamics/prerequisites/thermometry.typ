@@ -8,8 +8,8 @@ The standard for modern thermometry is the *triple point of water* ($T_"TP" = 27
 == Linear Scales
 Many thermometers assume a linear relationship between the property $X$ and temperature $T$:
 $ T = c dot X $
-To determine the constant $c$, we use the triple point: $c = (273.16 " K") / X_"TP"$.
+To determine the constant $c$, we use the triple point: $c = (273.16 " K") / (X_"TP")$.
 
 == Resolution and Uncertainty
 An instrument can only distinguish between two temperatures if the resulting change in the thermometric property ($Delta X$) is greater than the instrument's measurement uncertainty. For small changes:
-$ Delta X = X_"TP" / T_"TP" dot Delta T $
+$ Delta X = (X_"TP") / (T_"TP") dot Delta T $

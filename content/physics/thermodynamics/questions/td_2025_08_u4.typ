@@ -9,7 +9,7 @@ Two equal amounts ($n$) of the same liquid at $T_1$ and $T_2$ are mixed in an ad
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
-Equilibrium temperature $T_f = (T_1 + T_2) / 2$
+Equilibrium temperature $T_f = (T_1 + T_2) / (2)$
 #pagebreak()
 Equilibrium temperature $T_f = sqrt(T_1 * T_2)$
 #pagebreak()

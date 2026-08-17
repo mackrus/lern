@@ -8,11 +8,11 @@ For a reversible adiabatic expansion of an ideal gas with a constant adiabatic i
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
-$T V^(gamma - 1) = C_1$ and $T / P^(1 - 1/gamma) = C_2$
+$T V^(gamma - 1) = C_1$ and $(T) / (P^(1 - (1) / (gamma))) = C_2$
 #pagebreak()
-$T V^gamma = C_1$ and $T / P^gamma = C_2$
+$T V^gamma = C_1$ and $(T) / (P^gamma) = C_2$
 #pagebreak()
-$T V^(gamma - 1) = C_1$ and $T P^(1 - 1/gamma) = C_2$
+$T V^(gamma - 1) = C_1$ and $T P^(1 - (1) / (gamma)) = C_2$
 #pagebreak()
 $T^gamma V = C_1$ and $T P^(gamma - 1) = C_2$
 

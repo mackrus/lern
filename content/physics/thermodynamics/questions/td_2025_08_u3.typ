@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 
-One mole of monatomic ideal gas expands reversibly at constant temperature. It performs $1729$ J of work, and entropy increases by $5.763$ J/K. Determine the volume ratio ($V_2/V_1$) and the temperature.
+One mole of monatomic ideal gas expands reversibly at constant temperature. It performs $1729$ J of work, and entropy increases by $5.763$ J/K. Determine the volume ratio ($(V_2) / (V_1)$) and the temperature.
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)

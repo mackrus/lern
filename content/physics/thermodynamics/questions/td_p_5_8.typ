@@ -8,13 +8,13 @@ An ideal gas features a temperature-dependent molar heat capacity defined by $c_
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
-$Delta S = A ln(T_2 / T_1) + B(T_2 - T_1) + R ln(V_2 / V_1)$
+$Delta S = A ln((T_2) / (T_1)) + B(T_2 - T_1) + R ln((V_2) / (V_1))$
 #pagebreak()
-$Delta S = A ln(T_2 / T_1) + 1/2 B(T_2^2 - T_1^2) + R ln(V_2 / V_1)$
+$Delta S = A ln((T_2) / (T_1)) + (1) / (2) B(T_2^2 - T_1^2) + R ln((V_2) / (V_1))$
 #pagebreak()
-$Delta S = (A + B) ln(T_2 / T_1) + R ln(V_2 / V_1)$
+$Delta S = (A + B) ln((T_2) / (T_1)) + R ln((V_2) / (V_1))$
 #pagebreak()
-$Delta S = A ln(T_2 / T_1) + B(T_2 - T_1) - R ln(V_2 / V_1)$
+$Delta S = A ln((T_2) / (T_1)) + B(T_2 - T_1) - R ln((V_2) / (V_1))$
 
 #expl_page(include "../explanations/td_p_5_8.typ")
 #prereq_page(include "../prerequisites/entropy_second_law.typ")

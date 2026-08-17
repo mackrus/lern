@@ -8,7 +8,7 @@
 
 2. *Analyze Step 2-3 (Isothermal Compression):*
    - Since temperature is constant, $Delta U_{23} = 0$.
-   - Calculate work: $W_{23} = n R T_2 ln(P_3 / P_2)$.
+   - Calculate work: $W_{23} = n R T_2 ln((P_3) / (P_2))$.
    - Since $Delta U = 0$, the heat is $Q_{23} = -W_{23}$.
 
 3. *Analyze Step 3-1 (Isochoric Cooling):*

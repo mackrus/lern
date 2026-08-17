@@ -7,7 +7,7 @@
 
 Joule and Thomson observed temperature changes during adiabatic throttling. 
 (a) Show enthalpy conservation.
-(b) Derive the Joule-Thomson coefficient $mu_("JT") = V / C_p (beta T - 1)$.
+(b) Derive the Joule-Thomson coefficient $mu_("JT") = (V) / (C_p) (beta T - 1)$.
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)

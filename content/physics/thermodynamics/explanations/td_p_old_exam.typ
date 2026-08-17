@@ -1,6 +1,6 @@
 The total entropy change of the water consists of phase condensation and sensible subcooling:
   $ Delta S_"H2O,1" = (-1 " kg" times 2260 times 10^3 " J/kg") / (373 " K") = -6059 " J/K" \
-  Delta S_"H2O,2" = integral_(373)^(298) m c_p d T / T = 1 times 4190 times ln(298 / 373) = -941 " J/K" \
+  Delta S_"H2O,2" = integral_(373)^(298) m c_p (dif T) / (T) = 1 times 4190 times ln((298) / (373)) = -941 " J/K" \
   Delta S_"H2O" = -6059 - 941 = -7000 " J/K" $
   
   The surrounding air environment absorbs all energy rejected by the water mass:

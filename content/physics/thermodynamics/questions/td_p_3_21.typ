@@ -8,13 +8,13 @@ A thick-walled insulating chamber holds $n_1$ moles of helium gas at high pressu
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
-$n_2 = n_1 (P_0 / P_1)^(1/gamma)$
+$n_2 = n_1 ((P_0) / (P_1))^((1) / (gamma))$
 #pagebreak()
-$n_2 = n_1 (P_0 / P_1)^gamma$
+$n_2 = n_1 ((P_0) / (P_1))^gamma$
 #pagebreak()
-$n_2 = n_1 (P_1 / P_0)^(1/gamma)$
+$n_2 = n_1 ((P_1) / (P_0))^((1) / (gamma))$
 #pagebreak()
-$n_2 = n_1 (P_0 / P_1)^(1 - 1/gamma)$
+$n_2 = n_1 ((P_0) / (P_1))^(1 - (1) / (gamma))$
 
 #expl_page(include "../explanations/td_p_3_21.typ")
 #prereq_page(include "../prerequisites/ideal_gas_states.typ")

@@ -8,13 +8,13 @@ A gas characterized by an adiabatic exponent $gamma$ is compressed adiabatically
 
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
-$W = (P_i V_i) / (gamma - 1) [ (V_i / V_f)^(gamma - 1) - 1 ]$
+$W = (P_i V_i) / (gamma - 1) [ ((V_i) / (V_f))^(gamma - 1) - 1 ]$
 #pagebreak()
-$W = (P_i V_i) / (gamma - 1) [ 1 - (V_i / V_f)^(gamma - 1) ]$
+$W = (P_i V_i) / (gamma - 1) [ 1 - ((V_i) / (V_f))^(gamma - 1) ]$
 #pagebreak()
-$W = (P_f V_f) / (gamma - 1) [ (V_f / V_i)^(gamma) - 1 ]$
+$W = (P_f V_f) / (gamma - 1) [ ((V_f) / (V_i))^(gamma) - 1 ]$
 #pagebreak()
-$W = (P_i V_i) / (gamma + 1) [ (V_i / V_f)^(gamma - 1) - 1 ]$
+$W = (P_i V_i) / (gamma + 1) [ ((V_i) / (V_f))^(gamma - 1) - 1 ]$
 
 #expl_page(include "../explanations/td_p_3_19.typ")
 #prereq_page(include "../prerequisites/ideal_gas_states.typ")

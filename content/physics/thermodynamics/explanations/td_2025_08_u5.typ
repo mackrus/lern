@@ -3,6 +3,6 @@
 #set text(size: i_size)
 Explanation:
 
-- *Newton's Law of Cooling*: $d Q / d t = alpha A Delta T$.
+- *Newton's Law of Cooling*: $(dif Q) / (dif t) = alpha A Delta T$.
 - *Temperature Gradient*: Pouring milk early lowers the mixture's temperature, reducing the $Delta T$ between the coffee and the environment.
 - *Heat Loss*: Smaller $Delta T$ results in slower heat loss over the duration of the cooling process.

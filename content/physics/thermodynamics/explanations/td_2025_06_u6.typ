@@ -5,4 +5,4 @@ Explanation:
 
 - *Maxwell Route*: Use $((partial S) / (partial V))_T = ((partial P) / (partial T))_V$. First, find $P = -((partial F) / (partial V))_T$.
 - *Direct Route*: Use $S = -((partial F) / (partial T))_V$ and calculate $((partial S) / (partial V))_T$.
-Both methods should yield $alpha / V$.
+Both methods should yield $(alpha) / (V)$.

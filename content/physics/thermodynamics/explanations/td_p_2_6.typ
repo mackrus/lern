@@ -1,9 +1,9 @@
-$V_1 = (n R T_1) / P_1 = (2 times 8.314 times 300) / (1.013 times 10^5) approx 0.04923 " m"^3$. To prevent intermediate rounding errors, we compute algebraically:
+$V_1 = (n R T_1) / (P_1) = (2 times 8.314 times 300) / (1.013 times 10^5) approx 0.04923 " m"^3$. To prevent intermediate rounding errors, we compute algebraically:
   
   - *Step 1 (Isobaric expansion):* $W_12 = -P_1(2V_1 - V_1) = -P_1 V_1 = -n R T_1 = -2 times 8.314 times 300 = -4988.4 " J"$
     The final temperature for this step scales linearly with volume: $T_2 = 2 T_1 = 600 " K"$.
     
-  - *Step 2 (Isothermal compression):* $W_23 = -n R T_2 ln(V_1 / V_2) = -2 times 8.314 times 600 times ln(0.5) approx +6915.4 " J"$
+  - *Step 2 (Isothermal compression):* $W_23 = -n R T_2 ln((V_1) / (V_2)) = -2 times 8.314 times 600 times ln(0.5) approx +6915.4 " J"$
     
   - *Step 3 (Isochoric path):* $W_31 = 0$ because $d V = 0$.
     

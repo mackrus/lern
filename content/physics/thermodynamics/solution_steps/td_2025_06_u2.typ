@@ -12,5 +12,5 @@
 
 3. *Verify Heat Capacity Ratio:*
    - You can compute the molar heat capacities:
-     $ C_P = Delta H / (n Delta T), quad C_V = Delta U / (n Delta T) $
-   - Check if $C_P / C_V$ matches the diatomic gas ratio $7/5 = 1.4$.
+     $ C_P = (Delta H) / (n Delta T), quad C_V = (Delta U) / (n Delta T) $
+   - Check if $(C_P) / (C_V)$ matches the diatomic gas ratio $(7) / (5) = 1.4$.
