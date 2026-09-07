@@ -1,5 +1,5 @@
-import { State } from "./state.js?v=8";
-import { Navigation } from "./navigation.js?v=8";
+import { State } from "./state.js";
+import { Navigation } from "./navigation.js";
 
 export const Physics = {
     renderModeSelection(courseName) {

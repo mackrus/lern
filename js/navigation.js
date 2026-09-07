@@ -1,6 +1,6 @@
-import { State } from "./state.js?v=8";
-import { UI, translate } from "./ui.js?v=8";
-import { Renderer } from "./render.js?v=8";
+import { State } from "./state.js";
+import { UI, translate } from "./ui.js";
+import { Renderer } from "./render.js";
 import { 
     init_quiz, 
     restore_quiz_state,
@@ -188,8 +188,9 @@ export const Navigation = {
                 }
             }
         }
+        State.currentCategory = categoryName;
 
-        UI.updateCourseTheme(categoryName);
+        UI.updateCourseTheme(categoryName || courseName);
         this.hideAllSections();
 
         const modeDescriptionEl = document.getElementById("mode-description");
@@ -396,21 +397,12 @@ export const Navigation = {
     },
 
     renderBiologyModeSelector(courseName) {
-        import("./biology.js?v=8").then(m => m.Biology.renderSelector(courseName));
+        import("./biology.js").then(m => m.Biology.renderSelector(courseName));
     },
 
     renderPhysicsModeSelector(courseName) {
-        import("./physics.js?v=8").then(m => {
+        import("./physics.js").then(m => {
             m.Physics.renderModeSelection(courseName);
-            // Ensure back button in topic selection goes back to sub-courses
-            const backToCourses = document.getElementById("back-to-courses");
-            if (backToCourses) {
-                backToCourses.onclick = () => {
-                    document.getElementById("topic-selection").style.display = "none";
-                    document.getElementById("menu").style.display = "flex";
-                    this.showCategoryCourses(State.currentCategory);
-                };
-            }
         });
     }
 };

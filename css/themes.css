@@ -1,0 +1,160 @@
+/* ==========================================================================
+   Lern Discipline Themes (Modular Stylesheet)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Default / Neutral Theme (Root Menu & Global Fallback)
+   -------------------------------------------------------------------------- */
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --surface-color: #000000;
+    --hover-color: #111111;
+    --border-color: #222222;
+    --prereq-bg: #000000;
+    --prereq-border: #222222;
+    --svg-filter: invert(1) hue-rotate(180deg);
+    --header-color: #ffffff;
+    --accent-color: #ffffff;
+    --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body.light-mode {
+    --bg-color: #ffffff;
+    --text-color: #1a1a1a;
+    --surface-color: #f5f5f5;
+    --hover-color: #e5e5e5;
+    --border-color: #d0d0d0;
+    --prereq-bg: #fafafa;
+    --prereq-border: #e0e0e0;
+    --svg-filter: none;
+    --header-color: #000000;
+    --accent-color: #000000;
+}
+
+/* --------------------------------------------------------------------------
+   Mathematics Mode
+   - Dark: Dark Burgundy (deep rich wine)
+   - Bright: Ferrari Red (bold racing red)
+   -------------------------------------------------------------------------- */
+body.math-mode {
+    --bg-color: #240308; /* Dark Burgundy */
+    --text-color: #ffebee;
+    --surface-color: #240308;
+    --hover-color: #3b0710;
+    --border-color: #5c111c;
+    --prereq-bg: #1c0206;
+    --prereq-border: #5c111c;
+    --header-color: #ff4d6a;
+    --accent-color: #ff4d6a;
+    /* Invert black Typst SVG to soft rosy-white */
+    --svg-filter: invert(92%) sepia(10%) saturate(1500%) hue-rotate(300deg) brightness(105%) contrast(105%);
+}
+
+body.math-mode.light-mode {
+    --bg-color: #c4151c; /* Ferrari Red */
+    --text-color: #ffffff;
+    --surface-color: #b01017;
+    --hover-color: #d62028;
+    --border-color: #ff6e77;
+    --prereq-bg: #9c0c12;
+    --prereq-border: #ff6e77;
+    --header-color: #ffffff;
+    --accent-color: #ffebee;
+    --svg-filter: invert(1);
+}
+
+/* --------------------------------------------------------------------------
+   Physics Mode
+   - Dark: Midnight Blue (deep navy)
+   - Bright: Electric Blue (vibrant azure/cerulean)
+   -------------------------------------------------------------------------- */
+body.physics-mode {
+    --bg-color: #051329; /* Midnight Blue */
+    --text-color: #e6f1ff;
+    --surface-color: #051329;
+    --hover-color: #0e2447;
+    --border-color: #1a4279;
+    --prereq-bg: #030d1d;
+    --prereq-border: #1a4279;
+    --header-color: #38bdf8;
+    --accent-color: #38bdf8;
+    /* Invert black Typst SVG to soft cyan/white */
+    --svg-filter: invert(93%) sepia(20%) saturate(1200%) hue-rotate(175deg) brightness(105%) contrast(105%);
+}
+
+body.physics-mode.light-mode {
+    --bg-color: #005fc4; /* Electric Blue */
+    --text-color: #ffffff;
+    --surface-color: #0050a6;
+    --hover-color: #1472dc;
+    --border-color: #6bb0ff;
+    --prereq-bg: #00428a;
+    --prereq-border: #6bb0ff;
+    --header-color: #ffffff;
+    --accent-color: #e0f2fe;
+    --svg-filter: invert(1);
+}
+
+/* --------------------------------------------------------------------------
+   Biology Mode
+   - Dark: Deepest green
+   - Bright: Lush forest green
+   -------------------------------------------------------------------------- */
+body.biology-mode {
+    --bg-color: #040d04; /* Night: Deepest green */
+    --text-color: #d1ffd1;
+    --surface-color: #040d04;
+    --hover-color: #0a1f0a;
+    --border-color: #1a3a1a;
+    --prereq-bg: #040d04;
+    --prereq-border: #1a3a1a;
+    --header-color: #44ff44;
+    --accent-color: #44ff44;
+    --svg-filter: invert(88%) sepia(21%) saturate(1034%) hue-rotate(67deg) brightness(107%) contrast(101%);
+}
+
+body.biology-mode.light-mode {
+    --bg-color: #1a331a; /* Day: Lush forest green */
+    --text-color: #f0fff0;
+    --surface-color: #1a331a;
+    --hover-color: #254a25;
+    --border-color: #3d6b3d;
+    --prereq-bg: #1a331a;
+    --prereq-border: #3d6b3d;
+    --header-color: #74ff74;
+    --accent-color: #74ff74;
+    --svg-filter: invert(95%) sepia(15%) saturate(800%) hue-rotate(85deg) brightness(105%) contrast(102%);
+}
+
+/* --------------------------------------------------------------------------
+   Discipline Header Typography for lern Logo
+   -------------------------------------------------------------------------- */
+body.biology-mode .lern-anim {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px var(--accent-color);
+    color: var(--header-color);
+    transition: all 0.5s ease;
+}
+
+body.math-mode .lern-anim {
+    font-family: 'Merriweather', serif;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px var(--accent-color);
+    color: var(--header-color);
+    transition: all 0.5s ease;
+}
+
+body.physics-mode .lern-anim {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px var(--accent-color);
+    color: var(--header-color);
+    transition: all 0.5s ease;
+}
