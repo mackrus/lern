@@ -8,62 +8,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link id="themes-css" rel="stylesheet" href="css/themes.css">
     <style>
-        :root {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --surface-color: #000000;
-            --hover-color: #111111;
-            --border-color: #222222;
-            --prereq-bg: #000000;
-            --prereq-border: #222222;
-            --svg-filter: invert(1) hue-rotate(180deg);
-            --header-color: #ffffff;
-            --accent-color: #ffffff;
-        }
-
-        body.light-mode {
-            --bg-color: #ffffff;
-            --text-color: #1a1a1a;
-            --surface-color: #f5f5f5;
-            --hover-color: #e5e5e5;
-            --border-color: #d0d0d0;
-            --prereq-bg: #fafafa;
-            --prereq-border: #e0e0e0;
-            --svg-filter: none;
-            --header-color: #000000;
-            --accent-color: #000000;
-        }
-
-        body.biology-mode {
-            --bg-color: #040d04; /* Night: Deepest green */
-            --text-color: #d1ffd1;
-            --surface-color: #040d04;
-            --hover-color: #0a1f0a;
-            --border-color: #1a3a1a;
-            --prereq-bg: #040d04;
-            --prereq-border: #1a3a1a;
-            --svg-filter: invert(88%) sepia(21%) saturate(1034%) hue-rotate(67deg) brightness(107%) contrast(101%);
-            --header-color: #44ff44;
-            --accent-color: #44ff44;
-        }
-
-        body.biology-mode.light-mode {
-            --bg-color: #1a331a; /* Day: Lush forest green */
-            --text-color: #f0fff0;
-            --surface-color: #1a331a;
-            --hover-color: #254a25;
-            --border-color: #3d6b3d;
-            --prereq-bg: #1a331a;
-            --prereq-border: #3d6b3d;
-        }
 
         body {
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
             font-size: 1.2rem;
             margin: 0;
             padding: 0;
@@ -146,15 +99,19 @@
 
         #header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             margin-bottom: 2rem;
             height: 3rem;
         }
 
-        #logo-container {
-            font-size: 1.5rem;
-            font-weight: bold;
+        #menu h1 .lern-anim {
+            cursor: pointer;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+        }
+
+        #menu h1 .lern-anim:hover {
+            color: var(--accent-color);
         }
 
         /* Clean Text Buttons with Underscore Animation */
@@ -501,15 +458,6 @@
             min-width: 4ch;
         }
 
-        body.biology-mode .lern-anim {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-weight: 900;
-            letter-spacing: 0.1em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5), 0 0 10px var(--accent-color);
-            color: var(--header-color);
-            transition: all 0.5s ease;
-        }
 
         .stat-row {
             display: flex;
@@ -609,9 +557,6 @@
 <body>
     <div id="app-wrapper">
         <div id="header">
-            <div id="logo-container" style="cursor: pointer; visibility: hidden;">
-                <span class="lern-anim">lern</span>
-            </div>
             <button id="theme-toggle" title="Toggle Light/Dark Mode">
                 <span id="theme-icon">🌙</span>
             </button>
@@ -637,7 +582,7 @@
     <div id="app">
         <div id="app-content">
             <div id="menu">
-                <h1>what do you want to <span class="lern-anim">lern</span>?</h1>
+                <h1 id="menu-heading">what do you want to <span class="lern-anim" id="menu-lern-logo" title="Back to menu">lern</span>?</h1>
                 <div id="course-list"></div>
                 <p id="course-description" style="margin-top: 1.5rem; font-style: italic; opacity: 0.8; line-height: 1.6;"></p>
                 <div id="storage-management" style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
@@ -699,8 +644,8 @@
                     <div id="result"></div>
 
                     <div id="navigation-btns">
-                        <button id="prev-btn" style="display: none; margin: 0;">← Previous</button>
-                        <button id="next-btn" style="display: none; margin: 0;">Next Question →</button>
+                        <button id="prev-btn" style="margin: 0;">← Previous</button>
+                        <button id="next-btn" style="margin: 0;">Next Question →</button>
                         <button id="grade-btn" style="margin-left: auto; margin-right: 0;">Grade Quiz</button>
                     </div>
 
@@ -760,6 +705,6 @@
         Cookies? Don't worry, everything is stored locally. We don't track anything.
     </footer>
 
-    <script type="module" src="./app.js?v=8"></script>
+    <script type="module" src="./app.js"></script>
 </body>
 </html>

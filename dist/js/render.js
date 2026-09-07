@@ -27,8 +27,8 @@ import {
     get_explanation_html_by_index,
     get_references_json_by_index
 } from "../pkg/lern.js";
-import { State } from "./state.js?v=8";
-import { UI, translate } from "./ui.js?v=8";
+import { State } from "./state.js";
+import { UI, translate } from "./ui.js";
 
 function jsLevenshtein(s1, s2) {
     const len1 = s1.length;
@@ -167,7 +167,7 @@ export const Renderer = {
             finalResults.style.display = "none";
             document.getElementById("score-container").style.display = "none";
             // Show standard quiz UI
-            ["question", "alternatives", "navigation-btns", "question-nav-bar"]
+            ["question", "alternatives", "question-nav-bar"]
                 .forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
@@ -504,11 +504,8 @@ export const Renderer = {
 
         navBtns.style.display = "flex";
         
-        const currentIndex = get_current_question_index();
-        const total = get_total_questions();
-        
-        prevBtn.style.display = currentIndex > 0 ? "block" : "none";
-        nextBtn.style.display = currentIndex < total - 1 ? "block" : "none";
+        prevBtn.style.display = "block";
+        nextBtn.style.display = "block";
         gradeBtn.style.display = "block";
 
         prevBtn.innerText = translate("prev_question");
@@ -545,7 +542,7 @@ export const Renderer = {
         if (restartBtn) {
             restartBtn.innerText = translate("back_to_menu_btn");
             restartBtn.onclick = () => {
-                import("./navigation.js?v=8").then(m => m.Navigation.showMenu());
+                import("./navigation.js").then(m => m.Navigation.showMenu());
             };
         }
 
@@ -628,12 +625,12 @@ export const Renderer = {
     },
 
     async restartPractice(weaknesses) {
-        const { State } = await import("./state.js?v=8");
-        const { Navigation } = await import("./navigation.js?v=8");
+        const { State } = await import("./state.js");
+        const { Navigation } = await import("./navigation.js");
         
         if (State.currentMode === "biology_custom" && State.currentSavedState.bioParams) {
             const { qAttr, aAttr, limit, isTextInput } = State.currentSavedState.bioParams;
-            const { Biology } = await import("./biology.js?v=8");
+            const { Biology } = await import("./biology.js");
 
             Biology.startQuiz(qAttr, aAttr, limit, isTextInput, State.currentCourse === "Växtkännedom (Svenska)");
         } else {

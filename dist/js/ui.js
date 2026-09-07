@@ -1,4 +1,5 @@
-import { State } from "./state.js?v=8";
+import { State } from "./state.js";
+import { ThemeManager } from "./theme.js";
 
 export function translate(key, isSwedish) {
     if (isSwedish === undefined) {
@@ -117,41 +118,11 @@ export const UI = {
     },
 
     setupTheme() {
-        const toggle = document.getElementById("theme-toggle");
-        const icon = document.getElementById("theme-icon");
-        const body = document.body;
-
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme === "light") {
-            body.classList.add("light-mode");
-            icon.innerText = "☀️";
-        } else {
-            icon.innerText = "🌙";
-        }
-
-        toggle.onclick = () => {
-            body.classList.toggle("light-mode");
-            const isLight = body.classList.contains("light-mode");
-            icon.innerText = isLight ? "☀️" : "🌙";
-            localStorage.setItem("theme", isLight ? "light" : "dark");
-        };
+        ThemeManager.setupThemeToggle();
     },
 
     updateCourseTheme(courseName) {
-        const body = document.body;
-        const headerLogo = document.getElementById("logo-container");
-        
-        if (courseName) {
-            if (headerLogo) headerLogo.style.visibility = "visible";
-            if (courseName.toLowerCase().includes("biology")) {
-                body.classList.add("biology-mode");
-            } else {
-                body.classList.remove("biology-mode");
-            }
-        } else {
-            if (headerLogo) headerLogo.style.visibility = "hidden";
-            body.classList.remove("biology-mode");
-        }
+        ThemeManager.syncWithCourse(courseName);
     },
 
     fixSvgs() {

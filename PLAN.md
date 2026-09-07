@@ -304,3 +304,35 @@
 2. **Error Logging & Progress Tracking**:
     - Recorded all audited files and exact corrections applied in `coorections.txt`.
     - Removed irrelevant formula sheets and prerequisites from conceptual questions, corrected mathematical expressions in explanations, fixed typos in prerequisite math formulas, and rephrased 18 prerequisite files to prevent direct question spoiling.
+
+### Phase 38: Thematic Redesign (Completed)
+
+**Goal**: Introduce discipline-level visual identities and atmospheric color themes across the platform, expanding on the immersive nature theme introduced in the Biology module. Keep `index.html` clean and minimal by abstracting theme definitions and transitions into a dedicated, modular Theme Manager.
+
+1. **Discipline Color Palettes**:
+    - **Mathematics Mode** (`body.math-mode`):
+        - **Dark Mode**: Dark Burgundy palette (deep wine/garnet background, crimson accents, high-contrast readable formula text).
+        - **Light Mode**: Ferrari Red palette (vibrant racing red background with crisp white typography, high contrast borders, and responsive button states).
+    - **Physics Mode** (`body.physics-mode`):
+        - **Dark Mode**: Midnight Blue palette (abyssal deep navy background, cyan/celestial accents, subtle starlight borders).
+        - **Light Mode**: Electric Blue palette (vibrant azure/cerulean background, crisp white typography, high-energy borders).
+    - **Biology Mode** (`body.biology-mode`): Retain existing lush forest / night green palettes.
+    - **Default/Neutral Mode**: Minimal monochromatic black/white for root hub and non-discipline views.
+
+2. **Modular Theme Manager (`dist/js/theme.js`)**:
+    - Avoid polluting `index.html` with monolithic inline style blocks and hardcoded DOM manipulation.
+    - Create a structured theme registry object (e.g., `Themes = { mathematics: {...}, physics: {...}, biology: {...}, default: {...} }`) storing color tokens, SVG filter values, and mode metadata.
+    - Provide clean, exported management functions:
+      - `setDisciplineTheme(discipline)`: Smoothly transitions the active theme, applying appropriate CSS variables or class names to `document.body`.
+      - `getThemeTokens(discipline, isLightMode)`: Programmatic access to discipline palette variables.
+      - `syncWithCurrentCourse(courseOrCategory)`: Automatically resolves discipline from active course selection in `State`.
+    - Isolate discipline-specific styling in a dedicated CSS stylesheet (e.g., `dist/css/themes.css`) loaded cleanly by `index.html`.
+
+3. **Dynamic Discipline State & Switching**:
+    - Track current category in `State.currentCategory` or detect active course discipline in `dist/js/navigation.js` / `dist/js/state.js`.
+    - Trigger `setDisciplineTheme()` on course entry/exit and theme toggle events.
+    - Use hardware-accelerated CSS transitions on `--bg-color`, `--text-color`, and `--accent-color` for seamless visual morphing.
+
+4. **SVG Formula & Vector Tuning**:
+    - Define tailored `--svg-filter`, `--accent-color`, and `--border-color` CSS variables for both light and dark variants of Math and Physics to ensure Typst SVGs render cleanly with optimal contrast.
+
