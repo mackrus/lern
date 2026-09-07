@@ -1,0 +1,26 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Singularities",
+        "Essential Singularity",
+        "Laurent Series"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "6.69",
+            "topic": "Isolated Singular Points"
+        },
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "6.73",
+            "topic": "The Three Types of Isolated Singular Points"
+        }
+    ],
+    "difficulty": "medium"
+}

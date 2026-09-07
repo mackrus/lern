@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Residue Applications",
+        "Trigonometric Integrals",
+        "Unit Circle Integration"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "7.86",
+            "topic": "Definite Integrals Involving Sines and Cosines"
+        }
+    ],
+    "difficulty": "hard"
+}

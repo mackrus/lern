@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Power Series",
+        "Series Differentiation",
+        "Taylor Series"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "5.66",
+            "topic": "Integration and Differentiation of Power Series"
+        }
+    ],
+    "difficulty": "medium"
+}

@@ -1,0 +1,105 @@
+TABLE OF CONTENTS - COMPLEX VARIABLES AND APPLICATIONS (9th ed., Brown & Churchill)
+=====================================================================================
+
+1 Complex Numbers
+  1 Sums and Products
+  2 Basic Algebraic Properties
+  3 Further Properties
+  4 Vectors and Moduli
+  5 Complex Conjugates
+  6 Exponential Form
+  7 Products and Powers in Exponential Form
+  8 Arguments of Products and Quotients
+  9 Roots of Complex Numbers
+  10 Examples
+  11 Regions in the Complex Plane
+
+2 Analytic Functions
+  12 Functions of a Complex Variable
+  13 Mappings
+  14 Mappings by the Exponential Function
+  15 Limits
+  16 Theorems on Limits
+  17 Limits Involving the Point at Infinity
+  18 Continuity
+  19 Derivatives
+  20 Differentiation Formulas
+  21 Cauchy-Riemann Equations
+  22 Sufficient Conditions for Differentiability
+  23 Polar Coordinates
+  24 Analytic Functions
+  25 Further Examples
+  26 Harmonic Functions
+  27 Uniquely Determined Analytic Functions
+  28 Reflection Principle
+
+3 Elementary Functions
+  29 The Exponential Function
+  30 The Logarithmic Function
+  31 Branches and Derivatives of Logarithms
+  32 Some Identities Involving Logarithms
+  33 Complex Exponents
+  34 Trigonometric Functions
+  35 Hyperbolic Functions
+  36 Inverse Trigonometric and Hyperbolic Functions
+
+4 Integrals
+  37 Derivatives of Functions w(t)
+  38 Definite Integrals of Functions w(t)
+  39 Contours
+  40 Contour Integrals
+  41 Some Examples
+  42 Examples with Branch Cuts
+  43 Upper Bounds for Moduli of Contour Integrals
+  44 Antiderivatives
+  45 Proof of the Theorem
+  46 Cauchy-Goursat Theorem
+  47 Proof of the Theorem
+  48 Simply Connected Domains
+  49 Multiply Connected Domains
+  50 Cauchy Integral Formula
+  51 An Extension of the Cauchy Integral Formula
+  52 Some Consequences of the Extension
+  53 Derivatives of Analytic Functions
+  54 Liouville's Theorem and the Fundamental Theorem of Algebra
+  55 Maximum Modulus Principle
+
+5 Series
+  56 Convergence of Sequences
+  57 Convergence of Series
+  58 Taylor Series
+  59 Proof of Taylor's Theorem
+  60 Examples
+  61 Laurent Series
+  62 Proof of Laurent's Theorem
+  63 Examples
+  64 Absolute and Uniform Convergence of Power Series
+  65 Continuity of Sums of Power Series
+  66 Integration and Differentiation of Power Series
+  67 Uniqueness of Series Representations
+  68 Multiplication and Division of Power Series
+
+6 Residues and Poles
+  69 Isolated Singular Points
+  70 Residues
+  71 Cauchy's Residue Theorem
+  72 Residue at Infinity
+  73 The Three Types of Isolated Singular Points
+  74 Residues at Poles
+  75 Examples
+  76 Zeros of Analytic Functions
+  77 Zeros and Poles
+  78 Behavior of Functions Near Isolated Singular Points
+
+7 Applications of Residues
+  79 Evaluation of Improper Integrals
+  80 Example
+  81 Improper Integrals from Fourier Analysis
+  82 Jordan's Lemma
+  83 An Indented Path
+  84 An Indentation Around a Branch Point
+  85 Integration Along a Branch Cut
+  86 Definite Integrals Involving Sines and Cosines
+  87 Argument Principle
+  88 Rouché's Theorem
+  89 Inverse Laplace Transforms

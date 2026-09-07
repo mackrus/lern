@@ -1,0 +1,26 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Residues",
+        "Poles",
+        "Residue Theorem"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "6.70",
+            "topic": "Residues"
+        },
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "6.74",
+            "topic": "Residues at Poles"
+        }
+    ],
+    "difficulty": "medium"
+}

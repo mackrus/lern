@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Rouch\u00e9's Theorem",
+        "Transcendental Equations",
+        "Zeros of Analytic Functions"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "7.88",
+            "topic": "Rouch\u00e9's Theorem"
+        }
+    ],
+    "difficulty": "hard"
+}

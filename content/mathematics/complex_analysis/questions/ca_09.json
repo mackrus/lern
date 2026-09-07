@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Contour Integration",
+        "Parametrization",
+        "Integrals"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "4.40",
+            "topic": "Contour Integrals"
+        }
+    ],
+    "difficulty": "medium"
+}

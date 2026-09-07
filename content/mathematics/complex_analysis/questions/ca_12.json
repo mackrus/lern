@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Cauchy Integral Formula",
+        "Derivatives of Analytic Functions",
+        "Contour Integration"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "4.51",
+            "topic": "An Extension of the Cauchy Integral Formula"
+        }
+    ],
+    "difficulty": "medium"
+}

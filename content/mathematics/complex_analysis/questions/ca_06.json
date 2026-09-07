@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Elementary Functions",
+        "Complex Powers",
+        "Principal Value"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "3.33",
+            "topic": "Complex Exponents"
+        }
+    ],
+    "difficulty": "medium"
+}

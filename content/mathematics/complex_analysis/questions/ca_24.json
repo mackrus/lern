@@ -1,0 +1,26 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Residue Applications",
+        "Fourier Integrals",
+        "Jordan's Lemma"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "7.81",
+            "topic": "Improper Integrals from Fourier Analysis"
+        },
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "7.82",
+            "topic": "Jordan's Lemma"
+        }
+    ],
+    "difficulty": "hard"
+}

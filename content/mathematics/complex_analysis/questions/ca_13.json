@@ -1,0 +1,26 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Liouville's Theorem",
+        "Cauchy's Inequality",
+        "Entire Functions"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "4.54",
+            "topic": "Liouville's Theorem and the Fundamental Theorem of Algebra"
+        },
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "4.53",
+            "topic": "Derivatives of Analytic Functions"
+        }
+    ],
+    "difficulty": "medium"
+}

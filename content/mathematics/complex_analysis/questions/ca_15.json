@@ -1,0 +1,26 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Taylor Series",
+        "Maclaurin Series",
+        "Power Series"
+    ],
+    "references": [
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "5.58",
+            "topic": "Taylor Series"
+        },
+        {
+            "book": "Churchill & Brown (9th ed.)",
+            "chapter": "5.60",
+            "topic": "Examples"
+        }
+    ],
+    "difficulty": "medium"
+}
