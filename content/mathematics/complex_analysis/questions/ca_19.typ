@@ -23,7 +23,7 @@ $ - 1 / (2 pi) $
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$ 1 / (2 pi i) $
+$ 1 / (2 pi) $
 
 #expl_page(include "../explanations/ca_19.typ")
 #formulae_page(include "../formulae/ca_19.typ")

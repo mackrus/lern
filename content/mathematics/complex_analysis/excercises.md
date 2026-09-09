@@ -256,7 +256,7 @@ Find all roots of the equation $\sin z = \cosh 4$ by equating the real parts and
 Find all roots of the equation
 $$(a)\; \cos z = 2; \qquad (b)\; \sin z = i.$$
 *Ans.* $(a)\; 2n\pi \pm i\ln(2 + \sqrt{3}) \quad (n = 0, \pm 1, \pm 2, \dots);$
-$(b)\; \left(2n + \frac{1}{2}\right)\pi \pm i\ln(1 + \sqrt{2}) \quad (n = 0, \pm 1, \pm 2, \dots).$
+$(b)\; n\pi + (-1)^n i\ln(1 + \sqrt{2}) \quad (n = 0, \pm 1, \pm 2, \dots).$
 
 #### Exercise 8
 Show that $|\sinh y| \le |\sin z| \le \cosh y$.
@@ -366,7 +366,7 @@ $$\int_C \frac{z}{(z^2 + 9)(z - 1)} \, dz.$$
 #### Exercise 5
 Let $C$ denote the positively oriented circle $|z| = 3$. Evaluate the integral
 $$(a)\; \int_C \frac{e^{-z}}{z - (\pi i / 2)} \, dz; \qquad (b)\; \int_C \frac{\cos z}{z(z^2 + 8)} \, dz; \qquad (c)\; \int_C \frac{z}{2z + 1} \, dz.$$
-*Ans.* $(a)\; 2; \qquad (b)\; \pi i / 4; \qquad (c)\; -\pi i / 2.$
+*Ans.* $(a)\; 2; \qquad (b)\; \pi i / 4 \text{ (if contour encloses only } z=0\text{, as for the square in Ex. 6; for } |z|=3 \text{ with } \pm i\sqrt{8} \text{ inside: } \frac{\pi i(1 - \cosh\sqrt{8})}{4}); \qquad (c)\; -\pi i / 2.$
 
 #### Exercise 6
 Let $C$ denote the boundary of the square formed by the lines $x = \pm 2$ and $y = \pm 2$, described in the positive sense. Evaluate the integral
@@ -460,7 +460,7 @@ in the domain $0 < |z| < 1$.
 Find the Laurent series for the function
 $$f(z) = \frac{1}{(z + 1)(z + 3)}$$
 in the domain $1 < |z| < 3$.
-*Ans.* $\displaystyle\sum_{n=0}^\infty \frac{(-1)^n}{z^{n+1}} + \frac{1}{3} \sum_{n=0}^\infty \left(-\frac{1}{3}\right)^n z^n.$
+*Ans.* $\displaystyle\frac{1}{2}\sum_{n=0}^\infty \frac{(-1)^n}{z^{n+1}} - \frac{1}{6} \sum_{n=0}^\infty \left(-\frac{1}{3}\right)^n z^n.$
 
 ---
 

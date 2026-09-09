@@ -8,7 +8,7 @@ Find the Laurent series representation for $f(z) = 1 / ((z + 1)(z + 3))$ valid i
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$ 1/2 sum_(n=0)^oo ((-1)^n) / z^(n+1) + 1/6 sum_(n=0)^oo (-1/3)^n z^n $
+$ 1/2 sum_(n=0)^oo ((-1)^n) / z^(n+1) - 1/6 sum_(n=0)^oo (-1/3)^n z^n $
 
 #pagebreak()
 #set page(width: a_width, margin: a_margin)

@@ -11,4 +11,3 @@ Explanation:
    $ 1 / (z + 3) = 1 / 3 dot 1 / (1 + z/3) = 1 / 3 sum_(n=0)^oo (-1)^n (z / 3)^n = sum_(n=0)^oo (-1)^n / 3^(n+1) z^n = 1/3 sum_(n=0)^oo (-1/3)^n z^n. $
 4. Combining the two parts:
    $ f(z) = 1/2 sum_(n=0)^oo ((-1)^n) / z^(n+1) - 1/6 sum_(n=0)^oo (-1/3)^n z^n. $
-Taking the factor $1/2$ through gives $1/2 sum_(n=0)^oo ((-1)^n) / z^(n+1) + 1/6 sum_(n=0)^oo (-1)^n / 3^n z^n$.
