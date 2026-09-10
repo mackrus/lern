@@ -9,7 +9,7 @@ $ integral_C (e^(-z)) / (z - (pi i) / 2) thin d z $
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
-$ 2 $
+$ 2 pi $
 
 #pagebreak()
 #set page(width: a_width, margin: a_margin)
