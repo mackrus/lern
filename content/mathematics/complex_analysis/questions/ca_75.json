@@ -1,0 +1,20 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Analytic Functions",
+        "Weierstrass Convergence Theorem"
+    ],
+    "references": [
+        {
+            "book": "Uppsala University 1MA022 (Spring 2026)",
+            "chapter": "Session 7",
+            "topic": "Problem F.6: Analyticity of Exponential Series in Right Half-Plane"
+        }
+    ],
+    "difficulty": "medium"
+}

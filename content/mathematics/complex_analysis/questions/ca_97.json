@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Branch Cuts",
+        "Keyhole Contour",
+        "Beta Function"
+    ],
+    "references": [
+        {
+            "book": "Uppsala University 1MA022 (Spring 2026)",
+            "chapter": "Session 12",
+            "topic": "Problem J.7: Branch Point Integral via Keyhole Contour"
+        }
+    ],
+    "difficulty": "hard"
+}

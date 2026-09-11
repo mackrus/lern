@@ -1,0 +1,20 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Complex Exponents",
+        "Multi-valued Functions"
+    ],
+    "references": [
+        {
+            "book": "Uppsala University 1MA022 (Spring 2026)",
+            "chapter": "Session 1",
+            "topic": "Problem A.9: Real and Imaginary Parts of Complex Power z^z"
+        }
+    ],
+    "difficulty": "medium"
+}

@@ -1,0 +1,20 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Conformal Mapping",
+        "Logarithmic Map"
+    ],
+    "references": [
+        {
+            "book": "Uppsala University 1MA022 (Spring 2026)",
+            "chapter": "Session 4",
+            "topic": "Problem C.10: Conformal Map of Half-Disk to Infinite Strip"
+        }
+    ],
+    "difficulty": "hard"
+}

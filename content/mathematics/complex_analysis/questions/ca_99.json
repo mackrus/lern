@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Argument Principle",
+        "Rouch\u00e9's Theorem",
+        "Root Location"
+    ],
+    "references": [
+        {
+            "book": "Uppsala University 1MA022 (Spring 2026)",
+            "chapter": "Session 13",
+            "topic": "Problem K.1: Zeros in Third Quadrant via Argument Principle"
+        }
+    ],
+    "difficulty": "hard"
+}

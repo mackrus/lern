@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Contour Integration",
+        "Cauchy Theorem",
+        "Residues"
+    ],
+    "references": [
+        {
+            "book": "Uppsala University 1MA022 (Spring 2026)",
+            "chapter": "Session 6",
+            "topic": "Problem E.5: Contour Integral of Composite Expressions"
+        }
+    ],
+    "difficulty": "medium"
+}

@@ -1,0 +1,21 @@
+{
+    "correct_index": 0,
+    "num_alternatives": 4,
+    "has_explanation": true,
+    "has_formulae": true,
+    "has_solution_steps": true,
+    "label": "practice",
+    "topics": [
+        "Jordan's Lemma",
+        "Fourier Integrals",
+        "Residue Calculus"
+    ],
+    "references": [
+        {
+            "book": "Uppsala University 1MA022 (Spring 2026)",
+            "chapter": "Session 12",
+            "topic": "Problem J.6: Fourier Transform via Residues"
+        }
+    ],
+    "difficulty": "medium"
+}
