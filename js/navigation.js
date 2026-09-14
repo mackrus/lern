@@ -32,6 +32,7 @@ export const Navigation = {
         State.currentCategory = null;
         State.currentMode = null;
         State.currentSavedState = null;
+        State.numericalInputs = {};
         if (State.examTimerInterval) clearInterval(State.examTimerInterval);
         localStorage.removeItem("lern_last_course");
         
@@ -99,10 +100,6 @@ export const Navigation = {
 
         const category = State.coursesData[categoryName];
         
-        // Find if any course in this category has a description
-        const courseDescriptionEl = document.getElementById("course-description");
-        if (courseDescriptionEl) courseDescriptionEl.innerText = "";
-
         for (const courseName in category) {
             const courseInfo = category[courseName];
             const container = document.createElement("div");
@@ -116,21 +113,22 @@ export const Navigation = {
             const btn = document.createElement("button");
             btn.className = "alternative";
             btn.style.flex = "1";
-            
+
             const progress = State.load(courseName);
             const isInProgress = progress && !progress.graded;
 
             const isSe = courseName === "Växtkännedom (Svenska)";
-            btn.innerText = courseName + (isInProgress ? translate("in_progress", isSe) : "");
-            
-            btn.onmouseover = () => {
-                if (courseDescriptionEl && courseInfo.description) {
-                    courseDescriptionEl.innerText = courseInfo.description;
-                }
-            };
-            btn.onmouseout = () => {
-                if (courseDescriptionEl) courseDescriptionEl.innerText = "";
-            };
+            const badgeText = isInProgress ? translate("in_progress", isSe) : "";
+
+            if (courseInfo.description) {
+                btn.classList.add("mode-btn");
+                btn.innerHTML = `
+                    <span class="mode-title">${courseName}${badgeText}</span>
+                    <span class="mode-desc">${courseInfo.description}</span>
+                `;
+            } else {
+                btn.innerText = courseName + badgeText;
+            }
 
             btn.onclick = () => {
                 if (isInProgress) {
@@ -193,11 +191,6 @@ export const Navigation = {
         UI.updateCourseTheme(categoryName || courseName);
         this.hideAllSections();
 
-        const modeDescriptionEl = document.getElementById("mode-description");
-        if (modeDescriptionEl) {
-            modeDescriptionEl.innerText = "Hover over a mode below to see how it works.";
-        }
-        
         if (categoryName && categoryName.toLowerCase().includes("biology")) {
             this.renderBiologyModeSelector(courseName);
         } else {
@@ -208,11 +201,20 @@ export const Navigation = {
     startQuiz(courseName, mode, state = null) {
         State.currentCourse = courseName;
         State.currentMode = mode;
-        State.currentSavedState = state;
         State.setLastCourse(courseName);
 
-        if (state && state.bioParams) {
-            State.currentSavedState.bioParams = state.bioParams;
+        const isRestoring = !!(state && state.selections);
+
+        if (isRestoring) {
+            State.currentSavedState = state;
+            State.numericalInputs = (state && state.numericalInputs) ? { ...state.numericalInputs } : {};
+            if (state && state.bioParams) {
+                State.currentSavedState.bioParams = state.bioParams;
+            }
+        } else {
+            State.currentSavedState = null;
+            State.numericalInputs = {};
+            localStorage.removeItem(`lern_progress_${courseName}`);
         }
 
         let categoryName = (state && state.category) ? state.category : State.currentCategory;
@@ -238,55 +240,105 @@ export const Navigation = {
         document.getElementById("quiz").style.display = "block";
 
         let questions = [];
-        
-        if (state && state.questions) {
-            if (categoryName === "Biology") {
-                if (state.questions.length > 0 && typeof state.questions[0] === "number") {
-                    const bioParams = state.bioParams;
-                    const courseData = courseInfo ? (courseInfo.data || []).map((plant, idx) => ({ ...plant, index: idx })) : [];
-                    if (bioParams && courseData.length > 0 && State.Biology) {
-                        const isSe = courseName === "Växtkännedom (Svenska)";
-                        questions = state.questions.map((plantIndex, idx) => {
-                            const plant = courseData[plantIndex];
-                            if (!plant) return null;
-                            return State.Biology.generateQuestion(
-                                plant, 
-                                idx, 
-                                bioParams.qAttr, 
-                                bioParams.aAttr, 
-                                bioParams.isTextInput, 
-                                isSe,
-                                courseData
-                            );
-                        }).filter(Boolean);
+
+        if (isRestoring) {
+            // RESTORE existing quiz state without re-randomizing
+            if (state.questions && state.questions.length > 0) {
+                if (categoryName === "Biology") {
+                    if (typeof state.questions[0] === "number") {
+                        const bioParams = state.bioParams;
+                        const courseData = courseInfo ? (courseInfo.data || []).map((plant, idx) => ({ ...plant, index: idx })) : [];
+                        if (bioParams && courseData.length > 0 && State.Biology) {
+                            const isSe = courseName === "Växtkännedom (Svenska)";
+                            questions = state.questions.map((plantIndex, idx) => {
+                                const plant = courseData[plantIndex];
+                                if (!plant) return null;
+                                return State.Biology.generateQuestion(
+                                    plant, 
+                                    idx, 
+                                    bioParams.qAttr, 
+                                    bioParams.aAttr, 
+                                    bioParams.isTextInput, 
+                                    isSe,
+                                    courseData
+                                );
+                            }).filter(Boolean);
+                        }
+                    } else {
+                        questions = state.questions;
                     }
                 } else {
-                    questions = state.questions;
+                    const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
+                    const qMap = new Map(fullQuestions.map(q => [q.id, q]));
+                    questions = state.questions.map(id => (typeof id === "string" ? qMap.get(id) : id)).filter(Boolean);
                 }
-            } else if (categoryName !== "Biology" && state.questions.length > 0 && typeof state.questions[0] === "string") {
-                const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
-                questions = state.questions.map(id => fullQuestions.find(q => q.id === id)).filter(Boolean);
             } else {
-                questions = state.questions;
+                // Fallback for legacy state: preserve deterministic order without re-shuffling
+                const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
+                if (state.selectedTopics) {
+                    questions = fullQuestions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
+                } else if (mode === "practice") {
+                    const pool = fullQuestions.filter(q => q.label === "practice");
+                    questions = (pool.length > 0 ? pool : fullQuestions).slice(0, 10);
+                } else if (mode === "six_easy") {
+                    questions = fullQuestions.filter(q => q.difficulty === "easy").slice(0, 6);
+                } else if (mode === "six_hard") {
+                    questions = fullQuestions.filter(q => q.difficulty === "hard").slice(0, 6);
+                } else if (mode === "exam") {
+                    const pool = fullQuestions.filter(q => q.label === "exam");
+                    questions = pool.length > 0 ? pool : fullQuestions;
+                } else {
+                    questions = fullQuestions;
+                }
             }
-        } else if (categoryName === "Biology") {
-            questions = courseInfo.data || [];
+
+            if (mode === "exam") {
+                State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
+            }
         } else {
-            questions = courseInfo ? (courseInfo.data || []) : [];
-        }
-        
-        // Filtering logic based on mode/state
-        if (state && state.selectedTopics) {
-            questions = questions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
-        } else if (mode === "practice") {
-            questions = questions.filter(q => q.label === "practice").sort(() => 0.5 - Math.random()).slice(0, 10);
-        } else if (mode === "six_easy") {
-            questions = questions.filter(q => q.difficulty === "easy").sort(() => 0.5 - Math.random()).slice(0, 6);
-        } else if (mode === "six_hard") {
-            questions = questions.filter(q => q.difficulty === "hard").sort(() => 0.5 - Math.random()).slice(0, 6);
-        } else if (mode === "exam") {
-            questions = questions.filter(q => q.label === "exam");
-            State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
+            // NEW QUIZ / RESTART: Filter and randomize questions
+            const shuffle = (arr) => {
+                const copy = [...arr];
+                for (let i = copy.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [copy[i], copy[j]] = [copy[j], copy[i]];
+                }
+                return copy;
+            };
+
+            if (categoryName === "Biology") {
+                if (state && state.questions) {
+                    questions = state.questions;
+                } else {
+                    questions = shuffle(courseInfo ? (courseInfo.data || []) : []);
+                }
+            } else {
+                const allQuestions = courseInfo ? (courseInfo.data || []) : [];
+                
+                if (state && state.selectedTopics && state.selectedTopics.length > 0) {
+                    const filtered = allQuestions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
+                    questions = shuffle(filtered);
+                } else if (mode === "practice") {
+                    const practicePool = allQuestions.filter(q => q.label === "practice");
+                    const pool = practicePool.length > 0 ? practicePool : allQuestions;
+                    questions = shuffle(pool).slice(0, 10);
+                } else if (mode === "six_easy") {
+                    const easyPool = allQuestions.filter(q => q.difficulty === "easy");
+                    const pool = easyPool.length > 0 ? easyPool : allQuestions;
+                    questions = shuffle(pool).slice(0, 6);
+                } else if (mode === "six_hard") {
+                    const hardPool = allQuestions.filter(q => q.difficulty === "hard");
+                    const pool = hardPool.length > 0 ? hardPool : allQuestions;
+                    questions = shuffle(pool).slice(0, 6);
+                } else if (mode === "exam") {
+                    const examPool = allQuestions.filter(q => q.label === "exam");
+                    const pool = examPool.length > 0 ? examPool : allQuestions;
+                    questions = shuffle(pool);
+                    State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
+                } else {
+                    questions = shuffle(allQuestions);
+                }
+            }
         }
 
         if (questions.length === 0) {
@@ -333,6 +385,7 @@ export const Navigation = {
                 timerDiv.innerText = "00:00:00";
                 if (!is_graded()) {
                     alert("Time is up! Submitting exam.");
+                    Renderer.resolveNumericalAnswers();
                     grade_quiz();
                     State.save();
                     Renderer.renderQuiz();

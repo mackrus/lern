@@ -25,10 +25,33 @@ import {
     get_incorrect_indices,
     get_question_html_by_index,
     get_explanation_html_by_index,
-    get_references_json_by_index
+    get_references_json_by_index,
+    restore_quiz_state
 } from "../pkg/lern.js";
 import { State } from "./state.js";
 import { UI, translate } from "./ui.js";
+import { typstWasm } from "./typst-renderer.js";
+import { isNumericalQuestion, matchAlternative, cleanTypstMath, evaluateMath } from "./math-evaluator.js";
+
+function deterministicShuffle(items, id) {
+    const result = [...items];
+    if (!id || result.length < 2) return result;
+
+    let seed = 0n;
+    for (const byte of new TextEncoder().encode(id)) {
+        seed = (seed * 31n + BigInt(byte)) & ((1n << 64n) - 1n);
+    }
+    for (let i = result.length - 1; i > 0; i--) {
+        seed = (seed * 6364136223846793005n + 1442695040888963407n) & ((1n << 64n) - 1n);
+        const j = Number((seed >> 32n) % BigInt(i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+}
+
+function displayedAlternatives(question) {
+    return question?.alternatives ? deterministicShuffle(question.alternatives, question.id) : [];
+}
 
 function jsLevenshtein(s1, s2) {
     const len1 = s1.length;
@@ -191,7 +214,6 @@ export const Renderer = {
         const sidebarHeader = document.querySelector("#alternatives-area h3");
         if (sidebarHeader) sidebarHeader.innerText = translate("your_answer_header");
 
-        UI.fixSvgs();
     },
 
     syncTextInput() {
@@ -199,9 +221,133 @@ export const Renderer = {
         if (input && !input.disabled) {
             select_answer(input.value);
         }
+        const numInput = document.getElementById("numerical-answer-input");
+        if (numInput && !numInput.disabled) {
+            const currentIndex = get_current_question_index();
+            const currentQuestion = State.currentQuestionsList ? State.currentQuestionsList[currentIndex] : null;
+            if (currentQuestion) {
+                if (!State.numericalInputs) State.numericalInputs = {};
+                State.numericalInputs[currentQuestion.id] = numInput.value;
+                select_answer(numInput.value);
+            }
+        }
+    },
+
+    resolveNumericalAnswers() {
+        this.syncTextInput();
+        const selectionsJson = get_selections_json();
+        if (!selectionsJson) return;
+        const selections = JSON.parse(selectionsJson);
+        const questions = State.currentQuestionsList;
+        if (!questions || !Array.isArray(questions)) return;
+
+        let modified = false;
+        for (let i = 0; i < questions.length; i++) {
+            const q = questions[i];
+            if (isNumericalQuestion(q)) {
+                const typed = (State.numericalInputs && State.numericalInputs[q.id]) || selections[i];
+                if (typed && typeof typed === "string" && typed.trim().length > 0) {
+                    const match = matchAlternative(typed.trim(), q);
+                    if (match.matchedIndex >= 0) {
+                        // Rust shuffles alternatives deterministically before grading,
+                        // while State.currentQuestionsList retains the source order.
+                        // Translate the source-order match to the displayed/WASM order.
+                        set_question_index(i);
+                        const expectedAlternative = q.alternatives[match.matchedIndex];
+                        const displayed = displayedAlternatives(q);
+                        let displayedIndex = -1;
+                        displayedIndex = displayed.indexOf(expectedAlternative);
+                        selections[i] = (displayedIndex >= 0 ? displayedIndex : match.matchedIndex).toString();
+                    } else {
+                        selections[i] = "999999";
+                    }
+                    modified = true;
+                } else {
+                    selections[i] = null;
+                }
+            }
+        }
+
+        if (modified) {
+            restore_quiz_state(get_current_question_index(), JSON.stringify(selections), false);
+        }
+    },
+
+    fontSizeScales: [0.8, 0.9, 1.0, 1.15, 1.3, 1.5, 1.7],
+    currentFontScaleIndex: 2,
+    fontSizeInitialized: false,
+
+    initFontSizeControls() {
+        if (this.fontSizeInitialized) return;
+        this.fontSizeInitialized = true;
+
+        const saved = localStorage.getItem("lern_question_font_scale");
+        if (saved) {
+            const scale = parseFloat(saved);
+            const idx = this.fontSizeScales.findIndex(s => Math.abs(s - scale) < 0.01);
+            if (idx !== -1) {
+                this.currentFontScaleIndex = idx;
+            }
+        }
+        this.applyFontSize(false);
+
+        const decBtn = document.getElementById("font-decrease-btn");
+        const incBtn = document.getElementById("font-increase-btn");
+
+        if (decBtn) {
+            decBtn.onclick = (e) => {
+                e.preventDefault();
+                if (this.currentFontScaleIndex > 0) {
+                    this.currentFontScaleIndex--;
+                    this.applyFontSize(true);
+                }
+            };
+        }
+
+        if (incBtn) {
+            incBtn.onclick = (e) => {
+                e.preventDefault();
+                if (this.currentFontScaleIndex < this.fontSizeScales.length - 1) {
+                    this.currentFontScaleIndex++;
+                    this.applyFontSize(true);
+                }
+            };
+        }
+    },
+
+    applyFontSize(rerenderCurrentQuestion = false) {
+        const scale = this.fontSizeScales[this.currentFontScaleIndex];
+        localStorage.setItem("lern_question_font_scale", scale.toString());
+        document.documentElement.style.setProperty("--question-font-scale", scale.toString());
+
+        const indicator = document.getElementById("font-size-indicator");
+        if (indicator) {
+            indicator.innerText = `${Math.round(scale * 100)}%`;
+        }
+
+        const decBtn = document.getElementById("font-decrease-btn");
+        const incBtn = document.getElementById("font-increase-btn");
+        if (decBtn) {
+            decBtn.disabled = (this.currentFontScaleIndex === 0);
+        }
+        if (incBtn) {
+            incBtn.disabled = (this.currentFontScaleIndex === this.fontSizeScales.length - 1);
+        }
+
+        typstWasm.fontScale = scale;
+
+        if (rerenderCurrentQuestion) {
+            const currentIndex = get_current_question_index();
+            const currentQuestion = State.currentQuestionsList ? State.currentQuestionsList[currentIndex] : null;
+            if (currentQuestion) {
+                this.renderQuestionArea(currentQuestion);
+                this.renderAlternatives(currentQuestion, is_graded());
+            }
+        }
     },
 
     renderHeader(graded) {
+        this.initFontSizeControls();
         const questionLabel = document.getElementById("question-label");
         const label = get_current_question_label();
         if (label) {
@@ -248,11 +394,24 @@ export const Renderer = {
 
     renderQuestionArea(currentQuestion) {
         const questionDiv = document.getElementById("question");
-        if (currentQuestion && currentQuestion.question_html) {
+        if (currentQuestion && currentQuestion.question_raw) {
+            questionDiv.innerText = "Rendering…";
+        } else if (currentQuestion && currentQuestion.question_html) {
             questionDiv.innerHTML = currentQuestion.question_html;
         } else {
             questionDiv.innerHTML = get_current_question_html();
         }
+
+        // Always prefer live Typst-WASM output over precompiled question_html.
+        if (typstWasm.enabled && currentQuestion && currentQuestion.question_raw) {
+            typstWasm.compile(currentQuestion.question_raw, "question").then(result => {
+                if (result && result.svg) {
+                    questionDiv.innerHTML = result.svg;
+                    UI.fixSvgs();
+                }
+            });
+        }
+
     },
 
     renderAlternatives(currentQuestion, graded) {
@@ -261,8 +420,152 @@ export const Renderer = {
         
         if (currentQuestion.is_text_input) {
             this.renderTextInput(alternativesDiv, currentQuestion, graded);
+        } else if (isNumericalQuestion(currentQuestion)) {
+            this.renderNumericalQuestion(alternativesDiv, currentQuestion, graded);
         } else {
             this.renderStandardAlternatives(alternativesDiv, currentQuestion, graded);
+        }
+    },
+
+    renderNumericalQuestion(container, currentQuestion, graded) {
+        container.style.display = "block";
+
+        // 1. Numerical input container
+        const numericalContainer = document.createElement("div");
+        numericalContainer.className = "numerical-container";
+
+        // Symbols toolbar
+        const toolbar = document.createElement("div");
+        toolbar.className = "symbol-toolbar";
+
+        const symbols = [
+            { label: "π", insert: "pi" },
+            { label: "e", insert: "e" },
+            { label: "√", insert: "sqrt(" },
+            { label: "^", insert: "^" },
+            { label: "/", insert: "/" },
+            { label: "*", insert: "*" },
+            { label: "i", insert: "i" },
+            { label: "(", insert: "(" },
+            { label: ")", insert: ")" },
+            { label: "+", insert: "+" },
+            { label: "-", insert: "-" }
+        ];
+
+        // Input element
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = "numerical-answer-input";
+        input.className = "numerical-input-field";
+        input.placeholder = "Type answer";
+        input.setAttribute("aria-label", "Type answer");
+        input.autocomplete = "off";
+        input.spellcheck = false;
+
+        symbols.forEach(s => {
+            const symBtn = document.createElement("button");
+            symBtn.className = "symbol-btn";
+            symBtn.innerText = s.label;
+            symBtn.type = "button";
+            symBtn.title = `Insert ${s.label}`;
+            if (graded) {
+                symBtn.style.opacity = "0.35";
+                symBtn.style.pointerEvents = "none";
+            } else {
+                symBtn.onclick = (e) => {
+                    e.preventDefault();
+                    if (input.disabled) return;
+                    const start = input.selectionStart || 0;
+                    const end = input.selectionEnd || 0;
+                    const val = input.value;
+                    input.value = val.slice(0, start) + s.insert + val.slice(end);
+                    const newPos = start + s.insert.length;
+                    input.setSelectionRange(newPos, newPos);
+                    input.focus();
+                    input.dispatchEvent(new Event("input"));
+                };
+            }
+            toolbar.appendChild(symBtn);
+        });
+
+        numericalContainer.appendChild(toolbar);
+
+        // Pre-fill input value
+        let savedVal = (State.numericalInputs && State.numericalInputs[currentQuestion.id]) || "";
+        const selection = get_current_selection();
+        if (!savedVal && selection && typeof selection === "string" && !selection.startsWith("999999")) {
+            savedVal = selection;
+        }
+        input.value = savedVal;
+        input.disabled = graded;
+        numericalContainer.appendChild(input);
+
+        // Live evaluation / graded feedback
+        const feedback = document.createElement("div");
+        feedback.id = "numerical-feedback";
+        feedback.className = "numerical-feedback";
+        numericalContainer.appendChild(feedback);
+
+        container.appendChild(numericalContainer);
+
+        // Live evaluation while typing: ONLY evaluate the user's math expression without checking alternatives
+        const updateEvaluation = () => {
+            const val = input.value.trim();
+            if (!State.numericalInputs) State.numericalInputs = {};
+            State.numericalInputs[currentQuestion.id] = input.value;
+            select_answer(input.value);
+
+            if (!val) {
+                feedback.className = "numerical-feedback";
+                feedback.innerText = "";
+                return;
+            }
+
+            const parsedVal = evaluateMath(val);
+            if (parsedVal) {
+                feedback.className = "numerical-feedback";
+                feedback.innerText = `= ${parsedVal.format()}`;
+            } else {
+                feedback.className = "numerical-feedback";
+                feedback.innerText = "";
+            }
+        };
+
+        if (graded) {
+            const correctAlt = currentQuestion.alternatives.find(a => a.is_correct);
+            const correctVal = correctAlt ? evaluateMath(correctAlt.content_raw) : null;
+            const correctClean = correctAlt ? cleanTypstMath(correctAlt.content_raw) : "";
+            const userVal = evaluateMath(savedVal);
+            const isCorrect = userVal && correctVal && userVal.equals(correctVal);
+
+            if (isCorrect) {
+                input.classList.add("graded-correct");
+                feedback.className = "numerical-feedback matched";
+                feedback.innerText = `✓ Correct (= ${userVal.format()})`;
+            } else if (savedVal.trim()) {
+                input.classList.add("graded-incorrect");
+                feedback.className = "numerical-feedback error";
+                const userStr = userVal ? `= ${userVal.format()}` : "";
+                feedback.innerHTML = `✗ Incorrect ${userStr}<br><span style="opacity: 0.9;">Expected: <strong>${correctVal ? correctVal.format() : correctClean}</strong> (${correctClean})</span>`;
+            } else {
+                input.classList.add("graded-incorrect");
+                feedback.className = "numerical-feedback error";
+                feedback.innerHTML = `No answer given.<br><span style="opacity: 0.9;">Expected: <strong>${correctVal ? correctVal.format() : correctClean}</strong> (${correctClean})</span>`;
+            }
+        } else {
+            input.oninput = updateEvaluation;
+            input.onkeydown = (e) => {
+                if (e.key === "Enter") {
+                    updateEvaluation();
+                    State.save();
+                    next_question();
+                    this.renderQuiz();
+                }
+            };
+            if (input.value) {
+                updateEvaluation();
+            }
+            setTimeout(() => input.focus(), 20);
         }
     },
 
@@ -273,7 +576,8 @@ export const Renderer = {
         input.id = "answer-input";
         
         const isSe = State.currentCourse === "Växtkännedom (Svenska)";
-        input.placeholder = isSe ? "Skriv ditt svar här..." : "Type answer here...";
+        input.placeholder = isSe ? "Skriv svar..." : "Type answer";
+        input.setAttribute("aria-label", "Type answer");
         input.className = "alternative";
         
         const selection = get_current_selection() || "";
@@ -320,17 +624,17 @@ export const Renderer = {
                 const diffs = diffStrings(selection, expected);
                 
                 if (isCorrect) {
-                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${selection}</strong></div>`;
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}</span> <strong class="${answerClass}">${selection}</strong></div>`;
                 } else if (isPartial) {
-                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${diffs.userHtml}</strong>${statusText}</div>`;
-                    summary.innerHTML += `<div><span class="label">${translate("correct_spelling")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}</span> <strong class="${answerClass}">${diffs.userHtml}</strong>${statusText}</div>`;
+                    summary.innerHTML += `<div><span class="label">${translate("correct_spelling")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
                 } else {
-                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${diffs.userHtml}</strong></div>`;
-                    summary.innerHTML += `<div><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}</span> <strong class="${answerClass}">${diffs.userHtml}</strong></div>`;
+                    summary.innerHTML += `<div><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
                 }
             } else {
                 summary.innerHTML = `<div class="answer-missing">${translate("no_answer_given")}</div>`;
-                summary.innerHTML += `<div><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${expected}</strong></div>`;
+                summary.innerHTML += `<div><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${expected}</strong></div>`;
             }
             container.appendChild(summary);
             return;
@@ -365,7 +669,22 @@ export const Renderer = {
         for (let i = 0; i < count; i++) {
             const btn = document.createElement("button");
             btn.className = "alternative";
-            btn.innerHTML = get_alternative_html(i);
+            const displayed = displayedAlternatives(currentQuestion);
+            const alt = displayed[i];
+            if (alt && alt.content_raw) {
+                btn.innerText = "Rendering…";
+            } else {
+                btn.innerHTML = alt?.content_html || get_alternative_html(i);
+            }
+
+            if (typstWasm.enabled && alt && alt.content_raw) {
+                typstWasm.compile(alt.content_raw, "alternative").then(result => {
+                    if (result && result.svg) {
+                        btn.innerHTML = result.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
 
             if (graded) {
                 const isSelected = selection === i.toString();
@@ -400,13 +719,16 @@ export const Renderer = {
         const prereqHtml = get_current_question_prerequisites_html();
         const formulaeHtml = get_current_question_formulae_html();
         const stepsHtml = get_current_question_solution_steps_html();
+        const prereqRaw = currentQuestion?.prerequisites_raw;
+        const formulaeRaw = currentQuestion?.formulae_raw;
+        const stepsRaw = currentQuestion?.solution_steps_raw;
         const refsJson = get_current_question_references_json();
         const refs = refsJson ? JSON.parse(refsJson) : [];
 
         const tabs = [];
-        if (prereqHtml) tabs.push({ id: "prereqs", labelKey: "tab_prerequisites", html: prereqHtml });
-        if (formulaeHtml) tabs.push({ id: "formulae", labelKey: "tab_formulae", html: formulaeHtml });
-        if (stepsHtml) tabs.push({ id: "steps", labelKey: "tab_solution_steps", html: stepsHtml });
+        if (prereqRaw || prereqHtml) tabs.push({ id: "prereqs", labelKey: "tab_prerequisites", html: prereqHtml });
+        if (formulaeRaw || formulaeHtml) tabs.push({ id: "formulae", labelKey: "tab_formulae", html: formulaeHtml });
+        if (stepsRaw || stepsHtml) tabs.push({ id: "steps", labelKey: "tab_solution_steps", html: stepsHtml });
         if (refs && refs.length > 0) {
             const refsHtml = this.buildReferencesHtml(refs);
             tabs.push({ id: "references", labelKey: "tab_references", html: refsHtml });
@@ -435,14 +757,35 @@ export const Renderer = {
                     `).join("") + `</div>`;
                 }
 
-                prereqDiv.innerHTML = tabsHtmlStr + `<div class="study-content">${activeTab.html}</div>`;
+                const initialStudyContent = currentQuestion && currentQuestion[`${activeTab.id}_raw`]
+                    ? "Rendering…"
+                    : (activeTab.html || "Rendering…");
+                prereqDiv.innerHTML = tabsHtmlStr + `<div class="study-content">${initialStudyContent}</div>`;
+
+                if (typstWasm.enabled && currentQuestion) {
+                    let rawStudy = null;
+                    if (activeTab.id === "prereqs") rawStudy = currentQuestion.prerequisites_raw;
+                    else if (activeTab.id === "formulae") rawStudy = currentQuestion.formulae_raw;
+                    else if (activeTab.id === "steps") rawStudy = currentQuestion.solution_steps_raw;
+
+                    if (rawStudy) {
+                        typstWasm.compile(rawStudy, "study").then(result => {
+                            if (result && result.svg) {
+                                const content = prereqDiv.querySelector(".study-content");
+                                if (content) {
+                                    content.innerHTML = result.svg;
+                                    UI.fixSvgs();
+                                }
+                            }
+                        });
+                    }
+                }
 
                 prereqDiv.querySelectorAll(".study-tab-btn").forEach(btn => {
                     btn.onclick = (e) => {
                         e.preventDefault();
                         prereqDiv.dataset.activeTab = btn.dataset.tab;
                         this.renderControls(currentQuestion, graded);
-                        UI.fixSvgs();
                     };
                 });
             }
@@ -456,7 +799,7 @@ export const Renderer = {
         if (graded) {
             toggleAltBtn.style.display = "none";
             altArea.style.display = "block";
-        } else if (currentQuestion.is_text_input) {
+        } else if (currentQuestion.is_text_input || isNumericalQuestion(currentQuestion)) {
             toggleAltBtn.style.display = "none";
             altArea.style.display = "block";
         } else {
@@ -475,7 +818,19 @@ export const Renderer = {
             const rawExplanation = get_explanation_html_by_index(currentIndex);
             const isSe = State.currentCourse === "Växtkännedom (Svenska)";
             const noExplanation = isSe ? "Ingen förklaring tillgänglig." : "No explanation available.";
-            explanationDiv.innerHTML = rawExplanation || noExplanation;
+            explanationDiv.innerText = currentQuestion && currentQuestion.explanation_raw
+                ? "Rendering…"
+                : (rawExplanation || noExplanation);
+
+            if (typstWasm.enabled && currentQuestion && currentQuestion.explanation_raw) {
+                typstWasm.compile(currentQuestion.explanation_raw, "study").then(result => {
+                    if (result && result.svg) {
+                        explanationDiv.innerHTML = result.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+
         } else {
             explanationDiv.style.display = "none";
             explanationDiv.innerHTML = "";
@@ -542,6 +897,9 @@ export const Renderer = {
         if (restartBtn) {
             restartBtn.innerText = translate("back_to_menu_btn");
             restartBtn.onclick = () => {
+                if (State.currentCourse) {
+                    State.clear(State.currentCourse);
+                }
                 import("./navigation.js").then(m => m.Navigation.showMenu());
             };
         }
@@ -550,6 +908,7 @@ export const Renderer = {
         if (topicStatsHeader) topicStatsHeader.innerText = translate("topic_analysis");
 
         this.renderTopicStats(percentage);
+        this.renderAnswerBreakdown();
         this.renderIncorrectReview();
         
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -624,17 +983,44 @@ export const Renderer = {
         }
     },
 
+    renderAnswerBreakdown() {
+        const breakdown = document.getElementById("answer-breakdown");
+        const heading = document.getElementById("answer-breakdown-heading");
+        if (!breakdown) return;
+
+        if (heading) heading.innerText = translate("answer_breakdown");
+        const incorrect = new Set(get_incorrect_indices());
+        const total = get_total_questions();
+        breakdown.innerHTML = "";
+
+        for (let index = 0; index < total; index++) {
+            const isCorrect = !incorrect.has(index);
+            const item = document.createElement("div");
+            item.className = `answer-breakdown-item ${isCorrect ? "correct" : "incorrect"}`;
+            item.innerHTML = `
+                <strong>${translate("question_num").replace("{num}", index + 1)}</strong>
+                <span class="answer-breakdown-status">${isCorrect ? "✓ " : "✗ "}${translate(isCorrect ? "answered_correctly" : "answered_incorrectly")}</span>
+            `;
+            breakdown.appendChild(item);
+        }
+    },
+
     async restartPractice(weaknesses) {
         const { State } = await import("./state.js");
         const { Navigation } = await import("./navigation.js");
         
-        if (State.currentMode === "biology_custom" && State.currentSavedState.bioParams) {
+        const course = State.currentCourse;
+        if (course) {
+            State.clear(course);
+        }
+
+        if (State.currentMode === "biology_custom" && State.currentSavedState && State.currentSavedState.bioParams) {
             const { qAttr, aAttr, limit, isTextInput } = State.currentSavedState.bioParams;
             const { Biology } = await import("./biology.js");
 
-            Biology.startQuiz(qAttr, aAttr, limit, isTextInput, State.currentCourse === "Växtkännedom (Svenska)");
+            Biology.startQuiz(qAttr, aAttr, limit, isTextInput, course === "Växtkännedom (Svenska)");
         } else {
-            Navigation.startQuiz(State.currentCourse, "topic", { selectedTopics: weaknesses });
+            Navigation.startQuiz(course, "topic", { selectedTopics: weaknesses });
         }
     },
 
@@ -670,6 +1056,7 @@ export const Renderer = {
             const eHtml = get_explanation_html_by_index(idx);
             const question = State.currentQuestionsList[idx];
             const sel = selections[idx];
+            let selectedAlternative = null;
 
             // Build user answer HTML
             let userAnswerHtml = "";
@@ -688,14 +1075,31 @@ export const Renderer = {
                 
                 if (isPartial) {
                     const statusText = isSe ? " (Stavarfel - 0.5p)" : " (Misspelled - 0.5p)";
-                    userAnswerHtml = `<strong class="answer-partial">${diffs.userHtml}</strong> <span style="font-size:0.85rem; opacity:0.7;">${statusText}</span><br><span class="label">${translate("correct_spelling")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
+                    userAnswerHtml = `<strong class="answer-partial">${diffs.userHtml}</strong> <span style="font-size:0.85rem; opacity:0.7;">${statusText}</span><br><span class="label">${translate("correct_spelling")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
                 } else {
-                    userAnswerHtml = `<strong class="answer-incorrect">${diffs.userHtml}</strong><br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
+                    userAnswerHtml = `<strong class="answer-incorrect">${diffs.userHtml}</strong><br><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
+                }
+            } else if (question && isNumericalQuestion(question)) {
+                const typed = (State.numericalInputs && State.numericalInputs[question.id]) || (sel !== null && sel !== undefined && !String(sel).startsWith("999999") ? String(sel) : "");
+                const correctAlt = question.alternatives ? question.alternatives.find(a => a.is_correct) : null;
+                const correctClean = correctAlt ? cleanTypstMath(correctAlt.content_raw) : "";
+                const correctVal = correctAlt ? evaluateMath(correctAlt.content_raw) : null;
+                const userVal = typed ? evaluateMath(typed) : null;
+
+                const userValStr = userVal ? `(= ${userVal.format()})` : "";
+                const correctValStr = correctVal ? correctVal.format() : correctClean;
+
+                if (!typed.trim()) {
+                    userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span><br><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
+                } else {
+                    userAnswerHtml = `<strong class="answer-incorrect">${typed}</strong> ${userValStr}<br><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
                 }
             } else {
                 // MC: get the alternative HTML via WASM (needs correct question context)
                 set_question_index(idx);
-                const altHtml = get_alternative_html(parseInt(sel));
+                const displayed = displayedAlternatives(question);
+                selectedAlternative = displayed[parseInt(sel)];
+                const altHtml = selectedAlternative?.content_html || get_alternative_html(parseInt(sel));
                 if (altHtml) {
                     // Check if it contains an img (photo quiz) — show as thumbnail
                     if (altHtml.includes("<img")) {
@@ -721,15 +1125,44 @@ export const Renderer = {
 
             item.innerHTML = `
                 <div style="font-weight: bold; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${translate("question_num").replace("{num}", idx + 1)}</div>
-                <div style="margin-bottom: 1.5rem;">${qHtml}</div>
+                <div class="review-question" style="margin-bottom: 1.5rem;">${question?.question_raw ? "Rendering…" : (qHtml || "Question unavailable")}</div>
                 <div class="user-answer-summary" style="margin-bottom: 1.5rem;">
-                    <div><span class="label">${translate("your_answer")}:</span> ${userAnswerHtml}</div>
+                    <div><span class="label">${translate("your_answer")}</span> <span class="review-user-answer">${userAnswerHtml}</span></div>
                 </div>
                 <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
-                    <strong>${translate("explanation")}:</strong><br>${eHtml || noExplanation}
+                    <strong>${translate("explanation")}</strong><br><div class="review-explanation">${question?.explanation_raw ? "Rendering…" : (eHtml || noExplanation)}</div>
                 </div>
             `;
             incorrectList.appendChild(item);
+
+            const reviewQuestion = item.querySelector(".review-question");
+            if (reviewQuestion && question?.question_raw) {
+                typstWasm.compile(question.question_raw, "question").then(result => {
+                    if (result?.svg) {
+                        reviewQuestion.innerHTML = result.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+            const reviewExplanation = item.querySelector(".review-explanation");
+            if (reviewExplanation && question?.explanation_raw) {
+                typstWasm.compile(question.explanation_raw, "study").then(result => {
+                    if (result?.svg) {
+                        reviewExplanation.innerHTML = result.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+            const reviewAnswer = item.querySelector(".review-user-answer");
+            if (reviewAnswer && selectedAlternative?.content_raw) {
+                typstWasm.compile(selectedAlternative.content_raw, "alternative").then(result => {
+                    if (result?.svg) {
+                        reviewAnswer.innerHTML = `<strong class="answer-incorrect">${result.svg}</strong>`;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+
         });
 
         // Restore the question index

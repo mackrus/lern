@@ -206,6 +206,10 @@
             background-color: var(--hover-color);
         }
 
+        :root {
+            --question-font-scale: 1;
+        }
+
         #question {
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
@@ -214,6 +218,58 @@
             padding: 2.5rem;
             border-radius: 0px; /* Minimalist sharp edges or subtle radius */
             transition: background-color 0.3s;
+            font-size: calc(1.25rem * var(--question-font-scale, 1));
+            line-height: 1.6;
+        }
+
+        #question div, #question p, #question span {
+            font-size: inherit;
+        }
+
+        .font-size-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            border: 1px solid var(--border-color);
+            padding: 0.15rem 0.4rem;
+            background: var(--surface-color);
+            user-select: none;
+        }
+
+        .font-size-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 0.15rem 0.35rem;
+            opacity: 0.8;
+            line-height: 1;
+            transition: opacity 0.15s ease, color 0.15s ease;
+        }
+
+        .font-size-btn::after {
+            display: none !important;
+        }
+
+        .font-size-btn:hover:not(:disabled) {
+            opacity: 1;
+            color: var(--accent-color);
+        }
+
+        .font-size-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #font-size-indicator {
+            font-size: 0.8rem;
+            opacity: 0.75;
+            min-width: 3.8ch;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            font-family: inherit;
         }
 
         .alternative {
@@ -227,9 +283,10 @@
             text-align: left;
             background: var(--surface-color);
             color: var(--text-color);
-            font-size: 1.2rem;
+            font-size: calc(1.2rem * var(--question-font-scale, 1));
             font-family: inherit;
-            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
         }
 
         .alternative::after {
@@ -243,9 +300,20 @@
         }
 
         .alternative.selected {
-            background: var(--text-color);
-            color: var(--bg-color);
-            border-color: var(--text-color);
+            background: var(--hover-color);
+            background: color-mix(in srgb, var(--accent-color) 14%, var(--surface-color));
+            color: var(--text-color);
+            border-color: var(--accent-color);
+            border-left: 6px solid var(--accent-color);
+            transform: translateX(8px);
+            box-shadow: 0 0 14px color-mix(in srgb, var(--accent-color) 22%, transparent);
+        }
+
+        .alternative.selected:hover {
+            background: color-mix(in srgb, var(--accent-color) 20%, var(--surface-color));
+            border-color: var(--accent-color);
+            border-left: 6px solid var(--accent-color);
+            transform: translateX(8px);
         }
 
         .topic-btn {
@@ -278,6 +346,52 @@
         .topic-btn input {
             cursor: pointer;
             accent-color: var(--bg-color);
+        }
+
+        .info-callout {
+            border-left: 2px solid var(--accent-color);
+            padding: 0.8rem 1.2rem;
+            min-height: 4.8rem;
+            height: 4.8rem;
+            max-height: 4.8rem;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            overflow: hidden;
+            background: var(--surface-color);
+            contain: layout paint;
+        }
+
+        .info-callout p {
+            margin: 0;
+            font-style: italic;
+            opacity: 0.85;
+            line-height: 1.5;
+            font-size: 1.05rem;
+            transition: opacity 0.15s ease;
+        }
+
+        .mode-btn {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            text-align: left !important;
+            padding: 1.2rem 1.5rem !important;
+            gap: 0.35rem !important;
+        }
+
+        .mode-btn .mode-title {
+            font-size: 1.18rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .mode-btn .mode-desc {
+            font-size: 0.95rem;
+            opacity: 0.75;
+            font-weight: normal;
+            line-height: 1.4;
+            color: var(--text-color);
         }
 
         svg {
@@ -483,37 +597,51 @@
         .weakness { color: #ff4444; }
 
         .alternative.graded-correct {
-            border-color: #44ff44;
-            background-color: rgba(68, 255, 68, 0.08);
+            border-color: #44ff44 !important;
+            border-left: 6px solid #44ff44 !important;
+            background-color: rgba(68, 255, 68, 0.12) !important;
+            box-shadow: 0 0 12px rgba(68, 255, 68, 0.2) !important;
+            transform: none !important;
             cursor: default;
         }
         .alternative.graded-correct:hover {
-            transform: none;
+            transform: none !important;
         }
         .alternative.graded-incorrect {
-            border-color: #ff4444;
-            background-color: rgba(255, 68, 68, 0.08);
+            border-color: #ff4444 !important;
+            border-left: 6px solid #ff4444 !important;
+            background-color: rgba(255, 68, 68, 0.12) !important;
+            box-shadow: 0 0 12px rgba(255, 68, 68, 0.2) !important;
+            transform: none !important;
             cursor: default;
         }
         .alternative.graded-incorrect:hover {
-            transform: none;
+            transform: none !important;
         }
         .alternative.graded-partial {
-            border-color: #ffaa00;
-            background-color: rgba(255, 170, 0, 0.08);
+            border-color: #ffaa00 !important;
+            border-left: 6px solid #ffaa00 !important;
+            background-color: rgba(255, 170, 0, 0.12) !important;
+            box-shadow: 0 0 12px rgba(255, 170, 0, 0.2) !important;
+            transform: none !important;
             cursor: default;
         }
         .alternative.graded-partial:hover {
-            transform: none;
+            transform: none !important;
         }
         .alternative.graded-neutral {
             cursor: default;
             opacity: 0.4;
+            transform: none !important;
+            box-shadow: none !important;
+            border-left: 1px solid var(--border-color) !important;
         }
         .alternative.graded-neutral:hover {
-            transform: none;
+            transform: none !important;
             background: var(--surface-color);
             border-color: var(--border-color);
+            border-left: 1px solid var(--border-color) !important;
+            box-shadow: none !important;
         }
         .user-answer-summary {
             margin-top: 1.5rem;
@@ -539,6 +667,30 @@
             opacity: 0.5;
             font-style: italic;
         }
+        .answer-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+        .answer-breakdown-item {
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            font-size: 0.95rem;
+        }
+        .answer-breakdown-item.correct {
+            border-left: 5px solid #44ff44;
+        }
+        .answer-breakdown-item.incorrect {
+            border-left: 5px solid #ff4444;
+        }
+        .answer-breakdown-status {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            opacity: 0.75;
+        }
         .diff-delete {
             background-color: rgba(255, 68, 68, 0.2);
             text-decoration: line-through;
@@ -552,6 +704,91 @@
             color: #44ff44;
             padding: 0 2px;
             border-radius: 2px;
+        }
+
+        /* Numerical Question Input & Symbols Toolbar */
+        .numerical-container {
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            padding: 1.25rem;
+        }
+
+        .symbol-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .symbol-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: calc(0.95rem * var(--question-font-scale, 1));
+            padding: calc(0.35rem * var(--question-font-scale, 1)) calc(0.75rem * var(--question-font-scale, 1));
+            cursor: pointer;
+            border-radius: 0px;
+            opacity: 0.8;
+            transition: all 0.15s ease;
+            user-select: none;
+            margin: 0 !important;
+        }
+
+        .symbol-btn::after {
+            display: none !important;
+        }
+
+        .symbol-btn:hover {
+            opacity: 1;
+            border-color: var(--accent-color);
+            background: var(--hover-color);
+            transform: translateY(-1px);
+        }
+
+        .symbol-btn:active {
+            transform: translateY(0);
+        }
+
+        .numerical-input-field {
+            width: 100%;
+            box-sizing: border-box;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: calc(1.15rem * var(--question-font-scale, 1));
+            padding: calc(0.75rem * var(--question-font-scale, 1)) calc(1rem * var(--question-font-scale, 1));
+            outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .numerical-input-field:focus {
+            border-color: var(--accent-color);
+            background: var(--hover-color);
+        }
+
+        .numerical-input-field.matched {
+            border-color: #2ea043;
+        }
+
+        .numerical-feedback {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: calc(0.85rem * var(--question-font-scale, 1));
+            margin-top: 0.5rem;
+            min-height: 1.2rem;
+            color: var(--accent-color);
+            opacity: 0.9;
+        }
+
+        .numerical-feedback.matched {
+            color: #3fb950;
+            font-weight: bold;
+        }
+
+        .numerical-feedback.error {
+            color: #f85149;
         }
     </style>
 <body>
@@ -584,7 +821,6 @@
             <div id="menu">
                 <h1 id="menu-heading">what do you want to <span class="lern-anim" id="menu-lern-logo" title="Back to menu">lern</span>?</h1>
                 <div id="course-list"></div>
-                <p id="course-description" style="margin-top: 1.5rem; font-style: italic; opacity: 0.8; line-height: 1.6;"></p>
                 <div id="storage-management" style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span id="storage-usage">Usage: 0 KB</span>
@@ -598,15 +834,27 @@
                     <h1 id="selected-course-title-mode" style="margin: 0; padding-left: 1rem;"></h1>
                 </div>
                 <h2>Select Mode:</h2>
-                <div style="margin-bottom: 2.5rem; border-left: 2px solid var(--accent-color); padding-left: 1.2rem; min-height: 4rem; display: flex; align-items: center; box-sizing: border-box;">
-                    <p id="mode-description" style="margin: 0; font-style: italic; opacity: 0.85; line-height: 1.6; font-size: 1.1rem;"></p>
-                </div>
                 <div id="mode-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
-                    <button id="mode-topic" class="alternative" style="text-align: center;">Topic Traversal</button>
-                    <button id="mode-six-easy" class="alternative" style="text-align: center;">Six easy pieces</button>
-                    <button id="mode-six-hard" class="alternative" style="text-align: center;">Six not so easy pieces</button>
-                    <button id="mode-practice" class="alternative" style="text-align: center;">Practice Mode</button>
-                    <button id="mode-exam" class="alternative" style="text-align: center;">Exam Mode</button>
+                    <button id="mode-topic" class="alternative mode-btn">
+                        <span class="mode-title">Topic Traversal</span>
+                        <span class="mode-desc">Select specific subtopics to target your study.</span>
+                    </button>
+                    <button id="mode-six-easy" class="alternative mode-btn">
+                        <span class="mode-title">Six easy pieces</span>
+                        <span class="mode-desc">A relaxed session of 6 randomly selected easy questions. Great for a quick review.</span>
+                    </button>
+                    <button id="mode-six-hard" class="alternative mode-btn">
+                        <span class="mode-title">Six not so easy pieces</span>
+                        <span class="mode-desc">A challenging session of 6 randomly selected hard questions for deeper mastery.</span>
+                    </button>
+                    <button id="mode-practice" class="alternative mode-btn">
+                        <span class="mode-title">Practice Mode</span>
+                        <span class="mode-desc">A general practice session drawing from all questions at your own pace.</span>
+                    </button>
+                    <button id="mode-exam" class="alternative mode-btn">
+                        <span class="mode-title">Exam Mode</span>
+                        <span class="mode-desc">A timed mock exam with full grading at the end under real exam conditions.</span>
+                    </button>
                 </div>
             </div>
             <div id="topic-selection" style="display: none;">
@@ -623,12 +871,17 @@
         <div id="quiz" style="display: none;">
             <div id="app-with-sidebar">
                 <div id="main-column">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
                         <button id="back-to-menu">← Back to Menu</button>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                             <div id="exam-timer" style="display: none; background: var(--text-color); color: var(--bg-color); padding: 0.2rem 0.5rem; font-size: 0.9rem; font-weight: bold; letter-spacing: 0.05em;"></div>
                             <div id="question-label" style="display: none; background: var(--text-color); color: var(--bg-color); padding: 0.2rem 0.5rem; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;"></div>
                             <div id="question-number" style="color: var(--text-color);"></div>
+                            <div id="font-size-controls" class="font-size-controls" title="Adjust question text size">
+                                <button id="font-decrease-btn" class="font-size-btn" type="button" title="Decrease font size" aria-label="Decrease text size">A−</button>
+                                <span id="font-size-indicator">100%</span>
+                                <button id="font-increase-btn" class="font-size-btn" type="button" title="Increase font size" aria-label="Increase text size">A+</button>
+                            </div>
                         </div>
                     </div>
                     <div id="question-nav-bar"></div>
@@ -659,6 +912,11 @@
                         <div id="topic-stats" style="margin-bottom: 3rem;">
                             <h3>Topic Analysis:</h3>
                             <div id="topic-stats-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                        </div>
+
+                        <div id="answer-breakdown-section" style="margin-bottom: 3rem;">
+                            <h3 id="answer-breakdown-heading">Answer Breakdown:</h3>
+                            <div id="answer-breakdown" class="answer-breakdown"></div>
                         </div>
 
                         <div id="recommendations" style="margin-bottom: 3rem; background: var(--surface-color); padding: 2rem; border: 1px solid var(--border-color); display: none;">

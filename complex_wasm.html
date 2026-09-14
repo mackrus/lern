@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lern - Typst WASM Universal Module Runner</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link id="themes-css" rel="stylesheet" href="css/themes.css">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-bright: #f0f6fc;
+            --accent: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-amber: #d29922;
+            --accent-red: #f85149;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--mono);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 { font-size: 1.3rem; color: var(--text-bright); }
+        .subtitle { font-size: 0.85rem; color: #8b949e; }
+
+        .top-nav {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: #21262d;
+            border: 1px solid var(--border);
+        }
+        .badge.ready { color: var(--accent-green); border-color: rgba(63,185,80,0.4); }
+        .badge.busy { color: var(--accent-amber); border-color: rgba(210,153,34,0.4); }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+        .stat-val { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+        .stat-lbl { font-size: 0.72rem; color: #8b949e; margin-top: 0.2rem; }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.1s linear;
+        }
+
+        .controls-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        select {
+            background: #0d1117;
+            color: var(--text-bright);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.45rem 0.6rem;
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            outline: none;
+        }
+
+        button {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: #21262d;
+            color: var(--text-bright);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        button:hover:not(:disabled) { background: #30363d; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button.primary { background: #1f6feb; border-color: #388bfd; }
+        button.primary:hover:not(:disabled) { background: #388bfd; }
+
+        .question-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .question-body {
+            background: #ffffff;
+            color: #000000;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            overflow-x: auto;
+        }
+
+        .alternatives-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 700px) {
+            .alternatives-grid { grid-template-columns: 1fr; }
+            .stat-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .alt-btn {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s;
+        }
+        .alt-btn:hover { border-color: var(--accent); }
+        .alt-btn.correct { border-color: var(--accent-green); background: #f0fff4; }
+        .alt-btn.incorrect { border-color: var(--accent-red); background: #fff5f5; }
+
+        .study-box {
+            background: #161b22;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .study-content {
+            background: #ffffff;
+            color: #000000;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Universal Typst WASM Runner</h1>
+            <div class="subtitle">Client-Side Compilation across all 276 Mathematics & Physics Questions</div>
+        </div>
+        <div class="top-nav">
+            <span id="engine-status" class="badge busy">Initializing WASM...</span>
+            <a href="/" style="color: var(--accent); font-size: 0.85rem; text-decoration: none; margin-left: 0.5rem;">← Main App</a>
+        </div>
+    </header>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-val" id="stat-current">1 / --</div>
+            <div class="stat-lbl">Question Index</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val" id="stat-compile-time">-- ms</div>
+            <div class="stat-lbl">Latest Compile Latency</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val" id="stat-batch-avg">-- ms</div>
+            <div class="stat-lbl">Batch Avg / Question</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val" id="stat-cache-size">0</div>
+            <div class="stat-lbl">Cached Renderings</div>
+        </div>
+    </div>
+
+    <div class="progress-bar-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="controls-card">
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <select id="select-module" style="font-weight: 600;">
+                <option value="all">🚀 All Modules (276 questions)</option>
+                <option value="ca">📐 Complex Analysis (106)</option>
+                <option value="qm">⚛️ Quantum Mechanics (72)</option>
+                <option value="mvc">📊 Multivariable Calculus (34)</option>
+                <option value="td">🔥 Thermodynamics (34)</option>
+                <option value="climate">🌍 Climate Physics (30)</option>
+            </select>
+            <button id="btn-prev" disabled>←</button>
+            <button id="btn-next" disabled>→</button>
+            <select id="select-question" style="max-width: 320px;" disabled></select>
+        </div>
+        <div>
+            <button id="btn-run-all" class="primary" disabled>⚡ Benchmark Module</button>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <div class="question-header">
+            <div>
+                <strong id="q-id">--</strong>
+                <span id="q-topics" style="font-size: 0.8rem; color: #8b949e; margin-left: 0.5rem;"></span>
+            </div>
+            <span id="q-render-meta" class="badge">--</span>
+        </div>
+
+        <div id="q-body" class="question-body">Loading...</div>
+
+        <div class="alternatives-grid" id="alts-grid"></div>
+
+        <div class="study-box" id="study-box" style="display: none;">
+            <div style="font-weight: bold; margin-bottom: 0.5rem;">Explanation (Rendered via Typst WASM):</div>
+            <div id="study-content" class="study-content"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { typstWasm } from "./js/typst-renderer.js";
+
+        let allCoursesMap = {};
+        let activeQuestions = [];
+        let currentIndex = 0;
+        let isBatchRunning = false;
+
+        const engineStatus = document.getElementById("engine-status");
+        const statCurrent = document.getElementById("stat-current");
+        const statCompileTime = document.getElementById("stat-compile-time");
+        const statBatchAvg = document.getElementById("stat-batch-avg");
+        const statCacheSize = document.getElementById("stat-cache-size");
+        const selectModule = document.getElementById("select-module");
+        const btnPrev = document.getElementById("btn-prev");
+        const btnNext = document.getElementById("btn-next");
+        const btnRunAll = document.getElementById("btn-run-all");
+        const selectQuestion = document.getElementById("select-question");
+        const qId = document.getElementById("q-id");
+        const qTopics = document.getElementById("q-topics");
+        const qRenderMeta = document.getElementById("q-render-meta");
+        const qBody = document.getElementById("q-body");
+        const altsGrid = document.getElementById("alts-grid");
+        const studyBox = document.getElementById("study-box");
+        const studyContent = document.getElementById("study-content");
+        const progressContainer = document.getElementById("progress-container");
+        const progressBar = document.getElementById("progress-bar");
+
+        async function init() {
+            try {
+                // Initialize WASM
+                const ok = await typstWasm.init();
+                if (ok) {
+                    engineStatus.textContent = "WASM Ready";
+                    engineStatus.className = "badge ready";
+                }
+
+                // Fetch questions
+                const res = await fetch("./questions.json");
+                const lib = await res.json();
+                
+                allCoursesMap = {
+                    "ca": lib["Mathematics"]?.["Complex Analysis"]?.["data"] || [],
+                    "mvc": lib["Mathematics"]?.["Multivariable Calculus"]?.["data"] || [],
+                    "qm": lib["Physics"]?.["Quantum Mechanics"]?.["data"] || [],
+                    "td": lib["Physics"]?.["Thermodynamics"]?.["data"] || [],
+                    "climate": lib["Physics"]?.["Climate"]?.["data"] || []
+                };
+
+                updateModuleSelection("all");
+
+                btnPrev.disabled = false;
+                btnNext.disabled = false;
+                btnRunAll.disabled = false;
+                selectQuestion.disabled = false;
+            } catch (err) {
+                engineStatus.textContent = "Error";
+                engineStatus.className = "badge";
+                engineStatus.style.color = "var(--accent-red)";
+                console.error(err);
+            }
+        }
+
+        function updateModuleSelection(modKey) {
+            if (modKey === "all") {
+                activeQuestions = [
+                    ...allCoursesMap["ca"],
+                    ...allCoursesMap["qm"],
+                    ...allCoursesMap["mvc"],
+                    ...allCoursesMap["td"],
+                    ...allCoursesMap["climate"]
+                ];
+            } else {
+                activeQuestions = allCoursesMap[modKey] || [];
+            }
+
+            selectQuestion.innerHTML = "";
+            activeQuestions.forEach((q, idx) => {
+                const opt = document.createElement("option");
+                opt.value = idx;
+                opt.textContent = `${idx + 1}. ${q.id} - ${(q.topics || [])[0] || 'Problem'}`;
+                selectQuestion.appendChild(opt);
+            });
+
+            btnRunAll.textContent = `⚡ Benchmark ${activeQuestions.length} Questions`;
+            renderQuestion(0);
+        }
+
+        selectModule.onchange = (e) => {
+            updateModuleSelection(e.target.value);
+        };
+
+        async function renderQuestion(index) {
+            if (index < 0 || index >= activeQuestions.length) return;
+            currentIndex = index;
+            selectQuestion.value = index;
+            statCurrent.textContent = `${index + 1} / ${activeQuestions.length}`;
+
+            const q = activeQuestions[index];
+            qId.textContent = q.id;
+            qTopics.textContent = (q.topics || []).join(", ");
+            qRenderMeta.textContent = "Compiling WASM...";
+
+            altsGrid.innerHTML = "";
+            studyBox.style.display = "none";
+
+            const t0 = performance.now();
+
+            // 1. Compile question
+            let qSvg = q.question_html;
+            if (q.question_raw) {
+                const res = await typstWasm.compile(q.question_raw, "question");
+                if (res && res.svg) {
+                    qSvg = res.svg;
+                }
+            }
+            qBody.innerHTML = qSvg;
+
+            // 2. Compile alternatives
+            const alts = q.alternatives || [];
+            for (let i = 0; i < alts.length; i++) {
+                const alt = alts[i];
+                const btn = document.createElement("button");
+                btn.className = "alt-btn";
+                btn.innerHTML = `<span style="color: #888;">Compiling alt ${i+1}...</span>`;
+                altsGrid.appendChild(btn);
+
+                let altSvg = alt.content_html;
+                if (alt.content_raw) {
+                    const res = await typstWasm.compile(alt.content_raw, "alternative");
+                    if (res && res.svg) {
+                        altSvg = res.svg;
+                    }
+                }
+                btn.innerHTML = altSvg;
+
+                btn.onclick = () => {
+                    altsGrid.querySelectorAll(".alt-btn").forEach((b, bi) => {
+                        b.disabled = true;
+                        if (alts[bi].is_correct) b.classList.add("correct");
+                        else if (bi === i) b.classList.add("incorrect");
+                    });
+                    if (q.explanation_raw) {
+                        typstWasm.compile(q.explanation_raw, "study").then(r => {
+                            if (r && r.svg) {
+                                studyContent.innerHTML = r.svg;
+                                studyBox.style.display = "block";
+                            }
+                        });
+                    } else if (q.explanation_html) {
+                        studyContent.innerHTML = q.explanation_html;
+                        studyBox.style.display = "block";
+                    }
+                };
+            }
+
+            const totalTime = (performance.now() - t0).toFixed(1);
+            statCompileTime.textContent = `${totalTime} ms`;
+            statCacheSize.textContent = typstWasm.cache.size;
+            qRenderMeta.textContent = `Compiled in ${totalTime} ms`;
+        }
+
+        btnPrev.onclick = () => {
+            if (currentIndex > 0) renderQuestion(currentIndex - 1);
+        };
+        btnNext.onclick = () => {
+            if (currentIndex < activeQuestions.length - 1) renderQuestion(currentIndex + 1);
+        };
+        selectQuestion.onchange = (e) => {
+            renderQuestion(parseInt(e.target.value, 10));
+        };
+
+        // Full Batch Benchmark across selected questions
+        btnRunAll.onclick = async () => {
+            if (isBatchRunning || activeQuestions.length === 0) return;
+            isBatchRunning = true;
+            btnRunAll.disabled = true;
+            btnPrev.disabled = true;
+            btnNext.disabled = true;
+            selectQuestion.disabled = true;
+            selectModule.disabled = true;
+            progressContainer.style.display = "block";
+
+            const tStart = performance.now();
+
+            for (let i = 0; i < activeQuestions.length; i++) {
+                const q = activeQuestions[i];
+                progressBar.style.width = `${((i + 1) / activeQuestions.length) * 100}%`;
+                statCurrent.textContent = `${i + 1} / ${activeQuestions.length}`;
+
+                if (q.question_raw) {
+                    await typstWasm.compile(q.question_raw, "question");
+                }
+                for (const alt of (q.alternatives || [])) {
+                    if (alt.content_raw) {
+                        await typstWasm.compile(alt.content_raw, "alternative");
+                    }
+                }
+                if (q.explanation_raw) {
+                    await typstWasm.compile(q.explanation_raw, "study");
+                }
+
+                statCacheSize.textContent = typstWasm.cache.size;
+            }
+
+            const totalTime = performance.now() - tStart;
+            const avgPerQuestion = (totalTime / activeQuestions.length).toFixed(1);
+            statBatchAvg.textContent = `${avgPerQuestion} ms`;
+            statCompileTime.textContent = `${(totalTime / 1000).toFixed(2)}s total`;
+
+            progressBar.style.width = "100%";
+            setTimeout(() => {
+                progressContainer.style.display = "none";
+            }, 800);
+
+            isBatchRunning = false;
+            btnRunAll.disabled = false;
+            btnPrev.disabled = false;
+            btnNext.disabled = false;
+            selectQuestion.disabled = false;
+            selectModule.disabled = false;
+
+            renderQuestion(currentIndex);
+        };
+
+        init();
+    </script>
+</body>
+</html>

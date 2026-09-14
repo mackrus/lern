@@ -292,18 +292,30 @@ export const Biology = {
         const plantLabel = `${plant.common_name} (${plant.latin_name})`;
         const explanationPrefix = isSe ? "Rätt svar:" : "Correct answer:";
 
+        const promptRaw = isTextInput
+            ? (isSe ? `Ange rätt ${attrNames[aAttr].toLowerCase()} för denna växt:` : `Write down the ${attrNames[aAttr]} for this plant:`)
+            : (isSe ? `Välj rätt ${attrNames[aAttr].toLowerCase()} för denna växt:` : `Pick the correct ${attrNames[aAttr]} for this plant:`);
+
+        const qRaw = (qAttr === 'photo_url')
+            ? null
+            : `${promptRaw}\n\n#align(center)[#text(1.25em)[*${qValue}*]]`;
+
+        const expRaw = isAnswerPhoto
+            ? null
+            : `${explanationPrefix}\n\n#align(center)[#text(1.2em)[*${aValue}*]]`;
+
         const q = {
             id: `plant_${index}_${qAttr}_${aAttr}`,
             label: isSe ? "Växtidentifiering" : "Plant Identification",
             topics: [plantLabel],
             references: [],
             question_html: `<div style="text-align: center; margin-bottom: 1rem; opacity: 0.8;">${prompt}</div>${renderQ(qValue)}`,
-            question_raw: `${prompt} ${qValue}`,
+            question_raw: qRaw,
             prerequisites_html: null,
             formulae_html: null,
             solution_steps_html: null,
             explanation_html: `<div style="text-align: center;">${explanationPrefix} <br>${renderA(aValue)}</div>`,
-            explanation_raw: aValue,
+            explanation_raw: expRaw,
             is_text_input: isTextInput,
             expected_answer: isTextInput ? aValue : null,
             alternatives: [],
@@ -317,6 +329,7 @@ export const Biology = {
                 content_html: isAnswerPhoto 
                     ? `<img src="${aValue}" style="max-width:100%; height:auto; border-radius: 2px;">`
                     : renderA(aValue),
+                content_raw: isAnswerPhoto ? null : aValue,
                 is_correct: true
             });
 
@@ -336,6 +349,7 @@ export const Biology = {
                     content_html: isAnswerPhoto 
                         ? `<img src="${d[aAttr]}" style="max-width:100%; height:auto; border-radius: 2px;">`
                         : renderA(d[aAttr]),
+                    content_raw: isAnswerPhoto ? null : d[aAttr],
                     is_correct: false
                 });
             });

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lern - Typst WASM Prototype & Benchmark</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link id="themes-css" rel="stylesheet" href="css/themes.css">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-bright: #f0f6fc;
+            --accent: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-amber: #d29922;
+            --accent-red: #f85149;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--mono);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: var(--text-bright);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            font-size: 0.95rem;
+            color: #8b949e;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background-color: #21262d;
+            border: 1px solid var(--border);
+        }
+
+        .badge.ready {
+            color: var(--accent-green);
+            border-color: rgba(63, 185, 80, 0.4);
+        }
+
+        .badge.loading {
+            color: var(--accent-amber);
+            border-color: rgba(210, 153, 34, 0.4);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #8b949e;
+            margin-top: 0.25rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            background-color: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-bright);
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            padding: 0.75rem;
+            resize: vertical;
+            outline: none;
+            margin-bottom: 1rem;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background-color: #21262d;
+            color: var(--text-bright);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #30363d;
+            border-color: #8b949e;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button.primary {
+            background-color: #1f6feb;
+            border-color: #388bfd;
+        }
+
+        button.primary:hover:not(:disabled) {
+            background-color: #388bfd;
+        }
+
+        #render-output {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #000000;
+            border-radius: 4px;
+            padding: 1.5rem;
+            overflow: auto;
+        }
+
+        #render-output svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .log-box {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.75rem;
+            height: 140px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            color: #8b949e;
+        }
+
+        .log-entry {
+            margin-bottom: 0.25rem;
+        }
+        .log-entry.info { color: #8b949e; }
+        .log-entry.success { color: var(--accent-green); }
+        .log-entry.warn { color: var(--accent-amber); }
+        .log-entry.error { color: var(--accent-red); }
+
+        table.comparison {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        table.comparison th, table.comparison td {
+            border: 1px solid var(--border);
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+
+        table.comparison th {
+            background-color: #0d1117;
+            color: var(--text-bright);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Typst WebAssembly Prototype</h1>
+        <p class="subtitle">In-browser client-side compilation via <code>@myriaddreamin/typst.ts</code> vs precompiled static SVGs.</p>
+    </header>
+
+    <div class="stat-grid">
+        <div class="stat-box">
+            <div class="stat-val" id="stat-init">--</div>
+            <div class="stat-label">WASM Init Time</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val" id="stat-render">--</div>
+            <div class="stat-label">Latest Compile Time</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val" id="stat-memory">--</div>
+            <div class="stat-label">JS Heap / Memory</div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-title">
+                <span>Typst Input</span>
+                <span id="status-badge" class="badge loading">Initializing WASM...</span>
+            </div>
+            <textarea id="typst-input">#set page(width: auto, height: auto, margin: 10pt)
+#set text(size: 14pt)
+
+Compute the commutator:
+$ [a^dagger a, a] = a^dagger [a, a] + [a^dagger, a] a = -a $
+
+Where $[a, a^dagger] = 1$.</textarea>
+            <div class="btn-row">
+                <button id="btn-compile" class="primary" disabled>Compile in Browser</button>
+                <button id="btn-sample-qm">Sample: QM</button>
+                <button id="btn-sample-ca">Sample: Complex Analysis</button>
+                <button id="btn-sample-matrix">Sample: Matrix</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>Live Browser Output (Rendered SVG)</span>
+                <span id="output-meta" class="badge">0 bytes</span>
+            </div>
+            <div id="render-output">
+                <span style="color: #666;">Output will appear here</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-title">Runtime Log & Telemetry</div>
+        <div id="log-box" class="log-box"></div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Side-by-Side Comparison</div>
+        <table class="comparison">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Current (Precompiled SVGs)</th>
+                    <th>Typst WASM (Client-Side)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Render Latency</strong></td>
+                    <td><span style="color: var(--accent-green);">&lt; 1 ms</span> (instant DOM swap)</td>
+                    <td id="comp-latency">Measuring...</td>
+                </tr>
+                <tr>
+                    <td><strong>Network Payload</strong></td>
+                    <td>~2.2 MB total for all 276 questions</td>
+                    <td>~5–9 MB (Compiler WASM + Font Blobs)</td>
+                </tr>
+                <tr>
+                    <td><strong>Client Memory Usage</strong></td>
+                    <td>Negligible (only SVG DOM nodes)</td>
+                    <td id="comp-memory">~30–60 MB WASM Heap</td>
+                </tr>
+                <tr>
+                    <td><strong>Client CPU Load</strong></td>
+                    <td>0% (static rendering)</td>
+                    <td>Spike per compile (10–50ms)</td>
+                </tr>
+                <tr>
+                    <td><strong>Dynamic Math / Live Input</strong></td>
+                    <td>No (requires rebuild)</td>
+                    <td><span style="color: var(--accent-green);">Yes</span> (full compiler in browser)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { $typst } from "./js/typst.bundle.js";
+
+        const logBox = document.getElementById("log-box");
+        const statusBadge = document.getElementById("status-badge");
+        const btnCompile = document.getElementById("btn-compile");
+        const typstInput = document.getElementById("typst-input");
+        const renderOutput = document.getElementById("render-output");
+        const statInit = document.getElementById("stat-init");
+        const statRender = document.getElementById("stat-render");
+        const statMemory = document.getElementById("stat-memory");
+        const outputMeta = document.getElementById("output-meta");
+        const compLatency = document.getElementById("comp-latency");
+        const compMemory = document.getElementById("comp-memory");
+
+        function log(msg, type = "info") {
+            const entry = document.createElement("div");
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            entry.textContent = `[${time}] ${msg}`;
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function updateMemory() {
+            if (performance.memory) {
+                const usedMB = (performance.memory.usedJSHeapSize / (1024 * 1024)).toFixed(1);
+                statMemory.textContent = `${usedMB} MB`;
+                compMemory.textContent = `~${usedMB} MB JS Heap`;
+            } else {
+                statMemory.textContent = "N/A";
+            }
+        }
+
+        async function initTypst() {
+            const t0 = performance.now();
+            log("Fetching and initializing Typst WASM compiler...");
+            try {
+                // Initialize typst compiler by performing a warm-up render
+                await $typst.svg({ mainContent: "$1$" });
+                const elapsed = (performance.now() - t0).toFixed(0);
+                statInit.textContent = `${elapsed} ms`;
+                statusBadge.textContent = "WASM Ready";
+                statusBadge.className = "badge ready";
+                btnCompile.disabled = false;
+                log(`Typst WASM initialized in ${elapsed} ms.`, "success");
+                updateMemory();
+                // Initial compile
+                compile();
+            } catch (err) {
+                log(`Failed to initialize Typst WASM: ${err.message}`, "error");
+                statusBadge.textContent = "Init Error";
+                statusBadge.className = "badge";
+                statusBadge.style.color = "var(--accent-red)";
+                console.error(err);
+            }
+        }
+
+        async function compile() {
+            const code = typstInput.value;
+            btnCompile.disabled = true;
+            statusBadge.textContent = "Compiling...";
+            statusBadge.className = "badge loading";
+            
+            const t0 = performance.now();
+            try {
+                const svgString = await $typst.svg({ mainContent: code });
+                const elapsed = (performance.now() - t0).toFixed(1);
+                
+                renderOutput.innerHTML = svgString;
+                statRender.textContent = `${elapsed} ms`;
+                compLatency.textContent = `${elapsed} ms (in-browser compile)`;
+                
+                const byteSize = new Blob([svgString]).size;
+                outputMeta.textContent = `${byteSize} bytes SVG`;
+                
+                statusBadge.textContent = "Ready";
+                statusBadge.className = "badge ready";
+                log(`Compiled in ${elapsed} ms (${byteSize} bytes SVG output).`, "success");
+            } catch (err) {
+                log(`Compilation error: ${err.message}`, "error");
+                renderOutput.innerHTML = `<span style="color: var(--accent-red);">Compilation failed: ${err.message}</span>`;
+                statusBadge.textContent = "Error";
+                statusBadge.className = "badge";
+                statusBadge.style.color = "var(--accent-red)";
+            } finally {
+                btnCompile.disabled = false;
+                updateMemory();
+            }
+        }
+
+        btnCompile.addEventListener("click", compile);
+
+        document.getElementById("btn-sample-qm").addEventListener("click", () => {
+            typstInput.value = `#set page(width: auto, height: auto, margin: 10pt)
+#set text(size: 14pt)
+
+If the probability density current $j = 0$ everywhere, what is the expectation value $chevron.l p chevron.r$?
+
+$ chevron.l p chevron.r = integral limits(psi^* (-i hbar nabla) psi) dif V = 0 $`;
+            compile();
+        });
+
+        document.getElementById("btn-sample-ca").addEventListener("click", () => {
+            typstInput.value = `#set page(width: auto, height: auto, margin: 10pt)
+#set text(size: 14pt)
+
+Cauchy's Integral Formula:
+
+$ f(z_0) = 1 / (2 pi i) integral.cont_gamma (f(z)) / (z - z_0) dif z $
+
+Where $gamma$ is a simple closed contour oriented counterclockwise.`;
+            compile();
+        });
+
+        document.getElementById("btn-sample-matrix").addEventListener("click", () => {
+            typstInput.value = `#set page(width: auto, height: auto, margin: 10pt)
+#set text(size: 14pt)
+
+Unitary Matrix Condition:
+
+$ U = mat(1, 2; 2 i, beta) => U^dagger U = I $
+Columns must be orthogonal:
+$ 1^* dot 2 + (2 i)^* dot beta = 0 => 2 - 2 i beta = 0 => beta = -i $`;
+            compile();
+        });
+
+        initTypst();
+    </script>
+</body>
+</html>

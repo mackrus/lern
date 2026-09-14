@@ -10,9 +10,10 @@ import {
     previous_question, 
     is_graded,
     get_current_question_raw,
-    get_current_question_explanation_raw,
+    get_current_question_index,
     get_topic_stats_json
 } from "../pkg/lern.js";
+import { isNumericalQuestion } from "./math-evaluator.js";
 
 // Global error handling
 window.onerror = function(msg, url, line) {
@@ -24,6 +25,7 @@ window.onerror = function(msg, url, line) {
 async function run() {
     try {
         UI.setupTheme();
+
         UI.updateLoadingStatus("Initializing WASM core...");
         await init({ module_or_path: "./pkg/lern_bg.wasm" });
 
@@ -71,22 +73,34 @@ async function run() {
 
 // Attach global event listeners
 function attachGlobalEventListeners() {
+    Renderer.initFontSizeControls();
+
     const backToMenu = document.getElementById("back-to-menu");
     if (backToMenu) {
-        backToMenu.onclick = () => Navigation.showMenu();
+        backToMenu.onclick = () => {
+            if (is_graded() && State.currentCourse) {
+                State.clear(State.currentCourse);
+            }
+            Navigation.showMenu();
+        };
     }
     
     const middleLernLogo = document.querySelector("#menu h1 .lern-anim");
     if (middleLernLogo) {
         middleLernLogo.style.cursor = "pointer";
-        middleLernLogo.onclick = () => Navigation.showMenu();
+        middleLernLogo.onclick = () => {
+            if (is_graded() && State.currentCourse) {
+                State.clear(State.currentCourse);
+            }
+            Navigation.showMenu();
+        };
     }
 
     const gradeBtn = document.getElementById("grade-btn");
     if (gradeBtn) {
         gradeBtn.onclick = (e) => {
             e.preventDefault();
-            Renderer.syncTextInput();
+            Renderer.resolveNumericalAnswers();
             grade_quiz();
             
             // Update cumulative stats once per session
@@ -140,15 +154,77 @@ function attachGlobalEventListeners() {
         copyPromptBtn.onclick = async (e) => {
             e.preventDefault();
             const isSe = State.currentCourse === "Växtkännedom (Svenska)";
-            const questionRaw = get_current_question_raw() || (isSe ? "Frågedata saknas." : "Question data missing.");
-            const explanationRaw = get_current_question_explanation_raw() || (isSe ? "Ingen förklaring angiven." : "No explanation provided.");
+            const currentIndex = typeof get_current_question_index === "function" ? get_current_question_index() : 0;
+            const currentQuestion = (State.currentQuestionsList && State.currentQuestionsList[currentIndex]) || null;
+            const courseName = State.currentCourse || (isSe ? "Biologi" : "Physics");
             
+            const questionRaw = (currentQuestion && currentQuestion.question_raw) || get_current_question_raw() || (isSe ? "Frågedata saknas." : "Question data missing.");
+            const topics = currentQuestion && currentQuestion.topics && currentQuestion.topics.length ? currentQuestion.topics.join(", ") : "";
+            const topicLine = topics ? (isSe ? `\nÄmne: ${topics}` : `\nTopic: ${topics}`) : "";
+
+            let optionsSection = "";
+            if (currentQuestion) {
+                if (currentQuestion.is_text_input) {
+                    optionsSection = isSe ? "Svarstyp: Fri textinmatning" : "Answer format: Free text input";
+                } else if (isNumericalQuestion(currentQuestion)) {
+                    optionsSection = isSe ? "Svarstyp: Numerisk inmatning" : "Answer format: Numerical value";
+                } else if (Array.isArray(currentQuestion.alternatives) && currentQuestion.alternatives.length > 0) {
+                    const labels = ["A", "B", "C", "D", "E", "F"];
+                    const altLines = currentQuestion.alternatives.map((a, idx) => {
+                        const label = labels[idx] || `${idx + 1}`;
+                        let content = a.content_raw || "";
+                        if (!content && a.content_html) {
+                            const tmp = document.createElement("div");
+                            tmp.innerHTML = a.content_html;
+                            const img = tmp.querySelector("img");
+                            content = img ? `[Image: ${img.getAttribute("src")}]` : (tmp.textContent || tmp.innerText || "");
+                        }
+                        return `${label}) ${content.trim()}`;
+                    });
+                    optionsSection = (isSe ? "Alternativ:\n" : "Options:\n") + altLines.join("\n");
+                }
+            }
+
             let prompt = "";
             if (isSe) {
-                prompt = `Vänligen förklara följande problem och dess lösning ytterligare. Använd ett enkelt språk och gör inte saker mer komplicerade än de behöver vara:\n\nFråga:\n${questionRaw}\n\nFörklaring:\n${explanationRaw}`;
+                prompt = [
+                    `Jag arbetar med följande uppgift inom ${courseName} och vill förstå hur man löser den samt lära mig de underliggande koncepten.`,
+                    "",
+                    "[Roll & Instruktioner för AI]:",
+                    "Agera som en pedagogisk expertlärare. Avslöja INTE det slutgiltiga svaret, ange INTE vilket alternativ som är rätt, och lös INTE problemet åt mig direkt. Mitt mål är att lära mig att förstå och lösa det själv.",
+                    "Gör istället följande:",
+                    "1. Förklara de centrala begreppen, principerna eller biologiska kännetecknen på ett enkelt, intuitivt och tydligt språk.",
+                    "2. Ge en tydlig metod eller tankemodell för hur man resonerar sig fram till lösningen steg för steg från grundprinciper.",
+                    "3. Ge mig en riktad ledtråd eller ställ en ledande fråga som hjälper mig att själv ta nästa steg i resonemanget.",
+                    "",
+                    "---",
+                    `Kurs: ${courseName}${topicLine}`,
+                    "",
+                    "Fråga:",
+                    questionRaw,
+                    ...(optionsSection ? ["", optionsSection] : []),
+                    "---"
+                ].join("\n");
             } else {
-                const courseName = State.currentCourse || "physics";
-                prompt = `Please further explain the following ${courseName} problem and its solution, use simple language and don't make things more complicated than they need to be:\n\nQuestion:\n${questionRaw}\n\nExplanation:\n${explanationRaw}`;
+                prompt = [
+                    `I am working on the following ${courseName} problem and want to understand how to solve it and master the underlying principles.`,
+                    "",
+                    "[Role & Instructions for AI]:",
+                    "Act as an exceptional tutor. Do NOT reveal the final answer, do NOT specify which option is correct, and do NOT solve the problem outright. My goal is to learn how to solve it myself.",
+                    "Instead:",
+                    "1. Break down the core physical/mathematical concepts, laws, or definitions involved in clear, intuitive, and accessible terms.",
+                    "2. Provide a structured thought process or problem-solving framework showing how to reason through this problem from first principles.",
+                    "3. Give me a targeted hint or ask a guiding question that helps me work through the critical step myself.",
+                    "",
+                    "---",
+                    `Course: ${courseName}${topicLine}`,
+                    "Question notation: Typst / LaTeX math syntax (formulas delimited by '$')",
+                    "",
+                    "Question:",
+                    questionRaw,
+                    ...(optionsSection ? ["", optionsSection] : []),
+                    "---"
+                ].join("\n");
             }
             
             try {

@@ -37,6 +37,9 @@ export function translate(key, isSwedish) {
         "practice_weak": "Öva på svaga områden",
         "mastered_all": "Enastående! Du bemästrar alla valda ämnen. Redo för nästa utmaning?",
         "review_incorrect": "Granska felaktiga svar:",
+        "answer_breakdown": "Svarssammanställning:",
+        "answered_correctly": "Rätt",
+        "answered_incorrectly": "Fel",
         "question_num": "Fråga {num}:",
         "your_answer": "Ditt svar:",
         "correct_answer": "Rätt svar:",
@@ -83,6 +86,9 @@ export function translate(key, isSwedish) {
         "practice_weak": "Practice Weak Areas",
         "mastered_all": "Outstanding! You have mastered all selected topics. Ready for the next challenge?",
         "review_incorrect": "Review Incorrect Answers:",
+        "answer_breakdown": "Answer Breakdown:",
+        "answered_correctly": "Correct",
+        "answered_incorrectly": "Incorrect",
         "question_num": "Question {num}:",
         "your_answer": "Your answer:",
         "correct_answer": "Correct answer:",
@@ -121,22 +127,20 @@ export const UI = {
         ThemeManager.setupThemeToggle();
     },
 
+
     updateCourseTheme(courseName) {
         ThemeManager.syncWithCourse(courseName);
     },
 
     fixSvgs() {
         document.querySelectorAll("svg").forEach(svg => {
-            const isFullWidthContainer = svg.closest("#question") || 
-                                         svg.closest("#incorrect-list") || 
-                                         svg.closest("#explanation") || 
-                                         svg.closest("#prerequisites");
-            
-            if (isFullWidthContainer) {
+            const fullWidth = svg.closest("#question") || svg.closest("#incorrect-list") ||
+                svg.closest("#explanation") || svg.closest("#prerequisites");
+            if (fullWidth) {
                 svg.removeAttribute("width");
                 svg.removeAttribute("height");
                 svg.style.width = "100%";
-                svg.style.maxWidth = "750px"; 
+                svg.style.maxWidth = "750px";
                 svg.style.height = "auto";
                 svg.style.margin = "0 auto";
             } else {

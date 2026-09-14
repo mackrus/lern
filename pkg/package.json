@@ -1,6 +1,7 @@
 {
   "name": "lern",
   "type": "module",
+  "description": "Interactive math, physics, and biology learning platform",
   "version": "0.1.0",
   "files": [
     "lern_bg.wasm",
