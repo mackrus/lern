@@ -2,6 +2,8 @@
 name = "lern"
 version = "0.1.0"
 edition = "2024"
+description = "Interactive math, physics, and biology learning platform"
+
 
 [lib]
 crate-type = ["cdylib", "rlib"]
