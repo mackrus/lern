@@ -246,7 +246,80 @@ export const Renderer = {
         }
     },
 
+    fontSizeScales: [0.8, 0.9, 1.0, 1.15, 1.3, 1.5, 1.7],
+    currentFontScaleIndex: 2,
+    fontSizeInitialized: false,
+
+    initFontSizeControls() {
+        if (this.fontSizeInitialized) return;
+        this.fontSizeInitialized = true;
+
+        const saved = localStorage.getItem("lern_question_font_scale");
+        if (saved) {
+            const scale = parseFloat(saved);
+            const idx = this.fontSizeScales.findIndex(s => Math.abs(s - scale) < 0.01);
+            if (idx !== -1) {
+                this.currentFontScaleIndex = idx;
+            }
+        }
+        this.applyFontSize(false);
+
+        const decBtn = document.getElementById("font-decrease-btn");
+        const incBtn = document.getElementById("font-increase-btn");
+
+        if (decBtn) {
+            decBtn.onclick = (e) => {
+                e.preventDefault();
+                if (this.currentFontScaleIndex > 0) {
+                    this.currentFontScaleIndex--;
+                    this.applyFontSize(true);
+                }
+            };
+        }
+
+        if (incBtn) {
+            incBtn.onclick = (e) => {
+                e.preventDefault();
+                if (this.currentFontScaleIndex < this.fontSizeScales.length - 1) {
+                    this.currentFontScaleIndex++;
+                    this.applyFontSize(true);
+                }
+            };
+        }
+    },
+
+    applyFontSize(rerenderCurrentQuestion = false) {
+        const scale = this.fontSizeScales[this.currentFontScaleIndex];
+        localStorage.setItem("lern_question_font_scale", scale.toString());
+        document.documentElement.style.setProperty("--question-font-scale", scale.toString());
+
+        const indicator = document.getElementById("font-size-indicator");
+        if (indicator) {
+            indicator.innerText = `${Math.round(scale * 100)}%`;
+        }
+
+        const decBtn = document.getElementById("font-decrease-btn");
+        const incBtn = document.getElementById("font-increase-btn");
+        if (decBtn) {
+            decBtn.disabled = (this.currentFontScaleIndex === 0);
+        }
+        if (incBtn) {
+            incBtn.disabled = (this.currentFontScaleIndex === this.fontSizeScales.length - 1);
+        }
+
+        typstWasm.questionTextSize = 15 * scale;
+
+        if (rerenderCurrentQuestion) {
+            const currentIndex = get_current_question_index();
+            const currentQuestion = State.currentQuestionsList ? State.currentQuestionsList[currentIndex] : null;
+            if (currentQuestion) {
+                this.renderQuestionArea(currentQuestion);
+            }
+        }
+    },
+
     renderHeader(graded) {
+        this.initFontSizeControls();
         const questionLabel = document.getElementById("question-label");
         const label = get_current_question_label();
         if (label) {
@@ -353,7 +426,8 @@ export const Renderer = {
         input.type = "text";
         input.id = "numerical-answer-input";
         input.className = "numerical-input-field";
-        input.placeholder = "Type numerical answer (e.g. 2pi, 1/2, -4, sqrt(2))...";
+        input.placeholder = "Type answer";
+        input.setAttribute("aria-label", "Type answer");
         input.autocomplete = "off";
         input.spellcheck = false;
 
@@ -471,7 +545,8 @@ export const Renderer = {
         input.id = "answer-input";
         
         const isSe = State.currentCourse === "Växtkännedom (Svenska)";
-        input.placeholder = isSe ? "Skriv ditt svar här..." : "Type answer here...";
+        input.placeholder = isSe ? "Skriv svar..." : "Type answer";
+        input.setAttribute("aria-label", "Type answer");
         input.className = "alternative";
         
         const selection = get_current_selection() || "";

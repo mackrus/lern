@@ -206,6 +206,10 @@
             background-color: var(--hover-color);
         }
 
+        :root {
+            --question-font-scale: 1;
+        }
+
         #question {
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
@@ -214,6 +218,58 @@
             padding: 2.5rem;
             border-radius: 0px; /* Minimalist sharp edges or subtle radius */
             transition: background-color 0.3s;
+            font-size: calc(1.25rem * var(--question-font-scale, 1));
+            line-height: 1.6;
+        }
+
+        #question div, #question p, #question span {
+            font-size: inherit;
+        }
+
+        .font-size-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            border: 1px solid var(--border-color);
+            padding: 0.15rem 0.4rem;
+            background: var(--surface-color);
+            user-select: none;
+        }
+
+        .font-size-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 0.15rem 0.35rem;
+            opacity: 0.8;
+            line-height: 1;
+            transition: opacity 0.15s ease, color 0.15s ease;
+        }
+
+        .font-size-btn::after {
+            display: none !important;
+        }
+
+        .font-size-btn:hover:not(:disabled) {
+            opacity: 1;
+            color: var(--accent-color);
+        }
+
+        .font-size-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #font-size-indicator {
+            font-size: 0.8rem;
+            opacity: 0.75;
+            min-width: 3.8ch;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            font-family: inherit;
         }
 
         .alternative {
@@ -712,12 +768,17 @@
         <div id="quiz" style="display: none;">
             <div id="app-with-sidebar">
                 <div id="main-column">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
                         <button id="back-to-menu">← Back to Menu</button>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                             <div id="exam-timer" style="display: none; background: var(--text-color); color: var(--bg-color); padding: 0.2rem 0.5rem; font-size: 0.9rem; font-weight: bold; letter-spacing: 0.05em;"></div>
                             <div id="question-label" style="display: none; background: var(--text-color); color: var(--bg-color); padding: 0.2rem 0.5rem; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;"></div>
                             <div id="question-number" style="color: var(--text-color);"></div>
+                            <div id="font-size-controls" class="font-size-controls" title="Adjust question text size">
+                                <button id="font-decrease-btn" class="font-size-btn" type="button" title="Decrease font size" aria-label="Decrease text size">A−</button>
+                                <span id="font-size-indicator">100%</span>
+                                <button id="font-increase-btn" class="font-size-btn" type="button" title="Increase font size" aria-label="Increase text size">A+</button>
+                            </div>
                         </div>
                     </div>
                     <div id="question-nav-bar"></div>

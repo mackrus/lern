@@ -39,7 +39,8 @@ class TypstWasmEngine {
         const ok = await this.init();
         if (!ok) return null;
 
-        const cacheKey = `${kind}:${rawCode}`;
+        const currentSize = kind === "question" ? (this.questionFontSize || 15) : (kind === "alternative" ? 14 : 13);
+        const cacheKey = `${kind}:${currentSize.toFixed(1)}:${rawCode}`;
         if (this.cache.has(cacheKey)) {
             return {
                 svg: this.cache.get(cacheKey),
@@ -64,7 +65,8 @@ class TypstWasmEngine {
         } else if (kind === "study") {
             header += "#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: 13pt)\n";
         } else {
-            header += "#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: 15pt)\n";
+            const qSize = (this.questionFontSize || 15).toFixed(1);
+            header += `#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: ${qSize}pt)\n`;
         }
 
         const t0 = performance.now();

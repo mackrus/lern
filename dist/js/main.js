@@ -81,6 +81,8 @@ async function run() {
 
 // Attach global event listeners
 function attachGlobalEventListeners() {
+    Renderer.initFontSizeControls();
+
     const backToMenu = document.getElementById("back-to-menu");
     if (backToMenu) {
         backToMenu.onclick = () => Navigation.showMenu();
