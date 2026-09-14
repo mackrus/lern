@@ -307,13 +307,14 @@ export const Renderer = {
             incBtn.disabled = (this.currentFontScaleIndex === this.fontSizeScales.length - 1);
         }
 
-        typstWasm.questionTextSize = 15 * scale;
+        typstWasm.fontScale = scale;
 
         if (rerenderCurrentQuestion) {
             const currentIndex = get_current_question_index();
             const currentQuestion = State.currentQuestionsList ? State.currentQuestionsList[currentIndex] : null;
             if (currentQuestion) {
                 this.renderQuestionArea(currentQuestion);
+                this.renderAlternatives(currentQuestion, is_graded());
             }
         }
     },

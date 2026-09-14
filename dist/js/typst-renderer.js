@@ -9,6 +9,7 @@ class TypstWasmEngine {
         this.initPromise = null;
         this.lastCompileTime = 0;
         this.totalCompiles = 0;
+        this.fontScale = 1.0;
     }
 
     async init() {
@@ -39,8 +40,10 @@ class TypstWasmEngine {
         const ok = await this.init();
         if (!ok) return null;
 
-        const currentSize = kind === "question" ? (this.questionFontSize || 15) : (kind === "alternative" ? 14 : 13);
-        const cacheKey = `${kind}:${currentSize.toFixed(1)}:${rawCode}`;
+        const scale = this.fontScale || 1.0;
+        const baseSize = kind === "alternative" ? 14 : (kind === "study" ? 13 : 15);
+        const currentSize = (baseSize * scale).toFixed(1);
+        const cacheKey = `${kind}:${currentSize}:${rawCode}`;
         if (this.cache.has(cacheKey)) {
             return {
                 svg: this.cache.get(cacheKey),
@@ -61,12 +64,11 @@ class TypstWasmEngine {
         ].join('\n');
 
         if (kind === "alternative") {
-            header += "#set page(width: auto, height: auto, margin: 4pt)\n#set text(size: 14pt)\n";
+            header += `#set page(width: auto, height: auto, margin: 4pt)\n#set text(size: ${currentSize}pt)\n`;
         } else if (kind === "study") {
-            header += "#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: 13pt)\n";
+            header += `#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: ${currentSize}pt)\n`;
         } else {
-            const qSize = (this.questionFontSize || 15).toFixed(1);
-            header += `#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: ${qSize}pt)\n`;
+            header += `#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: ${currentSize}pt)\n`;
         }
 
         const t0 = performance.now();
