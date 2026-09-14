@@ -11,11 +11,15 @@ typst_assets=(
     "node_modules/@myriaddreamin/typst-ts-web-compiler/pkg/typst_ts_web_compiler_bg.wasm"
 )
 for source in "${typst_assets[@]}"; do
-    if [ ! -f "$source" ]; then
+    destination="dist/js/$(basename "$source")"
+    if [ -f "$source" ]; then
+        cp "$source" "$destination"
+    elif [ ! -f "$destination" ]; then
         echo "Missing Typst WASM asset: $source" >&2
         exit 1
+    else
+        echo "Using checked-in Typst WASM asset: $destination"
     fi
-    cp "$source" "dist/js/$(basename "$source")"
 done
 
 echo "Aggregating questions..."
