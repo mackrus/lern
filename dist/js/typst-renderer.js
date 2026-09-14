@@ -1,4 +1,18 @@
-import { $typst } from "./typst.bundle.js";
+import { $typst, TypstSnippet } from "./typst.bundle.js";
+
+const localFonts = [
+    new URL("../assets/fonts/NotoSans-Regular.ttf", import.meta.url).href,
+    new URL("../assets/fonts/NotoSerif-Regular.ttf", import.meta.url).href,
+    new URL("../assets/fonts/NotoSansMath-Regular.ttf", import.meta.url).href
+];
+
+// Keep initialization self-contained for local/offline deployments. The bundle's
+// default font set points at jsdelivr, which leaves compilation pending when the
+// CDN is unavailable.
+$typst.use(
+    TypstSnippet.disableDefaultFontAssets(),
+    TypstSnippet.preloadFonts(localFonts)
+);
 
 class TypstWasmEngine {
     constructor() {
@@ -53,6 +67,8 @@ class TypstWasmEngine {
         }
 
         let header = [
+            '#set text(font: "Noto Sans")',
+            '#show math.equation: set text(font: "Noto Sans Math")',
             '#let CO = $upright("CO")$',
             '#let CH = $upright("CH")$',
             '#let CaCO = $upright("CaCO")$',
