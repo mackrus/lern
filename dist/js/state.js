@@ -17,6 +17,7 @@ export const State = {
     examTimerInterval: null,
     currentSavedState: null,
     currentQuestionsList: null,
+    numericalInputs: {},
 
     save() {
         if (!this.currentCourse) return;
@@ -40,7 +41,8 @@ export const State = {
                 ? (this.currentCategory === "Biology" ? this.currentQuestionsList.map(q => q.plantIndex) : this.currentQuestionsList.map(q => q.id))
                 : null,
             statsUpdated: this.currentSavedState ? this.currentSavedState.statsUpdated : false,
-            bioParams: this.currentSavedState ? this.currentSavedState.bioParams : null
+            bioParams: this.currentSavedState ? this.currentSavedState.bioParams : null,
+            numericalInputs: this.numericalInputs || {}
         };
         this.currentSavedState = state;
         localStorage.setItem(`lern_progress_${this.currentCourse}`, JSON.stringify(state));
@@ -50,7 +52,9 @@ export const State = {
         const data = localStorage.getItem(`lern_progress_${courseName}`);
         if (!data) return null;
         try {
-            return JSON.parse(data);
+            const parsed = JSON.parse(data);
+            this.numericalInputs = parsed && parsed.numericalInputs ? parsed.numericalInputs : {};
+            return parsed;
         } catch (e) {
             console.error("Failed to parse progress state", e);
             return null;
@@ -58,6 +62,7 @@ export const State = {
     },
 
     clear(courseName) {
+        this.numericalInputs = {};
         localStorage.removeItem(`lern_progress_${courseName}`);
     },
 

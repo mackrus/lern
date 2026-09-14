@@ -553,6 +553,91 @@
             padding: 0 2px;
             border-radius: 2px;
         }
+
+        /* Numerical Question Input & Symbols Toolbar */
+        .numerical-container {
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            padding: 1.25rem;
+        }
+
+        .symbol-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .symbol-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.95rem;
+            padding: 0.35rem 0.75rem;
+            cursor: pointer;
+            border-radius: 0px;
+            opacity: 0.8;
+            transition: all 0.15s ease;
+            user-select: none;
+            margin: 0 !important;
+        }
+
+        .symbol-btn::after {
+            display: none !important;
+        }
+
+        .symbol-btn:hover {
+            opacity: 1;
+            border-color: var(--accent-color);
+            background: var(--hover-color);
+            transform: translateY(-1px);
+        }
+
+        .symbol-btn:active {
+            transform: translateY(0);
+        }
+
+        .numerical-input-field {
+            width: 100%;
+            box-sizing: border-box;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 1.15rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .numerical-input-field:focus {
+            border-color: var(--accent-color);
+            background: var(--hover-color);
+        }
+
+        .numerical-input-field.matched {
+            border-color: #2ea043;
+        }
+
+        .numerical-feedback {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.82rem;
+            margin-top: 0.5rem;
+            min-height: 1.2rem;
+            color: var(--accent-color);
+            opacity: 0.9;
+        }
+
+        .numerical-feedback.matched {
+            color: #3fb950;
+            font-weight: bold;
+        }
+
+        .numerical-feedback.error {
+            color: #f85149;
+        }
     </style>
 <body>
     <div id="app-wrapper">

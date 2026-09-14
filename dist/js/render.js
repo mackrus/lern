@@ -30,6 +30,7 @@ import {
 import { State } from "./state.js";
 import { UI, translate } from "./ui.js";
 import { typstWasm } from "./typst-renderer.js";
+import { isNumericalQuestion, matchAlternative, cleanTypstMath } from "./math-evaluator.js";
 
 function jsLevenshtein(s1, s2) {
     const len1 = s1.length;
@@ -200,6 +201,19 @@ export const Renderer = {
         if (input && !input.disabled) {
             select_answer(input.value);
         }
+        const numInput = document.getElementById("numerical-answer-input");
+        if (numInput && !numInput.disabled) {
+            const currentIndex = get_current_question_index();
+            const currentQuestion = State.currentQuestionsList ? State.currentQuestionsList[currentIndex] : null;
+            if (currentQuestion) {
+                if (!State.numericalInputs) State.numericalInputs = {};
+                State.numericalInputs[currentQuestion.id] = numInput.value;
+                const match = matchAlternative(numInput.value, currentQuestion);
+                if (match.matchedIndex >= 0) {
+                    select_answer(match.matchedIndex.toString());
+                }
+            }
+        }
     },
 
     renderHeader(graded) {
@@ -272,8 +286,223 @@ export const Renderer = {
         
         if (currentQuestion.is_text_input) {
             this.renderTextInput(alternativesDiv, currentQuestion, graded);
+        } else if (isNumericalQuestion(currentQuestion)) {
+            this.renderNumericalQuestion(alternativesDiv, currentQuestion, graded);
         } else {
             this.renderStandardAlternatives(alternativesDiv, currentQuestion, graded);
+        }
+    },
+
+    renderNumericalQuestion(container, currentQuestion, graded) {
+        container.style.display = "block";
+        const toggleAltBtn = document.getElementById("toggle-alt-btn");
+        const selection = get_current_selection();
+
+        // 1. Numerical input container
+        const numericalContainer = document.createElement("div");
+        numericalContainer.className = "numerical-container";
+
+        // Symbols toolbar
+        const toolbar = document.createElement("div");
+        toolbar.className = "symbol-toolbar";
+
+        const symbols = [
+            { label: "π", insert: "pi" },
+            { label: "e", insert: "e" },
+            { label: "√", insert: "sqrt(" },
+            { label: "^", insert: "^" },
+            { label: "/", insert: "/" },
+            { label: "*", insert: "*" },
+            { label: "i", insert: "i" },
+            { label: "(", insert: "(" },
+            { label: ")", insert: ")" },
+            { label: "+", insert: "+" },
+            { label: "-", insert: "-" }
+        ];
+
+        // Input element
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = "numerical-answer-input";
+        input.className = "numerical-input-field";
+        input.placeholder = "Type numerical answer (e.g. 2pi, 1/2, -4, sqrt(2))...";
+        input.autocomplete = "off";
+        input.spellcheck = false;
+
+        symbols.forEach(s => {
+            const symBtn = document.createElement("button");
+            symBtn.className = "symbol-btn";
+            symBtn.innerText = s.label;
+            symBtn.type = "button";
+            symBtn.title = `Insert ${s.label}`;
+            if (graded) {
+                symBtn.style.opacity = "0.35";
+                symBtn.style.pointerEvents = "none";
+            } else {
+                symBtn.onclick = (e) => {
+                    e.preventDefault();
+                    if (input.disabled) return;
+                    const start = input.selectionStart || 0;
+                    const end = input.selectionEnd || 0;
+                    const val = input.value;
+                    input.value = val.slice(0, start) + s.insert + val.slice(end);
+                    const newPos = start + s.insert.length;
+                    input.setSelectionRange(newPos, newPos);
+                    input.focus();
+                    input.dispatchEvent(new Event("input"));
+                };
+            }
+            toolbar.appendChild(symBtn);
+        });
+
+        numericalContainer.appendChild(toolbar);
+
+        // Pre-fill input value
+        let savedVal = (State.numericalInputs && State.numericalInputs[currentQuestion.id]) || "";
+        if (!savedVal && selection !== null && selection !== undefined && !graded) {
+            const selectedIdx = parseInt(selection);
+            if (!isNaN(selectedIdx) && currentQuestion.alternatives[selectedIdx]) {
+                savedVal = cleanTypstMath(currentQuestion.alternatives[selectedIdx].content_raw);
+            }
+        }
+        input.value = savedVal;
+        input.disabled = graded;
+        numericalContainer.appendChild(input);
+
+        // Feedback / Live preview line
+        const feedback = document.createElement("div");
+        feedback.id = "numerical-feedback";
+        feedback.className = "numerical-feedback";
+        numericalContainer.appendChild(feedback);
+
+        container.appendChild(numericalContainer);
+
+        // 2. Options container (Multiple Choice buttons)
+        const optionsContainer = document.createElement("div");
+        optionsContainer.id = "numerical-options-container";
+
+        if (!graded && toggleAltBtn && toggleAltBtn.dataset.state === "hidden") {
+            optionsContainer.style.display = "none";
+        } else {
+            optionsContainer.style.display = "block";
+        }
+
+        const altButtons = [];
+        const count = currentQuestion.alternatives.length;
+        for (let i = 0; i < count; i++) {
+            const btn = document.createElement("button");
+            btn.className = "alternative";
+            btn.innerHTML = get_alternative_html(i);
+
+            const alt = currentQuestion.alternatives[i];
+            if (typstWasm.enabled && alt && alt.content_raw) {
+                typstWasm.compile(alt.content_raw, "alternative").then(res => {
+                    if (res && res.svg) {
+                        btn.innerHTML = res.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+
+            if (graded) {
+                const isSelected = selection === i.toString();
+                const isCorrect = is_alternative_correct(i);
+                if (isCorrect) {
+                    btn.classList.add("graded-correct");
+                } else if (isSelected) {
+                    btn.classList.add("graded-incorrect");
+                } else {
+                    btn.classList.add("graded-neutral");
+                }
+                if (isSelected) btn.classList.add("selected");
+            } else {
+                if (selection === i.toString()) btn.classList.add("selected");
+                btn.onclick = () => {
+                    select_answer(i.toString());
+                    const cleanAlt = cleanTypstMath(alt.content_raw);
+                    input.value = cleanAlt;
+                    if (!State.numericalInputs) State.numericalInputs = {};
+                    State.numericalInputs[currentQuestion.id] = cleanAlt;
+                    State.save();
+                    this.renderQuiz();
+                };
+            }
+            altButtons.push(btn);
+            optionsContainer.appendChild(btn);
+        }
+
+        container.appendChild(optionsContainer);
+
+        // Update live evaluation & matching
+        const updateEvaluation = () => {
+            const val = input.value.trim();
+            if (!State.numericalInputs) State.numericalInputs = {};
+            State.numericalInputs[currentQuestion.id] = input.value;
+
+            if (!val) {
+                feedback.className = "numerical-feedback";
+                feedback.innerText = "";
+                input.classList.remove("matched");
+                return;
+            }
+
+            const match = matchAlternative(val, currentQuestion);
+            if (match.userVal) {
+                const formatted = match.userVal.format();
+                if (match.matchedIndex >= 0) {
+                    feedback.className = "numerical-feedback matched";
+                    feedback.innerText = `= ${formatted} (Matches Option ${match.matchedIndex + 1})`;
+                    input.classList.add("matched");
+
+                    select_answer(match.matchedIndex.toString());
+                    altButtons.forEach((b, idx) => {
+                        if (idx === match.matchedIndex) b.classList.add("selected");
+                        else b.classList.remove("selected");
+                    });
+                } else {
+                    feedback.className = "numerical-feedback";
+                    feedback.innerText = `= ${formatted}`;
+                    input.classList.remove("matched");
+                }
+            } else {
+                feedback.className = "numerical-feedback";
+                feedback.innerText = "";
+                input.classList.remove("matched");
+            }
+        };
+
+        if (graded) {
+            const selIdx = selection !== null ? parseInt(selection) : NaN;
+            const isCorrect = !isNaN(selIdx) && is_alternative_correct(selIdx);
+            if (isCorrect) {
+                input.classList.add("graded-correct");
+                feedback.className = "numerical-feedback matched";
+                feedback.innerText = "✓ Correct";
+            } else if (!isNaN(selIdx)) {
+                input.classList.add("graded-incorrect");
+                feedback.className = "numerical-feedback error";
+                const correctIdx = currentQuestion.alternatives.findIndex(a => a.is_correct);
+                const correctAlt = currentQuestion.alternatives[correctIdx];
+                const correctClean = correctAlt ? cleanTypstMath(correctAlt.content_raw) : "";
+                feedback.innerText = `✗ Incorrect (Correct: ${correctClean || `Option ${correctIdx + 1}`})`;
+            } else {
+                feedback.className = "numerical-feedback error";
+                feedback.innerText = "No answer given";
+            }
+        } else {
+            input.oninput = updateEvaluation;
+            input.onkeydown = (e) => {
+                if (e.key === "Enter") {
+                    updateEvaluation();
+                    State.save();
+                    next_question();
+                    this.renderQuiz();
+                }
+            };
+            if (input.value) {
+                updateEvaluation();
+            }
+            setTimeout(() => input.focus(), 20);
         }
     },
 
@@ -744,7 +973,10 @@ export const Renderer = {
             } else {
                 // MC: get the alternative HTML via WASM (needs correct question context)
                 set_question_index(idx);
-                const altHtml = get_alternative_html(parseInt(sel));
+                let typedPrefix = "";
+                if (State.numericalInputs && State.numericalInputs[question.id]) {
+                    typedPrefix = `<div style="font-family: monospace; font-size: 0.85rem; margin-bottom: 0.35rem; color: var(--accent-color);">Typed: <strong>${State.numericalInputs[question.id]}</strong></div>`;
+                }
                 if (altHtml) {
                     // Check if it contains an img (photo quiz) — show as thumbnail
                     if (altHtml.includes("<img")) {
@@ -757,12 +989,12 @@ export const Renderer = {
                             img.style.display = "inline-block";
                             img.style.verticalAlign = "middle";
                         }
-                        userAnswerHtml = wrapper.innerHTML;
+                        userAnswerHtml = typedPrefix + wrapper.innerHTML;
                     } else {
-                        userAnswerHtml = `<strong class="answer-incorrect">${altHtml}</strong>`;
+                        userAnswerHtml = `${typedPrefix}<strong class="answer-incorrect">${altHtml}</strong>`;
                     }
                 } else {
-                    userAnswerHtml = `<span class="answer-missing">Invalid selection</span>`;
+                    userAnswerHtml = `${typedPrefix}<span class="answer-missing">Invalid selection</span>`;
                 }
             }
 
