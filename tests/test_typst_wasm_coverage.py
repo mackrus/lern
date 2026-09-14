@@ -60,6 +60,9 @@ class TestTypstWasmCoverage(unittest.TestCase):
         self.assertIn("typstWasm.compile(currentQuestion.question_raw", render_code)
         self.assertIn("typstWasm.compile(alt.content_raw", render_code)
         self.assertIn("typstWasm.compile(currentQuestion.explanation_raw", render_code)
+        self.assertIn("typstWasm.compile(question.question_raw", render_code)
+        self.assertIn("typstWasm.compile(question.explanation_raw", render_code)
+        self.assertIn("typstWasm.compile(altObj.content_raw", render_code)
 
         with open(INDEX_HTML, "r", encoding="utf-8") as f:
             html_code = f.read()
@@ -189,6 +192,37 @@ class TestTypstWasmCoverage(unittest.TestCase):
             + "\n".join(f"  {e[0]} ({e[1]}): {e[3]}" for e in errors[:10]),
         )
 
+    def test_biology_typst_wasm_generation(self):
+        """Verify biology module generates valid Typst raw code for text questions and alternatives."""
+        library_path = "content/biology/växtkännedom_(svenska)/questions/library.json"
+        self.assertTrue(os.path.exists(library_path))
+        with open(library_path, "r", encoding="utf-8") as f:
+            library = json.load(f)
+
+        # Test generation logic with node
+        cmd = [
+            "node", "-e",
+            """
+            global.window = global;
+            global.document = { querySelectorAll: () => [] };
+            import('./dist/js/biology.js').then(({ Biology }) => {
+                import('node:fs').then(fs => {
+                    const lib = JSON.parse(fs.readFileSync('""" + library_path + """', 'utf8'));
+                    const courseData = lib.map((p, idx) => ({ ...p, index: idx }));
+                    const q = Biology.generateQuestion(courseData[0], 0, 'common_name', 'latin_name', false, true, courseData);
+                    if (!q.question_raw || !q.explanation_raw || !q.alternatives[0].content_raw) {
+                        process.exit(1);
+                    }
+                    console.log('OK');
+                });
+            });
+            """
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        self.assertEqual(res.returncode, 0, f"Biology question generation failed: {res.stderr}")
+        self.assertIn("OK", res.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
+

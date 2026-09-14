@@ -1048,15 +1048,49 @@ export const Renderer = {
 
             item.innerHTML = `
                 <div style="font-weight: bold; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${translate("question_num").replace("{num}", idx + 1)}</div>
-                <div style="margin-bottom: 1.5rem;">${qHtml}</div>
+                <div class="review-question" style="margin-bottom: 1.5rem;">${qHtml}</div>
                 <div class="user-answer-summary" style="margin-bottom: 1.5rem;">
-                    <div><span class="label">${translate("your_answer")}:</span> ${userAnswerHtml}</div>
+                    <div><span class="label">${translate("your_answer")}:</span> <span class="review-user-answer">${userAnswerHtml}</span></div>
                 </div>
                 <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
-                    <strong>${translate("explanation")}:</strong><br>${eHtml || noExplanation}
+                    <strong>${translate("explanation")}:</strong><br><div class="review-explanation">${eHtml || noExplanation}</div>
                 </div>
             `;
             incorrectList.appendChild(item);
+
+            if (typstWasm.enabled && question) {
+                const qEl = item.querySelector(".review-question");
+                if (qEl && question.question_raw) {
+                    typstWasm.compile(question.question_raw, "question").then(res => {
+                        if (res && res.svg) {
+                            qEl.innerHTML = res.svg;
+                            UI.fixSvgs();
+                        }
+                    });
+                }
+
+                const eEl = item.querySelector(".review-explanation");
+                if (eEl && question.explanation_raw) {
+                    typstWasm.compile(question.explanation_raw, "study").then(res => {
+                        if (res && res.svg) {
+                            eEl.innerHTML = res.svg;
+                            UI.fixSvgs();
+                        }
+                    });
+                }
+
+                const selIdx = parseInt(sel);
+                const altObj = question.alternatives && !isNaN(selIdx) ? question.alternatives[selIdx] : null;
+                const ansEl = item.querySelector(".review-user-answer");
+                if (ansEl && altObj && altObj.content_raw) {
+                    typstWasm.compile(altObj.content_raw, "alternative").then(res => {
+                        if (res && res.svg) {
+                            ansEl.innerHTML = `<strong class="answer-incorrect">${res.svg}</strong>`;
+                            UI.fixSvgs();
+                        }
+                    });
+                }
+            }
         });
 
         // Restore the question index
