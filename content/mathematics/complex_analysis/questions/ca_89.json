@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 10",
             "topic": "Problem I.3: Laurent Series of Logarithmic Ratio"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.3",
+            "topic": "Laurent Series Representations",
+            "url": "https://complexanalysis.org/web/sec_laurent-series.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "5.2",
+            "topic": "The Complex Logarithm",
+            "url": "https://complexanalysis.org/web/sec_complex-log.html"
         }
     ],
     "difficulty": "medium"

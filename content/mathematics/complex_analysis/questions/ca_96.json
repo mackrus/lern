@@ -15,6 +15,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 12",
             "topic": "Problem J.6: Fourier Transform via Residues"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "8.4",
+            "topic": "Improper Integrals of Trigonometric Functions",
+            "url": "https://complexanalysis.org/web/sec_improper-trig-integrals.html"
         }
     ],
     "difficulty": "medium"

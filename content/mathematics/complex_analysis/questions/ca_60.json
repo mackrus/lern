@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 6",
             "topic": "Problem E.1: Arc Length Integral of Chord Length"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.1",
+            "topic": "Complex Integrals",
+            "url": "https://complexanalysis.org/web/sec_complex-integrals.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.2",
+            "topic": "Contours and Contour Integrals",
+            "url": "https://complexanalysis.org/web/sec_contour-integrals.html"
         }
     ],
     "difficulty": "medium"

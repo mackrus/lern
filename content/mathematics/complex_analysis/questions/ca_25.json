@@ -15,6 +15,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 1",
             "topic": "Problem A.1: Point Sets in the Complex Plane"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "1.6",
+            "topic": "The Topology of Complex Numbers",
+            "url": "https://complexanalysis.org/web/sec_topology.html"
         }
     ],
     "difficulty": "easy"

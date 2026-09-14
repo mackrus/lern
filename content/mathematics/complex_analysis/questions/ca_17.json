@@ -20,6 +20,18 @@
             "book": "Lecture Note 7",
             "chapter": "12",
             "topic": "Examples of Power Series and Laurent Series"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "4.4",
+            "topic": "Power Series Functions",
+            "url": "https://complexanalysis.org/web/sec_power-series.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.2",
+            "topic": "Taylor Series Representations",
+            "url": "https://complexanalysis.org/web/sec_taylor-series.html"
         }
     ],
     "difficulty": "medium"

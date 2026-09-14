@@ -873,7 +873,12 @@ export const Renderer = {
     buildReferencesHtml(refs) {
         let html = `<h4 style='margin-top: 0; opacity: 0.8;'>${translate("read_about_this")}</h4><ul style='margin-bottom: 0; padding-left: 1.5rem;'>`;
         refs.forEach(ref => {
-            html += `<li><strong>${ref.book}</strong>, Chapter ${ref.chapter}${ref.topic ? ` (${ref.topic})` : ""}</li>`;
+            const chapterAndTopic = `Chapter ${ref.chapter}${ref.topic ? ` (${ref.topic})` : ""}`;
+            if (ref.url) {
+                html += `<li><strong>${ref.book}</strong>, <a href="${ref.url}" target="_blank" rel="noopener noreferrer">${chapterAndTopic}</a></li>`;
+            } else {
+                html += `<li><strong>${ref.book}</strong>, ${chapterAndTopic}</li>`;
+            }
         });
         html += "</ul>";
         return html;

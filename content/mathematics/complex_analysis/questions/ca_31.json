@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 1",
             "topic": "Problem A.7: Conjugate Symmetry of Complex Exponential"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "5.1",
+            "topic": "The Complex Exponential Function",
+            "url": "https://complexanalysis.org/web/sec_exponential-function.html"
         }
     ],
     "difficulty": "easy"

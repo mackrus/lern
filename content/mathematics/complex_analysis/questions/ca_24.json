@@ -30,6 +30,12 @@
             "book": "Lecture Note 10",
             "chapter": "16",
             "topic": "Application of Residue theorem"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "8.4",
+            "topic": "Improper Integrals of Trigonometric Functions",
+            "url": "https://complexanalysis.org/web/sec_improper-trig-integrals.html"
         }
     ],
     "difficulty": "hard"

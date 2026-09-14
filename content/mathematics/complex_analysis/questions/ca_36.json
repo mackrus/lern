@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 2",
             "topic": "Problem B.2: Constant Modulus Theorem"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "3.2",
+            "topic": "The Cauchy-Riemann Equations",
+            "url": "https://complexanalysis.org/web/sec_cauchy-riemann.html"
         }
     ],
     "difficulty": "medium"

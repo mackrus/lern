@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 9",
             "topic": "Problem H.6: Determining an Analytic Function from Sequence Values"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.5",
+            "topic": "Applications of Taylor and Laurent Series",
+            "url": "https://complexanalysis.org/web/sec_taylor-laurent-apps.html"
         }
     ],
     "difficulty": "medium"

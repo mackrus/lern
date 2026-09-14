@@ -15,6 +15,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 10",
             "topic": "Problem I.4: Classification of Isolated Singularities"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.4",
+            "topic": "Singularities, Zeros, and Poles",
+            "url": "https://complexanalysis.org/web/sec_singularities.html"
         }
     ],
     "difficulty": "easy"

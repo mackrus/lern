@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 1",
             "topic": "Problem A.4: Principal Value of the Complex Logarithm"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "5.2",
+            "topic": "The Complex Logarithm",
+            "url": "https://complexanalysis.org/web/sec_complex-log.html"
         }
     ],
     "difficulty": "easy"

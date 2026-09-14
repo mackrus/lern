@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 7",
             "topic": "Problem F.1: Pointwise and Uniform Convergence of Power Sequences"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "4.1",
+            "topic": "Sequences and Series",
+            "url": "https://complexanalysis.org/web/sec_sequences-series.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.1",
+            "topic": "Uniform Convergence",
+            "url": "https://complexanalysis.org/web/sec_uniform-convergence.html"
         }
     ],
     "difficulty": "medium"

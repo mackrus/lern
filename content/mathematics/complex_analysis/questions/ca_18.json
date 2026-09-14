@@ -25,6 +25,18 @@
             "book": "Lecture Note 8",
             "chapter": "13",
             "topic": "Isolated Zeros, and function behavior near them"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.4",
+            "topic": "Singularities, Zeros, and Poles",
+            "url": "https://complexanalysis.org/web/sec_singularities.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.5",
+            "topic": "Applications of Taylor and Laurent Series",
+            "url": "https://complexanalysis.org/web/sec_taylor-laurent-apps.html"
         }
     ],
     "difficulty": "medium"

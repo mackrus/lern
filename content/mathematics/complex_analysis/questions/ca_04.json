@@ -20,6 +20,18 @@
             "book": "Lecture Note 1",
             "chapter": "2",
             "topic": "Elementary functions"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "1.4",
+            "topic": "The Geometry of Complex Numbers, Part II",
+            "url": "https://complexanalysis.org/web/sec_geometry-2.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "2.2",
+            "topic": "The Mappings  and",
+            "url": "https://complexanalysis.org/web/sec_z_n.html"
         }
     ],
     "difficulty": "medium"

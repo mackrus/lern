@@ -4,9 +4,9 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "Argument Principle and Rouché's theorem (LN10)",
+    "label": "Argument Principle and Rouch\u00e9's theorem (LN10)",
     "topics": [
-        "Rouché's Theorem",
+        "Rouch\u00e9's Theorem",
         "Argument Principle",
         "Zeros of Analytic Functions"
     ],
@@ -14,7 +14,7 @@
         {
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "7.88",
-            "topic": "Rouché's Theorem"
+            "topic": "Rouch\u00e9's Theorem"
         },
         {
             "book": "Churchill & Brown (9th ed.)",
@@ -24,7 +24,13 @@
         {
             "book": "Lecture Note 10",
             "chapter": "18",
-            "topic": "Argument Principle and Rouché's theorem"
+            "topic": "Argument Principle and Rouch\u00e9's theorem"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "8.7",
+            "topic": "The Argument Principle and Rouch\u00e9\u2019s Theorem",
+            "url": "https://complexanalysis.org/web/sec_argument-rouche.html"
         }
     ],
     "difficulty": "medium"

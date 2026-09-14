@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 3",
             "topic": "Problem C.2: M\u00f6bius Map from Disk to Upper Half Plane"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "9.2",
+            "topic": "Bilinear Transformations",
+            "url": "https://complexanalysis.org/web/sec_bilinear-transformations.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "9.1",
+            "topic": "Basic Properties of Conformal Mappings",
+            "url": "https://complexanalysis.org/web/sec_conformal-mappings.html"
         }
     ],
     "difficulty": "medium"

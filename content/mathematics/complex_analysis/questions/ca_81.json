@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 9",
             "topic": "Problem H.1: Order of a Zero via Taylor Series"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.2",
+            "topic": "Taylor Series Representations",
+            "url": "https://complexanalysis.org/web/sec_taylor-series.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.4",
+            "topic": "Singularities, Zeros, and Poles",
+            "url": "https://complexanalysis.org/web/sec_singularities.html"
         }
     ],
     "difficulty": "medium"

@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 5",
             "topic": "Problem D.3: Harmonic Function in Semi-Disk"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "10.2",
+            "topic": "The Dirichlet Problem",
+            "url": "https://complexanalysis.org/web/sec_dirichlet-problem.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "10.3",
+            "topic": "Poisson\u2019s Integral Formula",
+            "url": "https://complexanalysis.org/web/sec_poisson-integral-formula.html"
         }
     ],
     "difficulty": "medium"

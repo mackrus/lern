@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 4",
             "topic": "Problem C.8: Conformal Map of Region Between Tangent Circles"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "9.1",
+            "topic": "Basic Properties of Conformal Mappings",
+            "url": "https://complexanalysis.org/web/sec_conformal-mappings.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "9.3",
+            "topic": "Mappings Involving Elementary Functions",
+            "url": "https://complexanalysis.org/web/sec_elementary-mappings.html"
         }
     ],
     "difficulty": "hard"

@@ -11,6 +11,7 @@ pub struct Reference {
     pub book: String,
     pub chapter: String,
     pub topic: Option<String>,
+    pub url: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

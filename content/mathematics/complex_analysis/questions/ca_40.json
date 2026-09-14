@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 2",
             "topic": "Problem B.6: Derivative Identity for Harmonic Conjugate Products"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "3.3",
+            "topic": "Harmonic Functions",
+            "url": "https://complexanalysis.org/web/sec_harmonic-functions.html"
         }
     ],
     "difficulty": "hard"

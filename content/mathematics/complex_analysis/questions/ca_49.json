@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 3",
             "topic": "Problem C.5: Circular Region to Circular Triangle"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "9.2",
+            "topic": "Bilinear Transformations",
+            "url": "https://complexanalysis.org/web/sec_bilinear-transformations.html"
         }
     ],
     "difficulty": "hard"

@@ -15,6 +15,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 12",
             "topic": "Problem J.7: Branch Point Integral via Keyhole Contour"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "8.6",
+            "topic": "Integrands with Branch Points",
+            "url": "https://complexanalysis.org/web/sec_branch-integrands.html"
         }
     ],
     "difficulty": "hard"

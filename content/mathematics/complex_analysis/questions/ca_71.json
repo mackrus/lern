@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 7",
             "topic": "Problem F.2: Convergence of Reciprocal Geometric Sum"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "4.1",
+            "topic": "Sequences and Series",
+            "url": "https://complexanalysis.org/web/sec_sequences-series.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "4.3",
+            "topic": "Geometric Series and Convergence Theorems",
+            "url": "https://complexanalysis.org/web/sec_convergence-theorems.html"
         }
     ],
     "difficulty": "medium"

@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 1",
             "topic": "Problem A.10: Solving Complex Trigonometric Equations"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "5.4",
+            "topic": "Trigonometric and Hyperbolic Functions",
+            "url": "https://complexanalysis.org/web/sec_trig-hyperbolics.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "5.5",
+            "topic": "Inverse Trigonometric and Hyperbolic Functions",
+            "url": "https://complexanalysis.org/web/sec_inverse-trig-hyperbolics.html"
         }
     ],
     "difficulty": "medium"

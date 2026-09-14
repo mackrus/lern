@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 6",
             "topic": "Problem E.6: Integral Along a Logarithmic Spiral"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.4",
+            "topic": "The Fundamental Theorems of Integration",
+            "url": "https://complexanalysis.org/web/sec_integration-theorems.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.2",
+            "topic": "Contours and Contour Integrals",
+            "url": "https://complexanalysis.org/web/sec_contour-integrals.html"
         }
     ],
     "difficulty": "hard"

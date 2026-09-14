@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 6",
             "topic": "Problem E.10: Liouville's Theorem for Harmonic Functions"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.6",
+            "topic": "The Theorems of Morera and Liouville",
+            "url": "https://complexanalysis.org/web/sec_morera-liouville.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "3.3",
+            "topic": "Harmonic Functions",
+            "url": "https://complexanalysis.org/web/sec_harmonic-functions.html"
         }
     ],
     "difficulty": "medium"

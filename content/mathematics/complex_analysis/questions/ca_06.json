@@ -20,6 +20,12 @@
             "book": "Lecture Note 1",
             "chapter": "2",
             "topic": "Elementary functions"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "5.3",
+            "topic": "Complex Exponents",
+            "url": "https://complexanalysis.org/web/sec_complex-exponents.html"
         }
     ],
     "difficulty": "medium"

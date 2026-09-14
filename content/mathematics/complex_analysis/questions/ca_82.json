@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 9",
             "topic": "Problem H.2: Zeros and Orders of Hyperbolic Combinations"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "5.4",
+            "topic": "Trigonometric and Hyperbolic Functions",
+            "url": "https://complexanalysis.org/web/sec_trig-hyperbolics.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.4",
+            "topic": "Singularities, Zeros, and Poles",
+            "url": "https://complexanalysis.org/web/sec_singularities.html"
         }
     ],
     "difficulty": "medium"

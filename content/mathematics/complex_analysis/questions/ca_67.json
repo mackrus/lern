@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 6",
             "topic": "Problem E.8: Closed Path Integral Enclosing Poles"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.5",
+            "topic": "Cauchy Integral Formulas",
+            "url": "https://complexanalysis.org/web/sec_cauchy-integral-formulas.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.6",
+            "topic": "The Theorems of Morera and Liouville",
+            "url": "https://complexanalysis.org/web/sec_morera-liouville.html"
         }
     ],
     "difficulty": "medium"

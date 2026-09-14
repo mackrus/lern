@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 5",
             "topic": "Problem D.5: Dirichlet Problem in the First Quadrant"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "10.2",
+            "topic": "The Dirichlet Problem",
+            "url": "https://complexanalysis.org/web/sec_dirichlet-problem.html"
         }
     ],
     "difficulty": "hard"

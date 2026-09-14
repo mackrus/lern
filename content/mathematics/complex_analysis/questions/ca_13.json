@@ -25,6 +25,12 @@
             "book": "Lecture Note 5",
             "chapter": "9",
             "topic": "Applications of Cauchy integral formulae; Liouville's theorem, fundamental theorem of Algebra, maximum modulus principle"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.6",
+            "topic": "The Theorems of Morera and Liouville",
+            "url": "https://complexanalysis.org/web/sec_morera-liouville.html"
         }
     ],
     "difficulty": "medium"

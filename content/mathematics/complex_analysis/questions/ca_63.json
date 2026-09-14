@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 6",
             "topic": "Problem E.4: Parameter-Dependent Cauchy Integral"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "6.5",
+            "topic": "Cauchy Integral Formulas",
+            "url": "https://complexanalysis.org/web/sec_cauchy-integral-formulas.html"
         }
     ],
     "difficulty": "medium"

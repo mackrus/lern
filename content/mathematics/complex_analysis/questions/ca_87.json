@@ -15,6 +15,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 10",
             "topic": "Problem I.1: Laurent Series in Outer Annular Region"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.3",
+            "topic": "Laurent Series Representations",
+            "url": "https://complexanalysis.org/web/sec_laurent-series.html"
         }
     ],
     "difficulty": "hard"

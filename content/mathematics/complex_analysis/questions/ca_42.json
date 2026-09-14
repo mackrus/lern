@@ -14,6 +14,18 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 2",
             "topic": "Problem B.8: Polynomial Analytic Functions"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "3.1",
+            "topic": "Differentiable and Analytic Functions",
+            "url": "https://complexanalysis.org/web/sec_diff-analytic.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "3.2",
+            "topic": "The Cauchy-Riemann Equations",
+            "url": "https://complexanalysis.org/web/sec_cauchy-riemann.html"
         }
     ],
     "difficulty": "medium"

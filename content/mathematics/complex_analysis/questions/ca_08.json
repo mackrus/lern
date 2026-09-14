@@ -20,6 +20,12 @@
             "book": "Lecture Note 3",
             "chapter": "4",
             "topic": "CR-eq in polar coordinates, analytic functions"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "3.3",
+            "topic": "Harmonic Functions",
+            "url": "https://complexanalysis.org/web/sec_harmonic-functions.html"
         }
     ],
     "difficulty": "medium"

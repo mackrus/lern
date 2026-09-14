@@ -14,6 +14,12 @@
             "book": "Uppsala University 1MA022 (Spring 2026)",
             "chapter": "Session 8",
             "topic": "Problem G.4: Taylor Coefficients of Composite Exponential Function"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "7.2",
+            "topic": "Taylor Series Representations",
+            "url": "https://complexanalysis.org/web/sec_taylor-series.html"
         }
     ],
     "difficulty": "medium"

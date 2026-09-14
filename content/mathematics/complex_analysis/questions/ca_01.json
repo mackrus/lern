@@ -20,6 +20,18 @@
             "book": "Lecture Note 1",
             "chapter": "1",
             "topic": "Complex numbers, Elementary functions"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "1.2",
+            "topic": "The Algebra of Complex Numbers, Part I",
+            "url": "https://complexanalysis.org/web/sec_algebra-1.html"
+        },
+        {
+            "book": "Howell & Mathews: Complex Analysis",
+            "chapter": "1.5",
+            "topic": "The Algebra of Complex Numbers, Part II",
+            "url": "https://complexanalysis.org/web/sec_algebra-2.html"
         }
     ],
     "difficulty": "easy"
