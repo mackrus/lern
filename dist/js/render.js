@@ -25,12 +25,13 @@ import {
     get_incorrect_indices,
     get_question_html_by_index,
     get_explanation_html_by_index,
-    get_references_json_by_index
+    get_references_json_by_index,
+    restore_quiz_state
 } from "../pkg/lern.js";
 import { State } from "./state.js";
 import { UI, translate } from "./ui.js";
 import { typstWasm } from "./typst-renderer.js";
-import { isNumericalQuestion, matchAlternative, cleanTypstMath } from "./math-evaluator.js";
+import { isNumericalQuestion, matchAlternative, cleanTypstMath, evaluateMath } from "./math-evaluator.js";
 
 function jsLevenshtein(s1, s2) {
     const len1 = s1.length;
@@ -208,11 +209,40 @@ export const Renderer = {
             if (currentQuestion) {
                 if (!State.numericalInputs) State.numericalInputs = {};
                 State.numericalInputs[currentQuestion.id] = numInput.value;
-                const match = matchAlternative(numInput.value, currentQuestion);
-                if (match.matchedIndex >= 0) {
-                    select_answer(match.matchedIndex.toString());
+                select_answer(numInput.value);
+            }
+        }
+    },
+
+    resolveNumericalAnswers() {
+        this.syncTextInput();
+        const selectionsJson = get_selections_json();
+        if (!selectionsJson) return;
+        const selections = JSON.parse(selectionsJson);
+        const questions = State.currentQuestionsList;
+        if (!questions || !Array.isArray(questions)) return;
+
+        let modified = false;
+        for (let i = 0; i < questions.length; i++) {
+            const q = questions[i];
+            if (isNumericalQuestion(q)) {
+                const typed = (State.numericalInputs && State.numericalInputs[q.id]) || selections[i];
+                if (typed && typeof typed === "string" && typed.trim().length > 0) {
+                    const match = matchAlternative(typed.trim(), q);
+                    if (match.matchedIndex >= 0) {
+                        selections[i] = match.matchedIndex.toString();
+                    } else {
+                        selections[i] = "999999";
+                    }
+                    modified = true;
+                } else {
+                    selections[i] = null;
                 }
             }
+        }
+
+        if (modified) {
+            restore_quiz_state(get_current_question_index(), JSON.stringify(selections), false);
         }
     },
 
@@ -295,8 +325,6 @@ export const Renderer = {
 
     renderNumericalQuestion(container, currentQuestion, graded) {
         container.style.display = "block";
-        const toggleAltBtn = document.getElementById("toggle-alt-btn");
-        const selection = get_current_selection();
 
         // 1. Numerical input container
         const numericalContainer = document.createElement("div");
@@ -359,17 +387,15 @@ export const Renderer = {
 
         // Pre-fill input value
         let savedVal = (State.numericalInputs && State.numericalInputs[currentQuestion.id]) || "";
-        if (!savedVal && selection !== null && selection !== undefined && !graded) {
-            const selectedIdx = parseInt(selection);
-            if (!isNaN(selectedIdx) && currentQuestion.alternatives[selectedIdx]) {
-                savedVal = cleanTypstMath(currentQuestion.alternatives[selectedIdx].content_raw);
-            }
+        const selection = get_current_selection();
+        if (!savedVal && selection && typeof selection === "string" && !selection.startsWith("999999")) {
+            savedVal = selection;
         }
         input.value = savedVal;
         input.disabled = graded;
         numericalContainer.appendChild(input);
 
-        // Feedback / Live preview line
+        // Live evaluation / graded feedback
         const feedback = document.createElement("div");
         feedback.id = "numerical-feedback";
         feedback.className = "numerical-feedback";
@@ -377,117 +403,49 @@ export const Renderer = {
 
         container.appendChild(numericalContainer);
 
-        // 2. Options container (Multiple Choice buttons)
-        const optionsContainer = document.createElement("div");
-        optionsContainer.id = "numerical-options-container";
-
-        if (!graded && toggleAltBtn && toggleAltBtn.dataset.state === "hidden") {
-            optionsContainer.style.display = "none";
-        } else {
-            optionsContainer.style.display = "block";
-        }
-
-        const altButtons = [];
-        const count = currentQuestion.alternatives.length;
-        for (let i = 0; i < count; i++) {
-            const btn = document.createElement("button");
-            btn.className = "alternative";
-            btn.innerHTML = get_alternative_html(i);
-
-            const alt = currentQuestion.alternatives[i];
-            if (typstWasm.enabled && alt && alt.content_raw) {
-                typstWasm.compile(alt.content_raw, "alternative").then(res => {
-                    if (res && res.svg) {
-                        btn.innerHTML = res.svg;
-                        UI.fixSvgs();
-                    }
-                });
-            }
-
-            if (graded) {
-                const isSelected = selection === i.toString();
-                const isCorrect = is_alternative_correct(i);
-                if (isCorrect) {
-                    btn.classList.add("graded-correct");
-                } else if (isSelected) {
-                    btn.classList.add("graded-incorrect");
-                } else {
-                    btn.classList.add("graded-neutral");
-                }
-                if (isSelected) btn.classList.add("selected");
-            } else {
-                if (selection === i.toString()) btn.classList.add("selected");
-                btn.onclick = () => {
-                    select_answer(i.toString());
-                    const cleanAlt = cleanTypstMath(alt.content_raw);
-                    input.value = cleanAlt;
-                    if (!State.numericalInputs) State.numericalInputs = {};
-                    State.numericalInputs[currentQuestion.id] = cleanAlt;
-                    State.save();
-                    this.renderQuiz();
-                };
-            }
-            altButtons.push(btn);
-            optionsContainer.appendChild(btn);
-        }
-
-        container.appendChild(optionsContainer);
-
-        // Update live evaluation & matching
+        // Live evaluation while typing: ONLY evaluate the user's math expression without checking alternatives
         const updateEvaluation = () => {
             const val = input.value.trim();
             if (!State.numericalInputs) State.numericalInputs = {};
             State.numericalInputs[currentQuestion.id] = input.value;
+            select_answer(input.value);
 
             if (!val) {
                 feedback.className = "numerical-feedback";
                 feedback.innerText = "";
-                input.classList.remove("matched");
                 return;
             }
 
-            const match = matchAlternative(val, currentQuestion);
-            if (match.userVal) {
-                const formatted = match.userVal.format();
-                if (match.matchedIndex >= 0) {
-                    feedback.className = "numerical-feedback matched";
-                    feedback.innerText = `= ${formatted} (Matches Option ${match.matchedIndex + 1})`;
-                    input.classList.add("matched");
-
-                    select_answer(match.matchedIndex.toString());
-                    altButtons.forEach((b, idx) => {
-                        if (idx === match.matchedIndex) b.classList.add("selected");
-                        else b.classList.remove("selected");
-                    });
-                } else {
-                    feedback.className = "numerical-feedback";
-                    feedback.innerText = `= ${formatted}`;
-                    input.classList.remove("matched");
-                }
+            const parsedVal = evaluateMath(val);
+            if (parsedVal) {
+                feedback.className = "numerical-feedback";
+                feedback.innerText = `= ${parsedVal.format()}`;
             } else {
                 feedback.className = "numerical-feedback";
                 feedback.innerText = "";
-                input.classList.remove("matched");
             }
         };
 
         if (graded) {
-            const selIdx = selection !== null ? parseInt(selection) : NaN;
-            const isCorrect = !isNaN(selIdx) && is_alternative_correct(selIdx);
+            const correctAlt = currentQuestion.alternatives.find(a => a.is_correct);
+            const correctVal = correctAlt ? evaluateMath(correctAlt.content_raw) : null;
+            const correctClean = correctAlt ? cleanTypstMath(correctAlt.content_raw) : "";
+            const userVal = evaluateMath(savedVal);
+            const isCorrect = userVal && correctVal && userVal.equals(correctVal);
+
             if (isCorrect) {
                 input.classList.add("graded-correct");
                 feedback.className = "numerical-feedback matched";
-                feedback.innerText = "✓ Correct";
-            } else if (!isNaN(selIdx)) {
+                feedback.innerText = `✓ Correct (= ${userVal.format()})`;
+            } else if (savedVal.trim()) {
                 input.classList.add("graded-incorrect");
                 feedback.className = "numerical-feedback error";
-                const correctIdx = currentQuestion.alternatives.findIndex(a => a.is_correct);
-                const correctAlt = currentQuestion.alternatives[correctIdx];
-                const correctClean = correctAlt ? cleanTypstMath(correctAlt.content_raw) : "";
-                feedback.innerText = `✗ Incorrect (Correct: ${correctClean || `Option ${correctIdx + 1}`})`;
+                const userStr = userVal ? `= ${userVal.format()}` : "";
+                feedback.innerHTML = `✗ Incorrect ${userStr}<br><span style="opacity: 0.9;">Expected: <strong>${correctVal ? correctVal.format() : correctClean}</strong> (${correctClean})</span>`;
             } else {
+                input.classList.add("graded-incorrect");
                 feedback.className = "numerical-feedback error";
-                feedback.innerText = "No answer given";
+                feedback.innerHTML = `No answer given.<br><span style="opacity: 0.9;">Expected: <strong>${correctVal ? correctVal.format() : correctClean}</strong> (${correctClean})</span>`;
             }
         } else {
             input.oninput = updateEvaluation;
@@ -725,7 +683,7 @@ export const Renderer = {
         if (graded) {
             toggleAltBtn.style.display = "none";
             altArea.style.display = "block";
-        } else if (currentQuestion.is_text_input) {
+        } else if (currentQuestion.is_text_input || isNumericalQuestion(currentQuestion)) {
             toggleAltBtn.style.display = "none";
             altArea.style.display = "block";
         } else {
@@ -970,13 +928,25 @@ export const Renderer = {
                 } else {
                     userAnswerHtml = `<strong class="answer-incorrect">${diffs.userHtml}</strong><br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
                 }
+            } else if (question && isNumericalQuestion(question)) {
+                const typed = (State.numericalInputs && State.numericalInputs[question.id]) || (sel !== null && sel !== undefined && !String(sel).startsWith("999999") ? String(sel) : "");
+                const correctAlt = question.alternatives ? question.alternatives.find(a => a.is_correct) : null;
+                const correctClean = correctAlt ? cleanTypstMath(correctAlt.content_raw) : "";
+                const correctVal = correctAlt ? evaluateMath(correctAlt.content_raw) : null;
+                const userVal = typed ? evaluateMath(typed) : null;
+
+                const userValStr = userVal ? `(= ${userVal.format()})` : "";
+                const correctValStr = correctVal ? correctVal.format() : correctClean;
+
+                if (!typed.trim()) {
+                    userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span><br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
+                } else {
+                    userAnswerHtml = `<strong class="answer-incorrect">${typed}</strong> ${userValStr}<br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
+                }
             } else {
                 // MC: get the alternative HTML via WASM (needs correct question context)
                 set_question_index(idx);
-                let typedPrefix = "";
-                if (State.numericalInputs && State.numericalInputs[question.id]) {
-                    typedPrefix = `<div style="font-family: monospace; font-size: 0.85rem; margin-bottom: 0.35rem; color: var(--accent-color);">Typed: <strong>${State.numericalInputs[question.id]}</strong></div>`;
-                }
+                const altHtml = get_alternative_html(parseInt(sel));
                 if (altHtml) {
                     // Check if it contains an img (photo quiz) — show as thumbnail
                     if (altHtml.includes("<img")) {
@@ -989,12 +959,12 @@ export const Renderer = {
                             img.style.display = "inline-block";
                             img.style.verticalAlign = "middle";
                         }
-                        userAnswerHtml = typedPrefix + wrapper.innerHTML;
+                        userAnswerHtml = wrapper.innerHTML;
                     } else {
-                        userAnswerHtml = `${typedPrefix}<strong class="answer-incorrect">${altHtml}</strong>`;
+                        userAnswerHtml = `<strong class="answer-incorrect">${altHtml}</strong>`;
                     }
                 } else {
-                    userAnswerHtml = `${typedPrefix}<span class="answer-missing">Invalid selection</span>`;
+                    userAnswerHtml = `<span class="answer-missing">Invalid selection</span>`;
                 }
             }
 

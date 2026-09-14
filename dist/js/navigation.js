@@ -333,6 +333,7 @@ export const Navigation = {
                 timerDiv.innerText = "00:00:00";
                 if (!is_graded()) {
                     alert("Time is up! Submitting exam.");
+                    Renderer.resolveNumericalAnswers();
                     grade_quiz();
                     State.save();
                     Renderer.renderQuiz();

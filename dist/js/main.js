@@ -96,7 +96,7 @@ function attachGlobalEventListeners() {
     if (gradeBtn) {
         gradeBtn.onclick = (e) => {
             e.preventDefault();
-            Renderer.syncTextInput();
+            Renderer.resolveNumericalAnswers();
             grade_quiz();
             
             // Update cumulative stats once per session
