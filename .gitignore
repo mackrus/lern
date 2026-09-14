@@ -7,4 +7,3 @@ __pycache__/
 *.pyc
 *.db
 node_modules/
-dist/js/*.wasm
