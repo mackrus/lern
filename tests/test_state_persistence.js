@@ -49,4 +49,68 @@ console.log("Running state persistence tests...");
     console.log("  ✓ 100 simulated page refreshes preserved exact question order");
 }
 
+// Test 3: Verify numerical inputs reset on new session and persist on reload
+{
+    // Simulated state manager
+    let storage = {};
+    const State = {
+        currentCourse: null,
+        currentSavedState: null,
+        numericalInputs: {},
+        load(courseName) {
+            const data = storage[`lern_progress_${courseName}`];
+            if (!data) return null;
+            return JSON.parse(data);
+        },
+        clear(courseName) {
+            this.numericalInputs = {};
+            this.currentSavedState = null;
+            delete storage[`lern_progress_${courseName}`];
+        },
+        save(courseName, state) {
+            this.currentSavedState = state;
+            storage[`lern_progress_${courseName}`] = JSON.stringify(state);
+        }
+    };
+
+    function startQuiz(courseName, mode, state = null) {
+        State.currentCourse = courseName;
+        const isRestoring = !!(state && state.selections);
+        if (isRestoring) {
+            State.currentSavedState = state;
+            State.numericalInputs = (state && state.numericalInputs) ? { ...state.numericalInputs } : {};
+        } else {
+            State.currentSavedState = null;
+            State.numericalInputs = {};
+            delete storage[`lern_progress_${courseName}`];
+        }
+    }
+
+    // Step 1: User starts quiz, enters an answer
+    startQuiz("Quantum Mechanics", "topic");
+    assert.deepStrictEqual(State.numericalInputs, {});
+    State.numericalInputs["qm_1"] = "2*pi";
+    State.save("Quantum Mechanics", {
+        mode: "topic",
+        selections: JSON.stringify(["2*pi"]),
+        numericalInputs: State.numericalInputs
+    });
+
+    // Step 2: Page reload in same session (isRestoring = true)
+    const saved = State.load("Quantum Mechanics");
+    startQuiz("Quantum Mechanics", "topic", saved);
+    assert.strictEqual(State.numericalInputs["qm_1"], "2*pi", "Must preserve input within same session on reload");
+
+    // Step 3: State.load should NOT side-effect in-memory state when querying other courses
+    storage["lern_progress_Thermodynamics"] = JSON.stringify({ numericalInputs: { "thermo_1": "100" } });
+    const thermoState = State.load("Thermodynamics");
+    assert.strictEqual(State.numericalInputs["thermo_1"], undefined, "State.load must not mutate active in-memory inputs");
+
+    // Step 4: Starting a NEW quiz session (isRestoring = false) must clear previous inputs
+    startQuiz("Quantum Mechanics", "six_easy");
+    assert.deepStrictEqual(State.numericalInputs, {}, "Must clear numerical inputs for new session");
+    assert.strictEqual(State.numericalInputs["qm_1"], undefined, "Must NOT reveal previous session answer");
+    console.log("  ✓ Numerical inputs reset on new session and do not leak across sessions");
+}
+
 console.log("All persistence tests passed!");

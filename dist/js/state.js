@@ -53,9 +53,7 @@ export const State = {
         const data = localStorage.getItem(`lern_progress_${courseName}`);
         if (!data) return null;
         try {
-            const parsed = JSON.parse(data);
-            this.numericalInputs = parsed && parsed.numericalInputs ? parsed.numericalInputs : {};
-            return parsed;
+            return JSON.parse(data);
         } catch (e) {
             console.error("Failed to parse progress state", e);
             return null;
@@ -64,6 +62,7 @@ export const State = {
 
     clear(courseName) {
         this.numericalInputs = {};
+        this.currentSavedState = null;
         localStorage.removeItem(`lern_progress_${courseName}`);
     },
 

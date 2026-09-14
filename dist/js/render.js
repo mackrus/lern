@@ -853,6 +853,9 @@ export const Renderer = {
         if (restartBtn) {
             restartBtn.innerText = translate("back_to_menu_btn");
             restartBtn.onclick = () => {
+                if (State.currentCourse) {
+                    State.clear(State.currentCourse);
+                }
                 import("./navigation.js").then(m => m.Navigation.showMenu());
             };
         }
@@ -939,13 +942,18 @@ export const Renderer = {
         const { State } = await import("./state.js");
         const { Navigation } = await import("./navigation.js");
         
-        if (State.currentMode === "biology_custom" && State.currentSavedState.bioParams) {
+        const course = State.currentCourse;
+        if (course) {
+            State.clear(course);
+        }
+
+        if (State.currentMode === "biology_custom" && State.currentSavedState && State.currentSavedState.bioParams) {
             const { qAttr, aAttr, limit, isTextInput } = State.currentSavedState.bioParams;
             const { Biology } = await import("./biology.js");
 
-            Biology.startQuiz(qAttr, aAttr, limit, isTextInput, State.currentCourse === "Växtkännedom (Svenska)");
+            Biology.startQuiz(qAttr, aAttr, limit, isTextInput, course === "Växtkännedom (Svenska)");
         } else {
-            Navigation.startQuiz(State.currentCourse, "topic", { selectedTopics: weaknesses });
+            Navigation.startQuiz(course, "topic", { selectedTopics: weaknesses });
         }
     },
 

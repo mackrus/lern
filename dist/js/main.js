@@ -78,13 +78,23 @@ function attachGlobalEventListeners() {
 
     const backToMenu = document.getElementById("back-to-menu");
     if (backToMenu) {
-        backToMenu.onclick = () => Navigation.showMenu();
+        backToMenu.onclick = () => {
+            if (is_graded() && State.currentCourse) {
+                State.clear(State.currentCourse);
+            }
+            Navigation.showMenu();
+        };
     }
     
     const middleLernLogo = document.querySelector("#menu h1 .lern-anim");
     if (middleLernLogo) {
         middleLernLogo.style.cursor = "pointer";
-        middleLernLogo.onclick = () => Navigation.showMenu();
+        middleLernLogo.onclick = () => {
+            if (is_graded() && State.currentCourse) {
+                State.clear(State.currentCourse);
+            }
+            Navigation.showMenu();
+        };
     }
 
     const gradeBtn = document.getElementById("grade-btn");

@@ -32,6 +32,7 @@ export const Navigation = {
         State.currentCategory = null;
         State.currentMode = null;
         State.currentSavedState = null;
+        State.numericalInputs = {};
         if (State.examTimerInterval) clearInterval(State.examTimerInterval);
         localStorage.removeItem("lern_last_course");
         
@@ -208,11 +209,20 @@ export const Navigation = {
     startQuiz(courseName, mode, state = null) {
         State.currentCourse = courseName;
         State.currentMode = mode;
-        State.currentSavedState = state;
         State.setLastCourse(courseName);
 
-        if (state && state.bioParams) {
-            State.currentSavedState.bioParams = state.bioParams;
+        const isRestoring = !!(state && state.selections);
+
+        if (isRestoring) {
+            State.currentSavedState = state;
+            State.numericalInputs = (state && state.numericalInputs) ? { ...state.numericalInputs } : {};
+            if (state && state.bioParams) {
+                State.currentSavedState.bioParams = state.bioParams;
+            }
+        } else {
+            State.currentSavedState = null;
+            State.numericalInputs = {};
+            localStorage.removeItem(`lern_progress_${courseName}`);
         }
 
         let categoryName = (state && state.category) ? state.category : State.currentCategory;
@@ -238,7 +248,6 @@ export const Navigation = {
         document.getElementById("quiz").style.display = "block";
 
         let questions = [];
-        const isRestoring = !!(state && state.selections);
 
         if (isRestoring) {
             // RESTORE existing quiz state without re-randomizing
