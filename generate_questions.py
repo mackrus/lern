@@ -130,7 +130,9 @@ for category in os.listdir(content_root):
                 ]
                 question_raw = "\n".join(clean_lines).strip()
 
-                for p in pages[1 : 1 + num_alts]:
+                for idx, p in enumerate(pages[1 : 1 + num_alts]):
+                    if idx == num_alts - 1:
+                        p = re.split(r"#\s*(?:expl_page|formulae_page|steps_page|prereq_page)", p)[0]
                     clean_p = [
                         line
                         for line in p.split("\n")
