@@ -458,6 +458,25 @@ export const Renderer = {
 
                 prereqDiv.innerHTML = tabsHtmlStr + `<div class="study-content">${activeTab.html}</div>`;
 
+                if (typstWasm.enabled && currentQuestion) {
+                    let rawStudy = null;
+                    if (activeTab.id === "prereqs") rawStudy = currentQuestion.prerequisites_raw;
+                    else if (activeTab.id === "formulae") rawStudy = currentQuestion.formulae_raw;
+                    else if (activeTab.id === "steps") rawStudy = currentQuestion.solution_steps_raw;
+
+                    if (rawStudy) {
+                        typstWasm.compile(rawStudy, "study").then(res => {
+                            if (res && res.svg) {
+                                const container = prereqDiv.querySelector(".study-content");
+                                if (container) {
+                                    container.innerHTML = res.svg;
+                                    UI.fixSvgs();
+                                }
+                            }
+                        });
+                    }
+                }
+
                 prereqDiv.querySelectorAll(".study-tab-btn").forEach(btn => {
                     btn.onclick = (e) => {
                         e.preventDefault();
