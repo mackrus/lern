@@ -30,6 +30,12 @@ for (const [category, courses] of Object.entries(db)) {
             }
             assert.ok(question.question_raw || question.question_html || question.common_name, `${questionId}: missing question content`);
 
+            if (question.references && question.references.length > 0) {
+                for (const ref of question.references) {
+                    assert.ok(ref.book && ref.chapter, `${questionId}: invalid reference metadata`);
+                }
+            }
+
             // Biology questions are generated dynamically from the plant library;
             // the static database intentionally has no answer alternatives.
             if (category === "Biology") continue;

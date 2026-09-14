@@ -276,6 +276,10 @@ export const Renderer = {
     fontSizeScales: [0.8, 0.9, 1.0, 1.15, 1.3, 1.5, 1.7],
     currentFontScaleIndex: 2,
     fontSizeInitialized: false,
+    questionRenderToken: 0,
+    alternativesRenderToken: 0,
+    studyRenderToken: 0,
+    explanationRenderToken: 0,
 
     initFontSizeControls() {
         if (this.fontSizeInitialized) return;
@@ -342,6 +346,7 @@ export const Renderer = {
             if (currentQuestion) {
                 this.renderQuestionArea(currentQuestion);
                 this.renderAlternatives(currentQuestion, is_graded());
+                this.renderControls(currentQuestion, is_graded());
             }
         }
     },
@@ -394,6 +399,7 @@ export const Renderer = {
 
     renderQuestionArea(currentQuestion) {
         const questionDiv = document.getElementById("question");
+        const token = ++this.questionRenderToken;
         if (currentQuestion && currentQuestion.question_raw) {
             questionDiv.innerText = "Rendering…";
         } else if (currentQuestion && currentQuestion.question_html) {
@@ -405,13 +411,18 @@ export const Renderer = {
         // Always prefer live Typst-WASM output over precompiled question_html.
         if (typstWasm.enabled && currentQuestion && currentQuestion.question_raw) {
             typstWasm.compile(currentQuestion.question_raw, "question").then(result => {
+                if (this.questionRenderToken !== token) return;
                 if (result && result.svg) {
                     questionDiv.innerHTML = result.svg;
                     UI.fixSvgs();
+                } else {
+                    questionDiv.innerText = "Rendering unavailable";
                 }
+            }).catch(() => {
+                if (this.questionRenderToken !== token) return;
+                questionDiv.innerText = "Rendering unavailable";
             });
         }
-
     },
 
     renderAlternatives(currentQuestion, graded) {
@@ -666,6 +677,7 @@ export const Renderer = {
         }
         
         container.style.display = "block";
+        const token = ++this.alternativesRenderToken;
         for (let i = 0; i < count; i++) {
             const btn = document.createElement("button");
             btn.className = "alternative";
@@ -679,10 +691,16 @@ export const Renderer = {
 
             if (typstWasm.enabled && alt && alt.content_raw) {
                 typstWasm.compile(alt.content_raw, "alternative").then(result => {
+                    if (this.alternativesRenderToken !== token) return;
                     if (result && result.svg) {
                         btn.innerHTML = result.svg;
                         UI.fixSvgs();
+                    } else {
+                        btn.innerText = "Rendering unavailable";
                     }
+                }).catch(() => {
+                    if (this.alternativesRenderToken !== token) return;
+                    btn.innerText = "Rendering unavailable";
                 });
             }
 
@@ -769,14 +787,22 @@ export const Renderer = {
                     else if (activeTab.id === "steps") rawStudy = currentQuestion.solution_steps_raw;
 
                     if (rawStudy) {
+                        const token = ++this.studyRenderToken;
                         typstWasm.compile(rawStudy, "study").then(result => {
-                            if (result && result.svg) {
-                                const content = prereqDiv.querySelector(".study-content");
-                                if (content) {
+                            if (this.studyRenderToken !== token) return;
+                            const content = prereqDiv.querySelector(".study-content");
+                            if (content) {
+                                if (result && result.svg) {
                                     content.innerHTML = result.svg;
                                     UI.fixSvgs();
+                                } else {
+                                    content.innerText = "Rendering unavailable";
                                 }
                             }
+                        }).catch(() => {
+                            if (this.studyRenderToken !== token) return;
+                            const content = prereqDiv.querySelector(".study-content");
+                            if (content) content.innerText = "Rendering unavailable";
                         });
                     }
                 }
@@ -823,11 +849,18 @@ export const Renderer = {
                 : (rawExplanation || noExplanation);
 
             if (typstWasm.enabled && currentQuestion && currentQuestion.explanation_raw) {
+                const explToken = ++this.explanationRenderToken;
                 typstWasm.compile(currentQuestion.explanation_raw, "study").then(result => {
+                    if (this.explanationRenderToken !== explToken) return;
                     if (result && result.svg) {
                         explanationDiv.innerHTML = result.svg;
                         UI.fixSvgs();
+                    } else {
+                        explanationDiv.innerText = "Rendering unavailable";
                     }
+                }).catch(() => {
+                    if (this.explanationRenderToken !== explToken) return;
+                    explanationDiv.innerText = "Rendering unavailable";
                 });
             }
 
@@ -1141,7 +1174,11 @@ export const Renderer = {
                     if (result?.svg) {
                         reviewQuestion.innerHTML = result.svg;
                         UI.fixSvgs();
+                    } else {
+                        reviewQuestion.innerText = "Rendering unavailable";
                     }
+                }).catch(() => {
+                    reviewQuestion.innerText = "Rendering unavailable";
                 });
             }
             const reviewExplanation = item.querySelector(".review-explanation");
@@ -1150,7 +1187,11 @@ export const Renderer = {
                     if (result?.svg) {
                         reviewExplanation.innerHTML = result.svg;
                         UI.fixSvgs();
+                    } else {
+                        reviewExplanation.innerText = "Rendering unavailable";
                     }
+                }).catch(() => {
+                    reviewExplanation.innerText = "Rendering unavailable";
                 });
             }
             const reviewAnswer = item.querySelector(".review-user-answer");
@@ -1159,7 +1200,11 @@ export const Renderer = {
                     if (result?.svg) {
                         reviewAnswer.innerHTML = `<strong class="answer-incorrect">${result.svg}</strong>`;
                         UI.fixSvgs();
+                    } else {
+                        reviewAnswer.innerText = "Rendering unavailable";
                     }
+                }).catch(() => {
+                    reviewAnswer.innerText = "Rendering unavailable";
                 });
             }
 

@@ -11,8 +11,8 @@
     "references": [
         {
             "book": "Griffiths",
-            "chapter": "1",
-            "topic": "The Wave Function"
+            "chapter": "1.1",
+            "topic": "The Schrödinger Equation"
         }
     ],
     "difficulty": "easy",

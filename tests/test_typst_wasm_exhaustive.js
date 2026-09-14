@@ -5,6 +5,17 @@ import fs from "node:fs";
 global.window = global;
 global.document = { querySelectorAll: () => [] };
 
+const origFetch = global.fetch;
+global.fetch = async (input, init) => {
+    const url = typeof input === "string" ? input : (input?.url || input?.href || String(input));
+    if (url.startsWith("file://")) {
+        const filePath = new URL(url).pathname;
+        const buf = fs.readFileSync(filePath);
+        return new Response(buf);
+    }
+    return origFetch(input, init);
+};
+
 const { typstWasm } = await import("../dist/js/typst-renderer.js");
 const { Biology } = await import("../dist/js/biology.js");
 
