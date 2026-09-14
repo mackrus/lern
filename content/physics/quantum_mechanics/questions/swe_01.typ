@@ -20,12 +20,8 @@ $3 E_1$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $5 E_1$
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/swe_01.typ")
 
-$chevron.l E chevron.r = sum bar.v c_n bar.v^2 E_n = 1/4 E_1 + 1/4 (4 E_1) + 1/2 (9 E_1) = (1/4 + 1 + 9/2) E_1 = (1/4 + 4/4 + 18/4) E_1 = 23/4 E_1$.
 #formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/swe_01.typ")
 #prereq_page([

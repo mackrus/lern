@@ -22,6 +22,4 @@ $dif Y / (dif phi) = i m Y$
 $dif^2 Y / (dif phi^2) = 0$
 #expl_page(include "../explanations/ao_01.typ")
 #steps_page(include "../solution_steps/ao_01.typ")
-#prereq_page([
-#include "../prerequisites/core/ao_2d_laplacian.typ"
-])
+#prereq_page(include "../prerequisites/core/ao_2d_laplacian.typ")

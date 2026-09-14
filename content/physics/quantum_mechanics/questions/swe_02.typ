@@ -23,6 +23,4 @@ $1/sqrt(2)$
 #expl_page(include "../explanations/swe_02.typ")
 #formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/swe_02.typ")
-#prereq_page([
-#include "../prerequisites/core/prac_stationary_time-dependence.typ"
-])
+#prereq_page(include "../prerequisites/core/prac_stationary_time-dependence.typ")

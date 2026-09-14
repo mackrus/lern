@@ -20,14 +20,8 @@ $sqrt(3 / (pi a^4))$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $1/a^2$
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/hsp_01.typ")
 
-Normalization requires $1 = integral bar.v psi bar.v^2 r^2 sin(theta) d r d theta d phi$. The radial integral is $integral_0^infinity r^3 e^(-2r/a) d r = 3 a^4 / 8$. The angular integral is $4 pi$. So $A^2 (3 a^4 / 8) (4 pi) = 1 => A = sqrt(2 / (3 pi a^4))$.
 #formulae_page(include "../formulae/hydrogen_atom_core.typ")
 #steps_page(include "../solution_steps/hsp_01.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_spectrum_normalization.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_spectrum_normalization.typ")

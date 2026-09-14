@@ -22,6 +22,4 @@ $1$
 $-1$
 #expl_page(include "../explanations/acp_12.typ")
 #steps_page(include "../solution_steps/acp_12.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_unitary_matrices.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_unitary_matrices.typ")

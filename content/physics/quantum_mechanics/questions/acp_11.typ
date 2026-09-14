@@ -12,10 +12,6 @@ True
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 False
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/acp_11.typ")
 
-The quantity is $planck / (m_e c^2)$.
 #steps_page(include "../solution_steps/acp_11.typ")

@@ -20,13 +20,7 @@ Electron-electron repulsion
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 Nuclear finite size
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/cf_03.typ")
 
-Fine structure is primarily due to relativistic effects and the coupling between the electron's spin and its orbital angular momentum.
 #steps_page(include "../solution_steps/cf_03.typ")
-#prereq_page([
-#include "../prerequisites/core/cf_fine_structure.typ"
-])
+#prereq_page(include "../prerequisites/core/cf_fine_structure.typ")

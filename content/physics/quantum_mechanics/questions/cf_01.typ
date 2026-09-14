@@ -20,13 +20,7 @@ Time evolution is governed by the Heat Equation
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 Measurement results are eigenvalues of the operator
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/cf_01.typ")
 
-Time evolution is governed by the Schrödinger Equation, not the Heat Equation.
 #steps_page(include "../solution_steps/cf_01.typ")
-#prereq_page([
-#include "../prerequisites/core/cf_postulates.typ"
-])
+#prereq_page(include "../prerequisites/core/cf_postulates.typ")

@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/acp_20.typ")
 #steps_page(include "../solution_steps/acp_20.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_wkb_approximation.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_wkb_approximation.typ")

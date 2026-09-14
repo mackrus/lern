@@ -20,13 +20,7 @@ It is zero
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 It is complex
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/acp_05.typ")
 
-Expectation value of $A^dagger A$ is $chevron.l psi bar.v A^dagger A bar.v psi chevron.r = norm(A psi)^2 >= 0$.
 #steps_page(include "../solution_steps/acp_05.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_expectation_values_of_products.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_expectation_values_of_products.typ")

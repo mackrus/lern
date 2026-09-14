@@ -23,6 +23,4 @@ Never
 #expl_page(include "../explanations/owp_09.typ")
 #formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/owp_09.typ")
-#prereq_page([
-#include "../prerequisites/core/ow_spreading_timescale.typ"
-])
+#prereq_page(include "../prerequisites/core/ow_spreading_timescale.typ")

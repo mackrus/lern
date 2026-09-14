@@ -11,7 +11,7 @@
 3. $(3) arrow (1)$: Isochoric process back to $P_1$.
 
 Calculate net work. Is it performed by or on the gas?
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Work is done BY the gas

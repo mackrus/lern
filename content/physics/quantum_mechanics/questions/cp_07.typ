@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/cp_07.typ")
 #steps_page(include "../solution_steps/cp_07.typ")
-#prereq_page([
-#include "../prerequisites/core/prac_empirical_spectra.typ"
-])
+#prereq_page(include "../prerequisites/core/prac_empirical_spectra.typ")

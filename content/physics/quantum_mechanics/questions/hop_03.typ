@@ -20,12 +20,8 @@ $planck omega$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 0
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/hop_03.typ")
 
-The denominator is $E_n^((0)) - E_(n+6)^((0)) = (n+1/2)planck omega - (n+6+1/2)planck omega = -6 planck omega$.
 #formulae_page(include "../formulae/hop_shared_core.typ")
 #steps_page(include "../solution_steps/hop_03.typ")
 #prereq_page(include "../prerequisites/harmonic_oscillator_perturbation.typ")

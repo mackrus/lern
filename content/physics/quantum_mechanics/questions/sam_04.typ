@@ -20,14 +20,8 @@ For a Caesium atom in the $6s^1$ state with nuclear spin $I=7/2$: The hyperfine 
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 1
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/sam_04.typ")
 
-$F = I plus.minus 1/2 = 3, 4$.
 #formulae_page(include "../formulae/spin_angular_momentum_core.typ")
 #steps_page(include "../solution_steps/sam_04.typ")
-#prereq_page([
-#include "../prerequisites/core/sam_addition_of_angular_momentum.typ"
-])
+#prereq_page(include "../prerequisites/core/sam_addition_of_angular_momentum.typ")

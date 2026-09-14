@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/cp_02.typ")
 #steps_page(include "../solution_steps/cp_02.typ")
-#prereq_page([
-#include "../prerequisites/core/prac_plancks_radiation_law.typ"
-])
+#prereq_page(include "../prerequisites/core/prac_plancks_radiation_law.typ")

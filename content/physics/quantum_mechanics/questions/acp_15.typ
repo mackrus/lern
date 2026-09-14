@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/acp_15.typ")
 #steps_page(include "../solution_steps/acp_15.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_spectrum_normalization.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_spectrum_normalization.typ")

@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/cp_06.typ")
 #steps_page(include "../solution_steps/cp_06.typ")
-#prereq_page([
-#include "../prerequisites/core/prac_hermitian_operators.typ"
-])
+#prereq_page(include "../prerequisites/core/prac_hermitian_operators.typ")

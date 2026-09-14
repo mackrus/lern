@@ -20,13 +20,7 @@ An interference pattern
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 A single central peak
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/cf_02.typ")
 
-Even for single particles, the probability distribution follows an interference pattern due to the superposition of paths.
 #steps_page(include "../solution_steps/cf_02.typ")
-#prereq_page([
-#include "../prerequisites/core/cf_double_slit.typ"
-])
+#prereq_page(include "../prerequisites/core/cf_double_slit.typ")

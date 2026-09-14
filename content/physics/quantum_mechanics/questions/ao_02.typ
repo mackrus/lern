@@ -20,13 +20,7 @@ In the context of many-electron atoms and the central field approximation: Deter
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 [Ar] $3d^6$
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/ao_02.typ")
 
-Chromium is an exception where a half-filled $d$-shell is more stable.
 #steps_page(include "../solution_steps/ao_02.typ")
-#prereq_page([
-#include "../prerequisites/core/ao_aufbau_principle.typ"
-])
+#prereq_page(include "../prerequisites/core/ao_aufbau_principle.typ")

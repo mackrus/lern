@@ -22,6 +22,4 @@ In the context of many-electron atoms and the central field approximation: Deter
 [Ar] $4s^2$
 #expl_page(include "../explanations/ao_06.typ")
 #steps_page(include "../solution_steps/ao_06.typ")
-#prereq_page([
-#include "../prerequisites/core/ao_aufbau_principle.typ"
-])
+#prereq_page(include "../prerequisites/core/ao_aufbau_principle.typ")

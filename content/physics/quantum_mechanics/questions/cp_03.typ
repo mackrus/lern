@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/cp_03.typ")
 #steps_page(include "../solution_steps/cp_03.typ")
-#prereq_page([
-#include "../prerequisites/core/prac_born_rule.typ"
-])
+#prereq_page(include "../prerequisites/core/prac_born_rule.typ")

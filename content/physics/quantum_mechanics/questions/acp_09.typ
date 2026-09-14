@@ -12,12 +12,8 @@ True
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 False
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/acp_09.typ")
 
-False for superpositions of traveling waves (e.g. standing waves).
 #steps_page(include "../solution_steps/acp_09.typ")
 #prereq_page([
 #include "../prerequisites/core/prac_born_rule.typ"

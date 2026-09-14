@@ -23,6 +23,4 @@ $0$
 #expl_page(include "../explanations/owp_04.typ")
 #formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/owp_04.typ")
-#prereq_page([
-#include "../prerequisites/core/hp_ladder_operator_orthogonality.typ"
-])
+#prereq_page(include "../prerequisites/core/hp_ladder_operator_orthogonality.typ")

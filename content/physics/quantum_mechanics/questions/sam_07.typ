@@ -23,6 +23,4 @@ $Delta M = 2$
 #expl_page(include "../explanations/sam_07.typ")
 #formulae_page(include "../formulae/spin_angular_momentum_core.typ")
 #steps_page(include "../solution_steps/sam_07.typ")
-#prereq_page([
-#include "../prerequisites/core/sam_dipole_selection_rules.typ"
-])
+#prereq_page(include "../prerequisites/core/sam_dipole_selection_rules.typ")

@@ -11,7 +11,7 @@ An ideal gas undergoes a reversible thermodynamic cycle consisting of:
 4. An isochoric pressure increase back to $(P_1, V_1)$
 
 If $P_1 = 3.0 " atm"$, $P_2 = 1.0 " atm"$, $V_1 = 1.0 " L"$, and $V_2 = 2.0 " L"$, what is the total work done *on* the gas after traversing this cycle 100 times?
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 $-20.3 " kJ"$

@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 A gas characterized by an adiabatic exponent $gamma$ is compressed adiabatically from an initial state $(P_i, V_i)$ to a final state $(P_f, V_f)$. Which expression describes the work $W$ performed *on* the gas?
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 $W = (P_i V_i) / (gamma - 1) [ ((V_i) / (V_f))^(gamma - 1) - 1 ]$

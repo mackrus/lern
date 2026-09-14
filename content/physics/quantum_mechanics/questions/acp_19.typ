@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/acp_19.typ")
 #steps_page(include "../solution_steps/acp_19.typ")
-#prereq_page([
-#include "../prerequisites/core/ow_variational_principle.typ"
-])
+#prereq_page(include "../prerequisites/core/ow_variational_principle.typ")

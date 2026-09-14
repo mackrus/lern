@@ -12,14 +12,8 @@ True
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 False
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/acp_04.typ")
 
-Normal operators map to orthogonal eigenbases.
 #formulae_page(include "../formulae/operators_commutators_core.typ")
 #steps_page(include "../solution_steps/acp_04.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_normal_operators.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_normal_operators.typ")

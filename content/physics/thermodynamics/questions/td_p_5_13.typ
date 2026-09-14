@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 According to Gibbs Theorem, what can be stated about the total entropy change ($Delta S = S_f - S_i$) of a system where two distinct ideal gases, initially isolated at identical temperatures and pressures, are mixed via the slow, reversible displacement of coupled semipermeable membranes?
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 $S_i = S_f$, meaning the total entropy does not change during a reversible mixing process driven by ideal semipermeable separation.

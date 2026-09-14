@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 Two moles of an ideal gas undergo a free expansion into an insulated vacuum chamber, tripling its volume. What are the entropy changes of the gas ($Delta S_"gas"$) and of the total universe ($Delta S_"universe"$) respectively?
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 $Delta S_"gas" = 18.27 " J/K"$ and $Delta S_"universe" = 18.27 " J/K"$

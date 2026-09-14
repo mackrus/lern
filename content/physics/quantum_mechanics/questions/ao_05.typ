@@ -22,6 +22,4 @@ $Y(0) = 0$
 $Y'(0) = 0$
 #expl_page(include "../explanations/ao_05.typ")
 #steps_page(include "../solution_steps/ao_05.typ")
-#prereq_page([
-#include "../prerequisites/core/ao_boundary_conditions.typ"
-])
+#prereq_page(include "../prerequisites/core/ao_boundary_conditions.typ")

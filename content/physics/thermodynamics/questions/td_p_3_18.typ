@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 For a reversible adiabatic expansion of an ideal gas with a constant adiabatic index $gamma$, which of the following sets of relations consistently describes the property constants across states?
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 $T V^(gamma - 1) = C_1$ and $(T) / (P^(1 - (1) / (gamma))) = C_2$

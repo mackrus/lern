@@ -14,6 +14,4 @@ True
 False
 #expl_page(include "../explanations/cp_04.typ")
 #steps_page(include "../solution_steps/cp_04.typ")
-#prereq_page([
-#include "../prerequisites/core/prac_stationary_time-dependence.typ"
-])
+#prereq_page(include "../prerequisites/core/prac_stationary_time-dependence.typ")

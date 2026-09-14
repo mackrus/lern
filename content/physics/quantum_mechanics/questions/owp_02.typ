@@ -23,6 +23,4 @@ $ 1/sqrt(L) $
 #expl_page(include "../explanations/owp_02.typ")
 #formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/owp_02.typ")
-#prereq_page([
-#include "../prerequisites/core/ow_ground_state.typ"
-])
+#prereq_page(include "../prerequisites/core/ow_ground_state.typ")

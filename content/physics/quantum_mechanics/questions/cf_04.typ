@@ -20,13 +20,7 @@ Cavendish experiment
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 Young's experiment
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/cf_04.typ")
 
-The Stern-Gerlach experiment demonstrated the quantization of magnetic moment (and thus spin).
 #steps_page(include "../solution_steps/cf_04.typ")
-#prereq_page([
-#include "../prerequisites/core/cf_real_experiments.typ"
-])
+#prereq_page(include "../prerequisites/core/cf_real_experiments.typ")

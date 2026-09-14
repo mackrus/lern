@@ -20,14 +20,8 @@ $L/4$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $L$
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/owp_08.typ")
 
-By symmetry of the wavefunction about the origin.
 #formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/owp_08.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_expectation_values_of_products.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_expectation_values_of_products.typ")

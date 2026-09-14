@@ -26,6 +26,4 @@ Length
 Electric potential
 #expl_page(include "../explanations/acp_07.typ")
 #steps_page(include "../solution_steps/acp_07.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_units.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_units.typ")

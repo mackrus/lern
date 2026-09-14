@@ -5,7 +5,7 @@
 #set enum(numbering: "a)", ..list_style)
 
 On a standard pressure-volume ($P$-$V$) diagram, how does the slope of a reversible adiabatic curve compare to the slope of an isothermal curve passing through the exact same coordinate point?
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 The adiabat is steeper by a factor of $gamma$.

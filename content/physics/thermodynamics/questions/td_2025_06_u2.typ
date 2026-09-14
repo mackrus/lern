@@ -11,7 +11,7 @@ Calculate:
 (a) The final state ($T_2, P_2, V_2$).
 (b) The internal energy change ($Delta U$) and enthalpy change ($Delta H$).
 (c) The molar heat capacities ($c_p, c_v$) and compare with kinetic theory.
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 $Delta H = 3000$ J, $Delta U = 2168$ J

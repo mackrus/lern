@@ -12,7 +12,7 @@ The cyclic process is:
 3. $(3) arrow (1)$: Isochoric process back to the initial state.
 
 Calculate $Delta U$, $Delta H$, $Q$, and $W$ for each step.
-
+#pagebreak()
 #set page(width: a_width, height: auto, margin: a_margin)
 #set text(size: a_size)
 Isobaric work is negative, isothermal work is positive

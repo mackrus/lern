@@ -23,6 +23,4 @@ $7/2 planck omega$
 #expl_page(include "../explanations/owp_03.typ")
 #formulae_page(include "../formulae/potential_wells_wavefunctions_core.typ")
 #steps_page(include "../solution_steps/owp_03.typ")
-#prereq_page([
-#include "../prerequisites/core/ow_quantized_spectrum.typ"
-])
+#prereq_page(include "../prerequisites/core/ow_quantized_spectrum.typ")

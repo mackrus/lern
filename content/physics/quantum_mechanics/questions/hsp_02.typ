@@ -23,6 +23,4 @@ It is impossible to know the exact wave function
 #expl_page(include "../explanations/hsp_02.typ")
 #formulae_page(include "../formulae/hydrogen_atom_core.typ")
 #steps_page(include "../solution_steps/hsp_02.typ")
-#prereq_page([
-#include "../prerequisites/core/hs_state_preparation.typ"
-])
+#prereq_page(include "../prerequisites/core/hs_state_preparation.typ")

@@ -20,14 +20,8 @@ $1$
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 $3/2, 5/2$
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/sam_06.typ")
 
-$j = bar.v l - s bar.v, dots, l + s = bar.v 1 - 1/2 bar.v, 1 + 1/2 = 1/2, 3/2$.
 #formulae_page(include "../formulae/spin_angular_momentum_core.typ")
 #steps_page(include "../solution_steps/sam_06.typ")
-#prereq_page([
-#include "../prerequisites/core/sam_addition_of_angular_momentum.typ"
-])
+#prereq_page(include "../prerequisites/core/sam_addition_of_angular_momentum.typ")

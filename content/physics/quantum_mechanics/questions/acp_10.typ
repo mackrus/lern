@@ -20,13 +20,7 @@ The Hilbert space describing a single particle is three-dimensional. What is the
 #set page(width: a_width, margin: a_margin)
 #set text(size: a_size)
 3
-#pagebreak()
-#set page(width: i_width, height: auto, margin: i_margin)
-#set text(size: i_size)
-Explanation:
+#expl_page(include "../explanations/acp_10.typ")
 
-For $N=3$, dimension is $N(N+1)/2 = 6$.
 #steps_page(include "../solution_steps/acp_10.typ")
-#prereq_page([
-#include "../prerequisites/core/adv_combinatorics_of_indistinguishable_particles.typ"
-])
+#prereq_page(include "../prerequisites/core/adv_combinatorics_of_indistinguishable_particles.typ")
