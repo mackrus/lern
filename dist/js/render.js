@@ -33,6 +33,26 @@ import { UI, translate } from "./ui.js";
 import { typstWasm } from "./typst-renderer.js";
 import { isNumericalQuestion, matchAlternative, cleanTypstMath, evaluateMath } from "./math-evaluator.js";
 
+function deterministicShuffle(items, id) {
+    const result = [...items];
+    if (!id || result.length < 2) return result;
+
+    let seed = 0n;
+    for (const byte of new TextEncoder().encode(id)) {
+        seed = (seed * 31n + BigInt(byte)) & ((1n << 64n) - 1n);
+    }
+    for (let i = result.length - 1; i > 0; i--) {
+        seed = (seed * 6364136223846793005n + 1442695040888963407n) & ((1n << 64n) - 1n);
+        const j = Number((seed >> 32n) % BigInt(i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+}
+
+function displayedAlternatives(question) {
+    return question?.alternatives ? deterministicShuffle(question.alternatives, question.id) : [];
+}
+
 function jsLevenshtein(s1, s2) {
     const len1 = s1.length;
     const len2 = s2.length;
@@ -194,7 +214,6 @@ export const Renderer = {
         const sidebarHeader = document.querySelector("#alternatives-area h3");
         if (sidebarHeader) sidebarHeader.innerText = translate("your_answer_header");
 
-        UI.fixSvgs();
     },
 
     syncTextInput() {
@@ -230,7 +249,15 @@ export const Renderer = {
                 if (typed && typeof typed === "string" && typed.trim().length > 0) {
                     const match = matchAlternative(typed.trim(), q);
                     if (match.matchedIndex >= 0) {
-                        selections[i] = match.matchedIndex.toString();
+                        // Rust shuffles alternatives deterministically before grading,
+                        // while State.currentQuestionsList retains the source order.
+                        // Translate the source-order match to the displayed/WASM order.
+                        set_question_index(i);
+                        const expectedAlternative = q.alternatives[match.matchedIndex];
+                        const displayed = displayedAlternatives(q);
+                        let displayedIndex = -1;
+                        displayedIndex = displayed.indexOf(expectedAlternative);
+                        selections[i] = (displayedIndex >= 0 ? displayedIndex : match.matchedIndex).toString();
                     } else {
                         selections[i] = "999999";
                     }
@@ -367,20 +394,24 @@ export const Renderer = {
 
     renderQuestionArea(currentQuestion) {
         const questionDiv = document.getElementById("question");
-        if (currentQuestion && currentQuestion.question_html) {
+        if (currentQuestion && currentQuestion.question_raw) {
+            questionDiv.innerText = "Rendering…";
+        } else if (currentQuestion && currentQuestion.question_html) {
             questionDiv.innerHTML = currentQuestion.question_html;
         } else {
             questionDiv.innerHTML = get_current_question_html();
         }
 
+        // Always prefer live Typst-WASM output over precompiled question_html.
         if (typstWasm.enabled && currentQuestion && currentQuestion.question_raw) {
-            typstWasm.compile(currentQuestion.question_raw, "question").then(res => {
-                if (res && res.svg) {
-                    questionDiv.innerHTML = res.svg;
+            typstWasm.compile(currentQuestion.question_raw, "question").then(result => {
+                if (result && result.svg) {
+                    questionDiv.innerHTML = result.svg;
                     UI.fixSvgs();
                 }
             });
         }
+
     },
 
     renderAlternatives(currentQuestion, graded) {
@@ -638,13 +669,18 @@ export const Renderer = {
         for (let i = 0; i < count; i++) {
             const btn = document.createElement("button");
             btn.className = "alternative";
-            btn.innerHTML = get_alternative_html(i);
+            const displayed = displayedAlternatives(currentQuestion);
+            const alt = displayed[i];
+            if (alt && alt.content_raw) {
+                btn.innerText = "Rendering…";
+            } else {
+                btn.innerHTML = alt?.content_html || get_alternative_html(i);
+            }
 
-            const alt = currentQuestion && currentQuestion.alternatives ? currentQuestion.alternatives[i] : null;
             if (typstWasm.enabled && alt && alt.content_raw) {
-                typstWasm.compile(alt.content_raw, "alternative").then(res => {
-                    if (res && res.svg) {
-                        btn.innerHTML = res.svg;
+                typstWasm.compile(alt.content_raw, "alternative").then(result => {
+                    if (result && result.svg) {
+                        btn.innerHTML = result.svg;
                         UI.fixSvgs();
                     }
                 });
@@ -718,7 +754,10 @@ export const Renderer = {
                     `).join("") + `</div>`;
                 }
 
-                prereqDiv.innerHTML = tabsHtmlStr + `<div class="study-content">${activeTab.html}</div>`;
+                const initialStudyContent = currentQuestion && currentQuestion[`${activeTab.id}_raw`]
+                    ? "Rendering…"
+                    : (activeTab.html || "Rendering…");
+                prereqDiv.innerHTML = tabsHtmlStr + `<div class="study-content">${initialStudyContent}</div>`;
 
                 if (typstWasm.enabled && currentQuestion) {
                     let rawStudy = null;
@@ -727,11 +766,11 @@ export const Renderer = {
                     else if (activeTab.id === "steps") rawStudy = currentQuestion.solution_steps_raw;
 
                     if (rawStudy) {
-                        typstWasm.compile(rawStudy, "study").then(res => {
-                            if (res && res.svg) {
-                                const container = prereqDiv.querySelector(".study-content");
-                                if (container) {
-                                    container.innerHTML = res.svg;
+                        typstWasm.compile(rawStudy, "study").then(result => {
+                            if (result && result.svg) {
+                                const content = prereqDiv.querySelector(".study-content");
+                                if (content) {
+                                    content.innerHTML = result.svg;
                                     UI.fixSvgs();
                                 }
                             }
@@ -744,7 +783,6 @@ export const Renderer = {
                         e.preventDefault();
                         prereqDiv.dataset.activeTab = btn.dataset.tab;
                         this.renderControls(currentQuestion, graded);
-                        UI.fixSvgs();
                     };
                 });
             }
@@ -777,16 +815,19 @@ export const Renderer = {
             const rawExplanation = get_explanation_html_by_index(currentIndex);
             const isSe = State.currentCourse === "Växtkännedom (Svenska)";
             const noExplanation = isSe ? "Ingen förklaring tillgänglig." : "No explanation available.";
-            explanationDiv.innerHTML = rawExplanation || noExplanation;
+            explanationDiv.innerText = currentQuestion && currentQuestion.explanation_raw
+                ? "Rendering…"
+                : (rawExplanation || noExplanation);
 
             if (typstWasm.enabled && currentQuestion && currentQuestion.explanation_raw) {
-                typstWasm.compile(currentQuestion.explanation_raw, "study").then(res => {
-                    if (res && res.svg) {
-                        explanationDiv.innerHTML = res.svg;
+                typstWasm.compile(currentQuestion.explanation_raw, "study").then(result => {
+                    if (result && result.svg) {
+                        explanationDiv.innerHTML = result.svg;
                         UI.fixSvgs();
                     }
                 });
             }
+
         } else {
             explanationDiv.style.display = "none";
             explanationDiv.innerHTML = "";
@@ -864,6 +905,7 @@ export const Renderer = {
         if (topicStatsHeader) topicStatsHeader.innerText = translate("topic_analysis");
 
         this.renderTopicStats(percentage);
+        this.renderAnswerBreakdown();
         this.renderIncorrectReview();
         
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -938,6 +980,28 @@ export const Renderer = {
         }
     },
 
+    renderAnswerBreakdown() {
+        const breakdown = document.getElementById("answer-breakdown");
+        const heading = document.getElementById("answer-breakdown-heading");
+        if (!breakdown) return;
+
+        if (heading) heading.innerText = translate("answer_breakdown");
+        const incorrect = new Set(get_incorrect_indices());
+        const total = get_total_questions();
+        breakdown.innerHTML = "";
+
+        for (let index = 0; index < total; index++) {
+            const isCorrect = !incorrect.has(index);
+            const item = document.createElement("div");
+            item.className = `answer-breakdown-item ${isCorrect ? "correct" : "incorrect"}`;
+            item.innerHTML = `
+                <strong>${translate("question_num").replace("{num}", index + 1)}</strong>
+                <span class="answer-breakdown-status">${isCorrect ? "✓ " : "✗ "}${translate(isCorrect ? "answered_correctly" : "answered_incorrectly")}</span>
+            `;
+            breakdown.appendChild(item);
+        }
+    },
+
     async restartPractice(weaknesses) {
         const { State } = await import("./state.js");
         const { Navigation } = await import("./navigation.js");
@@ -989,6 +1053,7 @@ export const Renderer = {
             const eHtml = get_explanation_html_by_index(idx);
             const question = State.currentQuestionsList[idx];
             const sel = selections[idx];
+            let selectedAlternative = null;
 
             // Build user answer HTML
             let userAnswerHtml = "";
@@ -1029,7 +1094,9 @@ export const Renderer = {
             } else {
                 // MC: get the alternative HTML via WASM (needs correct question context)
                 set_question_index(idx);
-                const altHtml = get_alternative_html(parseInt(sel));
+                const displayed = displayedAlternatives(question);
+                selectedAlternative = displayed[parseInt(sel)];
+                const altHtml = selectedAlternative?.content_html || get_alternative_html(parseInt(sel));
                 if (altHtml) {
                     // Check if it contains an img (photo quiz) — show as thumbnail
                     if (altHtml.includes("<img")) {
@@ -1055,49 +1122,44 @@ export const Renderer = {
 
             item.innerHTML = `
                 <div style="font-weight: bold; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${translate("question_num").replace("{num}", idx + 1)}</div>
-                <div class="review-question" style="margin-bottom: 1.5rem;">${qHtml}</div>
+                <div class="review-question" style="margin-bottom: 1.5rem;">${question?.question_raw ? "Rendering…" : (qHtml || "Question unavailable")}</div>
                 <div class="user-answer-summary" style="margin-bottom: 1.5rem;">
                     <div><span class="label">${translate("your_answer")}</span> <span class="review-user-answer">${userAnswerHtml}</span></div>
                 </div>
                 <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
-                    <strong>${translate("explanation")}</strong><br><div class="review-explanation">${eHtml || noExplanation}</div>
+                    <strong>${translate("explanation")}</strong><br><div class="review-explanation">${question?.explanation_raw ? "Rendering…" : (eHtml || noExplanation)}</div>
                 </div>
             `;
             incorrectList.appendChild(item);
 
-            if (typstWasm.enabled && question) {
-                const qEl = item.querySelector(".review-question");
-                if (qEl && question.question_raw) {
-                    typstWasm.compile(question.question_raw, "question").then(res => {
-                        if (res && res.svg) {
-                            qEl.innerHTML = res.svg;
-                            UI.fixSvgs();
-                        }
-                    });
-                }
-
-                const eEl = item.querySelector(".review-explanation");
-                if (eEl && question.explanation_raw) {
-                    typstWasm.compile(question.explanation_raw, "study").then(res => {
-                        if (res && res.svg) {
-                            eEl.innerHTML = res.svg;
-                            UI.fixSvgs();
-                        }
-                    });
-                }
-
-                const selIdx = parseInt(sel);
-                const altObj = question.alternatives && !isNaN(selIdx) ? question.alternatives[selIdx] : null;
-                const ansEl = item.querySelector(".review-user-answer");
-                if (ansEl && altObj && altObj.content_raw) {
-                    typstWasm.compile(altObj.content_raw, "alternative").then(res => {
-                        if (res && res.svg) {
-                            ansEl.innerHTML = `<strong class="answer-incorrect">${res.svg}</strong>`;
-                            UI.fixSvgs();
-                        }
-                    });
-                }
+            const reviewQuestion = item.querySelector(".review-question");
+            if (reviewQuestion && question?.question_raw) {
+                typstWasm.compile(question.question_raw, "question").then(result => {
+                    if (result?.svg) {
+                        reviewQuestion.innerHTML = result.svg;
+                        UI.fixSvgs();
+                    }
+                });
             }
+            const reviewExplanation = item.querySelector(".review-explanation");
+            if (reviewExplanation && question?.explanation_raw) {
+                typstWasm.compile(question.explanation_raw, "study").then(result => {
+                    if (result?.svg) {
+                        reviewExplanation.innerHTML = result.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+            const reviewAnswer = item.querySelector(".review-user-answer");
+            if (reviewAnswer && selectedAlternative?.content_raw) {
+                typstWasm.compile(selectedAlternative.content_raw, "alternative").then(result => {
+                    if (result?.svg) {
+                        reviewAnswer.innerHTML = `<strong class="answer-incorrect">${result.svg}</strong>`;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+
         });
 
         // Restore the question index

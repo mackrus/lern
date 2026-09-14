@@ -348,6 +348,52 @@
             accent-color: var(--bg-color);
         }
 
+        .info-callout {
+            border-left: 2px solid var(--accent-color);
+            padding: 0.8rem 1.2rem;
+            min-height: 4.8rem;
+            height: 4.8rem;
+            max-height: 4.8rem;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            overflow: hidden;
+            background: var(--surface-color);
+            contain: layout paint;
+        }
+
+        .info-callout p {
+            margin: 0;
+            font-style: italic;
+            opacity: 0.85;
+            line-height: 1.5;
+            font-size: 1.05rem;
+            transition: opacity 0.15s ease;
+        }
+
+        .mode-btn {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            text-align: left !important;
+            padding: 1.2rem 1.5rem !important;
+            gap: 0.35rem !important;
+        }
+
+        .mode-btn .mode-title {
+            font-size: 1.18rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .mode-btn .mode-desc {
+            font-size: 0.95rem;
+            opacity: 0.75;
+            font-weight: normal;
+            line-height: 1.4;
+            color: var(--text-color);
+        }
+
         svg {
             display: block;
             filter: var(--svg-filter);
@@ -621,6 +667,30 @@
             opacity: 0.5;
             font-style: italic;
         }
+        .answer-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+        .answer-breakdown-item {
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            font-size: 0.95rem;
+        }
+        .answer-breakdown-item.correct {
+            border-left: 5px solid #44ff44;
+        }
+        .answer-breakdown-item.incorrect {
+            border-left: 5px solid #ff4444;
+        }
+        .answer-breakdown-status {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            opacity: 0.75;
+        }
         .diff-delete {
             background-color: rgba(255, 68, 68, 0.2);
             text-decoration: line-through;
@@ -751,7 +821,6 @@
             <div id="menu">
                 <h1 id="menu-heading">what do you want to <span class="lern-anim" id="menu-lern-logo" title="Back to menu">lern</span>?</h1>
                 <div id="course-list"></div>
-                <p id="course-description" style="margin-top: 1.5rem; font-style: italic; opacity: 0.8; line-height: 1.6;"></p>
                 <div id="storage-management" style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span id="storage-usage">Usage: 0 KB</span>
@@ -765,15 +834,27 @@
                     <h1 id="selected-course-title-mode" style="margin: 0; padding-left: 1rem;"></h1>
                 </div>
                 <h2>Select Mode:</h2>
-                <div style="margin-bottom: 2.5rem; border-left: 2px solid var(--accent-color); padding-left: 1.2rem; min-height: 4rem; display: flex; align-items: center; box-sizing: border-box;">
-                    <p id="mode-description" style="margin: 0; font-style: italic; opacity: 0.85; line-height: 1.6; font-size: 1.1rem;"></p>
-                </div>
                 <div id="mode-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
-                    <button id="mode-topic" class="alternative" style="text-align: center;">Topic Traversal</button>
-                    <button id="mode-six-easy" class="alternative" style="text-align: center;">Six easy pieces</button>
-                    <button id="mode-six-hard" class="alternative" style="text-align: center;">Six not so easy pieces</button>
-                    <button id="mode-practice" class="alternative" style="text-align: center;">Practice Mode</button>
-                    <button id="mode-exam" class="alternative" style="text-align: center;">Exam Mode</button>
+                    <button id="mode-topic" class="alternative mode-btn">
+                        <span class="mode-title">Topic Traversal</span>
+                        <span class="mode-desc">Select specific subtopics to target your study.</span>
+                    </button>
+                    <button id="mode-six-easy" class="alternative mode-btn">
+                        <span class="mode-title">Six easy pieces</span>
+                        <span class="mode-desc">A relaxed session of 6 randomly selected easy questions. Great for a quick review.</span>
+                    </button>
+                    <button id="mode-six-hard" class="alternative mode-btn">
+                        <span class="mode-title">Six not so easy pieces</span>
+                        <span class="mode-desc">A challenging session of 6 randomly selected hard questions for deeper mastery.</span>
+                    </button>
+                    <button id="mode-practice" class="alternative mode-btn">
+                        <span class="mode-title">Practice Mode</span>
+                        <span class="mode-desc">A general practice session drawing from all questions at your own pace.</span>
+                    </button>
+                    <button id="mode-exam" class="alternative mode-btn">
+                        <span class="mode-title">Exam Mode</span>
+                        <span class="mode-desc">A timed mock exam with full grading at the end under real exam conditions.</span>
+                    </button>
                 </div>
             </div>
             <div id="topic-selection" style="display: none;">
@@ -831,6 +912,11 @@
                         <div id="topic-stats" style="margin-bottom: 3rem;">
                             <h3>Topic Analysis:</h3>
                             <div id="topic-stats-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                        </div>
+
+                        <div id="answer-breakdown-section" style="margin-bottom: 3rem;">
+                            <h3 id="answer-breakdown-heading">Answer Breakdown:</h3>
+                            <div id="answer-breakdown" class="answer-breakdown"></div>
                         </div>
 
                         <div id="recommendations" style="margin-bottom: 3rem; background: var(--surface-color); padding: 2rem; border: 1px solid var(--border-color); display: none;">

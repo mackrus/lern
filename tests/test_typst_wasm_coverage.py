@@ -62,7 +62,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
         self.assertIn("typstWasm.compile(currentQuestion.explanation_raw", render_code)
         self.assertIn("typstWasm.compile(question.question_raw", render_code)
         self.assertIn("typstWasm.compile(question.explanation_raw", render_code)
-        self.assertIn("typstWasm.compile(altObj.content_raw", render_code)
+        self.assertIn("typstWasm.compile(selectedAlternative.content_raw", render_code)
         self.assertNotIn("WASM COMPILED IN", render_code)
 
         with open(INDEX_HTML, "r", encoding="utf-8") as f:
@@ -103,7 +103,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
                             missing.append((course_name, qid, f"alternative_{idx}_content_raw"))
 
                     # Explanation raw source if explanation exists
-                    if q.get("explanation_html") and not q.get("explanation_raw"):
+                    if q.get("explanation_raw") and not q.get("explanation_raw", "").strip():
                         missing.append((course_name, qid, "explanation_raw"))
 
         self.assertEqual(
@@ -226,4 +226,3 @@ class TestTypstWasmCoverage(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -4,7 +4,6 @@ import { UI, translate } from "./ui.js";
 import { Navigation } from "./navigation.js";
 import { Renderer } from "./render.js";
 import { Biology } from "./biology.js";
-import { typstWasm } from "./typst-renderer.js";
 import { 
     grade_quiz, 
     next_question, 

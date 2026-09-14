@@ -52,60 +52,14 @@ for category in os.listdir(content_root):
             metadata_path = os.path.join(questions_path, json_file)
             with open(metadata_path, "r") as f:
                 metadata = json.load(f)
-            # Collect SVG pages
-            pattern = re.compile(rf"{base}-(\d+)\.svg")
-            svg_files = []
-            if os.path.exists("dist/content"):
-                for f in os.listdir("dist/content"):
-                    match = pattern.match(f)
-                    if match:
-                        svg_files.append((int(match.group(1)), f))
-
-            svg_files.sort()  # Sort by page number
-
-            if len(svg_files) < 3:
-                continue
-
-            page_contents = []
-            for _, filename in svg_files:
-                path = os.path.join("dist/content", filename)
-                with open(path, "r") as f:
-                    page_contents.append(f.read())
-
             num_alts = metadata.get("num_alternatives", 4)
             has_expl = metadata.get("has_explanation", False)
             has_formulae = metadata.get("has_formulae", False)
             has_solution_steps = metadata.get("has_solution_steps", False)
             has_prereqs = metadata.get("has_prerequisites", True)
 
-            question_html = page_contents[0]
-            alternative_contents = page_contents[1 : 1 + num_alts]
-
-            page_idx = 1 + num_alts
-
-            explanation_html = None
-            if has_expl and len(page_contents) > page_idx:
-                explanation_html = page_contents[page_idx]
-                page_idx += 1
-
-            formulae_html = None
-            if has_formulae and len(page_contents) > page_idx:
-                formulae_html = page_contents[page_idx]
-                page_idx += 1
-
-            solution_steps_html = None
-            if has_solution_steps and len(page_contents) > page_idx:
-                solution_steps_html = page_contents[page_idx]
-                page_idx += 1
-
-            prerequisites_html = None
-            if has_prereqs and len(page_contents) > page_idx:
-                prerequisites_html = page_contents[page_idx]
-                page_idx += 1
-            elif has_prereqs and not has_formulae and not has_solution_steps:
-                prerequisites_html = page_contents[-1]
-
-            # Extract raw text from Typst files
+            # Extract raw text from Typst files. Runtime rendering is handled by
+            # Typst-WASM; no compiled SVG pages are needed in the question DB.
             question_raw = ""
             alt_raws = []
             prefixes = (
@@ -118,6 +72,7 @@ for category in os.listdir(content_root):
                 "#prereq_page",
             )
             typ_path = os.path.join(questions_path, f"{base}.typ")
+            pages = []
             if os.path.exists(typ_path):
                 with open(typ_path, "r", encoding="utf-8") as f:
                     typ_content = f.read()
@@ -145,6 +100,13 @@ for category in os.listdir(content_root):
                         if not any(line.strip().startswith(pref) for pref in prefixes)
                     ]
                     alt_raws.append("\n".join(clean_p).strip())
+
+            question_html = ""
+            alternative_contents = [""] * num_alts
+            explanation_html = None
+            formulae_html = None
+            solution_steps_html = None
+            prerequisites_html = None
 
             alternatives = []
             for i, content in enumerate(alternative_contents):

@@ -100,10 +100,6 @@ export const Navigation = {
 
         const category = State.coursesData[categoryName];
         
-        // Find if any course in this category has a description
-        const courseDescriptionEl = document.getElementById("course-description");
-        if (courseDescriptionEl) courseDescriptionEl.innerText = "";
-
         for (const courseName in category) {
             const courseInfo = category[courseName];
             const container = document.createElement("div");
@@ -117,21 +113,22 @@ export const Navigation = {
             const btn = document.createElement("button");
             btn.className = "alternative";
             btn.style.flex = "1";
-            
+
             const progress = State.load(courseName);
             const isInProgress = progress && !progress.graded;
 
             const isSe = courseName === "Växtkännedom (Svenska)";
-            btn.innerText = courseName + (isInProgress ? translate("in_progress", isSe) : "");
-            
-            btn.onmouseover = () => {
-                if (courseDescriptionEl && courseInfo.description) {
-                    courseDescriptionEl.innerText = courseInfo.description;
-                }
-            };
-            btn.onmouseout = () => {
-                if (courseDescriptionEl) courseDescriptionEl.innerText = "";
-            };
+            const badgeText = isInProgress ? translate("in_progress", isSe) : "";
+
+            if (courseInfo.description) {
+                btn.classList.add("mode-btn");
+                btn.innerHTML = `
+                    <span class="mode-title">${courseName}${badgeText}</span>
+                    <span class="mode-desc">${courseInfo.description}</span>
+                `;
+            } else {
+                btn.innerText = courseName + badgeText;
+            }
 
             btn.onclick = () => {
                 if (isInProgress) {
@@ -194,11 +191,6 @@ export const Navigation = {
         UI.updateCourseTheme(categoryName || courseName);
         this.hideAllSections();
 
-        const modeDescriptionEl = document.getElementById("mode-description");
-        if (modeDescriptionEl) {
-            modeDescriptionEl.innerText = "Hover over a mode below to see how it works.";
-        }
-        
         if (categoryName && categoryName.toLowerCase().includes("biology")) {
             this.renderBiologyModeSelector(courseName);
         } else {
