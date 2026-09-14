@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Find and kill the process running on port 8000
-PID=$(lsof -t -i:8000)
+# Find and kill the process running on port 8001
+PID=$(lsof -t -i:8001)
 
 if [ -n "$PID" ]; then
     echo "Stopping existing server (PID: $PID)..."
@@ -10,5 +10,5 @@ if [ -n "$PID" ]; then
     sleep 0.5
 fi
 
-echo "Starting server at http://localhost:8000..."
+echo "Starting server at http://localhost:8001..."
 uv run serve.py &
