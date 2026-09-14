@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2024"
 description = "Interactive math, physics, and biology learning platform"
 
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
 
 [lib]
 crate-type = ["cdylib", "rlib"]
