@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Applications of Cauchy integral formulae; Liouville's theorem, fundamental theorem of Algebra, maximum modulus principle (LN5).",
     "topics": [
         "Maximum Modulus Principle",
         "Minimum Modulus Principle",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "4.55",
             "topic": "Maximum Modulus Principle"
+        },
+        {
+            "book": "Lecture Note 5",
+            "chapter": "9",
+            "topic": "Applications of Cauchy integral formulae; Liouville's theorem, fundamental theorem of Algebra, maximum modulus principle"
         }
     ],
     "difficulty": "medium"

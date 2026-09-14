@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Complex numbers, Elementary functions. (LN 1)",
     "topics": [
         "Complex Numbers",
         "Polar Form",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "1.7",
             "topic": "Products and Powers in Exponential Form"
+        },
+        {
+            "book": "Lecture Note 1",
+            "chapter": "1",
+            "topic": "Complex numbers, Elementary functions"
         }
     ],
     "difficulty": "easy"

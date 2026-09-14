@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Elementary functions (LN 1), Limits and Continuity (LN 2).",
     "topics": [
         "Complex Numbers",
         "Roots of Unity",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "1.9",
             "topic": "Roots of Complex Numbers"
+        },
+        {
+            "book": "Lecture Note 1",
+            "chapter": "2",
+            "topic": "Elementary functions"
         }
     ],
     "difficulty": "medium"

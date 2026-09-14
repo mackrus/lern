@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Complex numbers, Elementary functions. (LN 1)",
     "topics": [
         "Complex Numbers",
         "Principal Argument",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "1.8",
             "topic": "Arguments of Products and Quotients"
+        },
+        {
+            "book": "Lecture Note 1",
+            "chapter": "1",
+            "topic": "Complex numbers, Elementary functions"
         }
     ],
     "difficulty": "easy"

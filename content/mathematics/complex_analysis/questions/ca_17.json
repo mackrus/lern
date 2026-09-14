@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Examples of Power Series and Laurent Series (LN7)",
     "topics": [
         "Power Series",
         "Series Differentiation",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "5.66",
             "topic": "Integration and Differentiation of Power Series"
+        },
+        {
+            "book": "Lecture Note 7",
+            "chapter": "12",
+            "topic": "Examples of Power Series and Laurent Series"
         }
     ],
     "difficulty": "medium"

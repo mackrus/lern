@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Application of Residue theorem. (LN9, LN10)",
     "topics": [
         "Residue Applications",
         "Trigonometric Integrals",
@@ -15,6 +15,16 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "7.86",
             "topic": "Definite Integrals Involving Sines and Cosines"
+        },
+        {
+            "book": "Lecture Note 9",
+            "chapter": "16",
+            "topic": "Application of Residue theorem"
+        },
+        {
+            "book": "Lecture Note 10",
+            "chapter": "16",
+            "topic": "Application of Residue theorem"
         }
     ],
     "difficulty": "hard"

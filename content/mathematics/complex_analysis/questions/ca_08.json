@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "CR-eq in polar coordinates, analytic functions (LN3).",
     "topics": [
         "Harmonic Functions",
         "Harmonic Conjugates",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "2.26",
             "topic": "Harmonic Functions"
+        },
+        {
+            "book": "Lecture Note 3",
+            "chapter": "4",
+            "topic": "CR-eq in polar coordinates, analytic functions"
         }
     ],
     "difficulty": "medium"

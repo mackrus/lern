@@ -4,9 +4,9 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Argument Principle and Rouché's theorem (LN10)",
     "topics": [
-        "Rouch\u00e9's Theorem",
+        "Rouché's Theorem",
         "Argument Principle",
         "Zeros of Analytic Functions"
     ],
@@ -14,12 +14,17 @@
         {
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "7.88",
-            "topic": "Rouch\u00e9's Theorem"
+            "topic": "Rouché's Theorem"
         },
         {
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "7.87",
             "topic": "Argument Principle"
+        },
+        {
+            "book": "Lecture Note 10",
+            "chapter": "18",
+            "topic": "Argument Principle and Rouché's theorem"
         }
     ],
     "difficulty": "medium"

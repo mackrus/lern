@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Residue Theorem. (LN8, LN9)",
     "topics": [
         "Residues",
         "Poles",
@@ -20,6 +20,16 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "6.74",
             "topic": "Residues at Poles"
+        },
+        {
+            "book": "Lecture Note 8",
+            "chapter": "15",
+            "topic": "Residue Theorem"
+        },
+        {
+            "book": "Lecture Note 9",
+            "chapter": "15",
+            "topic": "Residue Theorem"
         }
     ],
     "difficulty": "medium"

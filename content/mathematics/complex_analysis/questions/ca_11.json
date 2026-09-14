@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Cauchy Goursat Theorem (LN4), Cauchy integral formula (LN5).",
     "topics": [
         "Cauchy Integral Formula",
         "Contour Integration",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "4.50",
             "topic": "Cauchy Integral Formula"
+        },
+        {
+            "book": "Lecture Note 5",
+            "chapter": "7",
+            "topic": "Cauchy integral formula"
         }
     ],
     "difficulty": "medium"

@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Elementary functions (LN 1), Limits and Continuity (LN 2).",
     "topics": [
         "Elementary Functions",
         "Complex Exponential",
@@ -20,6 +20,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "3.30",
             "topic": "The Logarithmic Function"
+        },
+        {
+            "book": "Lecture Note 1",
+            "chapter": "2",
+            "topic": "Elementary functions"
         }
     ],
     "difficulty": "easy"

@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Limits at infinity (LN2), Differentiability & Cauchy Riemann equations (LN2).",
     "topics": [
         "Analytic Functions",
         "Cauchy-Riemann Equations",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "2.21",
             "topic": "Cauchy-Riemann Equations"
+        },
+        {
+            "book": "Lecture Note 2",
+            "chapter": "3",
+            "topic": "Differentiability & Cauchy Riemann equations"
         }
     ],
     "difficulty": "easy"

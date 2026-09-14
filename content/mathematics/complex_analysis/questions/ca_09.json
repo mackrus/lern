@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Contour integrals, Anti-derivatives (LN3).",
     "topics": [
         "Contour Integration",
         "Parametrization",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "4.40",
             "topic": "Contour Integrals"
+        },
+        {
+            "book": "Lecture Note 3",
+            "chapter": "5",
+            "topic": "Contour integrals, Anti-derivatives"
         }
     ],
     "difficulty": "medium"

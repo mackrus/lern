@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Laurent Series (LN6).",
     "topics": [
         "Laurent Series",
         "Annular Domains",
@@ -20,6 +20,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "5.63",
             "topic": "Examples"
+        },
+        {
+            "book": "Lecture Note 6",
+            "chapter": "10",
+            "topic": "Laurent Series"
         }
     ],
     "difficulty": "hard"

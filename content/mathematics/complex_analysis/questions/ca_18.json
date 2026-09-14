@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Isolated Zeros, and function behavior near them (LN8)",
     "topics": [
         "Singularities",
         "Essential Singularity",
@@ -20,6 +20,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "6.73",
             "topic": "The Three Types of Isolated Singular Points"
+        },
+        {
+            "book": "Lecture Note 8",
+            "chapter": "13",
+            "topic": "Isolated Zeros, and function behavior near them"
         }
     ],
     "difficulty": "medium"

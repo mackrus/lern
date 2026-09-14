@@ -4,7 +4,7 @@
     "has_explanation": true,
     "has_formulae": true,
     "has_solution_steps": true,
-    "label": "practice",
+    "label": "Continuation of Cauchy integral formulae (LN5).",
     "topics": [
         "Cauchy Integral Formula",
         "Derivatives of Analytic Functions",
@@ -15,6 +15,11 @@
             "book": "Churchill & Brown (9th ed.)",
             "chapter": "4.51",
             "topic": "An Extension of the Cauchy Integral Formula"
+        },
+        {
+            "book": "Lecture Note 5",
+            "chapter": "8",
+            "topic": "Continuation of Cauchy integral formulae"
         }
     ],
     "difficulty": "medium"
