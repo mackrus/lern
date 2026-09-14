@@ -594,17 +594,17 @@ export const Renderer = {
                 const diffs = diffStrings(selection, expected);
                 
                 if (isCorrect) {
-                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${selection}</strong></div>`;
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}</span> <strong class="${answerClass}">${selection}</strong></div>`;
                 } else if (isPartial) {
-                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${diffs.userHtml}</strong>${statusText}</div>`;
-                    summary.innerHTML += `<div><span class="label">${translate("correct_spelling")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}</span> <strong class="${answerClass}">${diffs.userHtml}</strong>${statusText}</div>`;
+                    summary.innerHTML += `<div><span class="label">${translate("correct_spelling")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
                 } else {
-                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}:</span> <strong class="${answerClass}">${diffs.userHtml}</strong></div>`;
-                    summary.innerHTML += `<div><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
+                    summary.innerHTML = `<div><span class="label">${translate("your_answer")}</span> <strong class="${answerClass}">${diffs.userHtml}</strong></div>`;
+                    summary.innerHTML += `<div><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong></div>`;
                 }
             } else {
                 summary.innerHTML = `<div class="answer-missing">${translate("no_answer_given")}</div>`;
-                summary.innerHTML += `<div><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${expected}</strong></div>`;
+                summary.innerHTML += `<div><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${expected}</strong></div>`;
             }
             container.appendChild(summary);
             return;
@@ -1000,9 +1000,9 @@ export const Renderer = {
                 
                 if (isPartial) {
                     const statusText = isSe ? " (Stavarfel - 0.5p)" : " (Misspelled - 0.5p)";
-                    userAnswerHtml = `<strong class="answer-partial">${diffs.userHtml}</strong> <span style="font-size:0.85rem; opacity:0.7;">${statusText}</span><br><span class="label">${translate("correct_spelling")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
+                    userAnswerHtml = `<strong class="answer-partial">${diffs.userHtml}</strong> <span style="font-size:0.85rem; opacity:0.7;">${statusText}</span><br><span class="label">${translate("correct_spelling")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
                 } else {
-                    userAnswerHtml = `<strong class="answer-incorrect">${diffs.userHtml}</strong><br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
+                    userAnswerHtml = `<strong class="answer-incorrect">${diffs.userHtml}</strong><br><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${diffs.correctHtml}</strong>`;
                 }
             } else if (question && isNumericalQuestion(question)) {
                 const typed = (State.numericalInputs && State.numericalInputs[question.id]) || (sel !== null && sel !== undefined && !String(sel).startsWith("999999") ? String(sel) : "");
@@ -1015,9 +1015,9 @@ export const Renderer = {
                 const correctValStr = correctVal ? correctVal.format() : correctClean;
 
                 if (!typed.trim()) {
-                    userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span><br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
+                    userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span><br><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
                 } else {
-                    userAnswerHtml = `<strong class="answer-incorrect">${typed}</strong> ${userValStr}<br><span class="label">${translate("correct_answer")}:</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
+                    userAnswerHtml = `<strong class="answer-incorrect">${typed}</strong> ${userValStr}<br><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
                 }
             } else {
                 // MC: get the alternative HTML via WASM (needs correct question context)
@@ -1050,10 +1050,10 @@ export const Renderer = {
                 <div style="font-weight: bold; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${translate("question_num").replace("{num}", idx + 1)}</div>
                 <div class="review-question" style="margin-bottom: 1.5rem;">${qHtml}</div>
                 <div class="user-answer-summary" style="margin-bottom: 1.5rem;">
-                    <div><span class="label">${translate("your_answer")}:</span> <span class="review-user-answer">${userAnswerHtml}</span></div>
+                    <div><span class="label">${translate("your_answer")}</span> <span class="review-user-answer">${userAnswerHtml}</span></div>
                 </div>
                 <div style="background: var(--prereq-bg); padding: 1.5rem; border-left: 3px solid var(--text-color);">
-                    <strong>${translate("explanation")}:</strong><br><div class="review-explanation">${eHtml || noExplanation}</div>
+                    <strong>${translate("explanation")}</strong><br><div class="review-explanation">${eHtml || noExplanation}</div>
                 </div>
             `;
             incorrectList.appendChild(item);
