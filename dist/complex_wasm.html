@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lern - Complex Analysis (Typst WASM Full Module)</title>
+    <title>Lern - Typst WASM Universal Module Runner</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link id="themes-css" rel="stylesheet" href="css/themes.css">
     <style>
@@ -106,6 +106,17 @@
             gap: 1rem;
         }
 
+        select {
+            background: #0d1117;
+            color: var(--text-bright);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.45rem 0.6rem;
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            outline: none;
+        }
+
         button {
             font-family: var(--mono);
             font-size: 0.85rem;
@@ -145,7 +156,7 @@
             border-radius: 4px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            min-height: 100px;
+            min-height: 80px;
             overflow-x: auto;
         }
 
@@ -197,8 +208,8 @@
 <body>
     <header>
         <div>
-            <h1>Complex Analysis (106 Questions)</h1>
-            <div class="subtitle">Client-Side Typst WebAssembly Compilation Engine</div>
+            <h1>Universal Typst WASM Runner</h1>
+            <div class="subtitle">Client-Side Compilation across all 276 Mathematics & Physics Questions</div>
         </div>
         <div class="top-nav">
             <span id="engine-status" class="badge busy">Initializing WASM...</span>
@@ -208,12 +219,12 @@
 
     <div class="stat-grid">
         <div class="stat-card">
-            <div class="stat-val" id="stat-current">1 / 106</div>
+            <div class="stat-val" id="stat-current">1 / --</div>
             <div class="stat-lbl">Question Index</div>
         </div>
         <div class="stat-card">
             <div class="stat-val" id="stat-compile-time">-- ms</div>
-            <div class="stat-lbl">WASM Compile Latency</div>
+            <div class="stat-lbl">Latest Compile Latency</div>
         </div>
         <div class="stat-card">
             <div class="stat-val" id="stat-batch-avg">-- ms</div>
@@ -230,20 +241,28 @@
     </div>
 
     <div class="controls-card">
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button id="btn-prev" disabled>← Previous</button>
-            <button id="btn-next" disabled>Next →</button>
-            <select id="select-question" style="background: #0d1117; color: var(--text-bright); border: 1px solid var(--border); border-radius: 4px; padding: 0.4rem; font-family: var(--mono); font-size: 0.82rem; outline: none;" disabled></select>
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <select id="select-module" style="font-weight: 600;">
+                <option value="all">🚀 All Modules (276 questions)</option>
+                <option value="ca">📐 Complex Analysis (106)</option>
+                <option value="qm">⚛️ Quantum Mechanics (72)</option>
+                <option value="mvc">📊 Multivariable Calculus (34)</option>
+                <option value="td">🔥 Thermodynamics (34)</option>
+                <option value="climate">🌍 Climate Physics (30)</option>
+            </select>
+            <button id="btn-prev" disabled>←</button>
+            <button id="btn-next" disabled>→</button>
+            <select id="select-question" style="max-width: 320px;" disabled></select>
         </div>
         <div>
-            <button id="btn-run-all" class="primary" disabled>⚡ Benchmark All 106 Questions</button>
+            <button id="btn-run-all" class="primary" disabled>⚡ Benchmark Module</button>
         </div>
     </div>
 
     <div class="question-card">
         <div class="question-header">
             <div>
-                <strong id="q-id">ca_01</strong>
+                <strong id="q-id">--</strong>
                 <span id="q-topics" style="font-size: 0.8rem; color: #8b949e; margin-left: 0.5rem;"></span>
             </div>
             <span id="q-render-meta" class="badge">--</span>
@@ -262,7 +281,8 @@
     <script type="module">
         import { typstWasm } from "./js/typst-renderer.js";
 
-        let questions = [];
+        let allCoursesMap = {};
+        let activeQuestions = [];
         let currentIndex = 0;
         let isBatchRunning = false;
 
@@ -271,6 +291,7 @@
         const statCompileTime = document.getElementById("stat-compile-time");
         const statBatchAvg = document.getElementById("stat-batch-avg");
         const statCacheSize = document.getElementById("stat-cache-size");
+        const selectModule = document.getElementById("select-module");
         const btnPrev = document.getElementById("btn-prev");
         const btnNext = document.getElementById("btn-next");
         const btnRunAll = document.getElementById("btn-run-all");
@@ -297,23 +318,21 @@
                 // Fetch questions
                 const res = await fetch("./questions.json");
                 const lib = await res.json();
-                questions = lib["Mathematics"]["Complex Analysis"]["data"] || [];
+                
+                allCoursesMap = {
+                    "ca": lib["Mathematics"]?.["Complex Analysis"]?.["data"] || [],
+                    "mvc": lib["Mathematics"]?.["Multivariable Calculus"]?.["data"] || [],
+                    "qm": lib["Physics"]?.["Quantum Mechanics"]?.["data"] || [],
+                    "td": lib["Physics"]?.["Thermodynamics"]?.["data"] || [],
+                    "climate": lib["Physics"]?.["Climate"]?.["data"] || []
+                };
 
-                // Populate selector
-                selectQuestion.innerHTML = "";
-                questions.forEach((q, idx) => {
-                    const opt = document.createElement("option");
-                    opt.value = idx;
-                    opt.textContent = `${idx + 1}. ${q.id} - ${(q.topics || [])[0] || 'Problem'}`;
-                    selectQuestion.appendChild(opt);
-                });
+                updateModuleSelection("all");
 
-                selectQuestion.disabled = false;
                 btnPrev.disabled = false;
                 btnNext.disabled = false;
                 btnRunAll.disabled = false;
-
-                renderQuestion(0);
+                selectQuestion.disabled = false;
             } catch (err) {
                 engineStatus.textContent = "Error";
                 engineStatus.className = "badge";
@@ -322,13 +341,42 @@
             }
         }
 
+        function updateModuleSelection(modKey) {
+            if (modKey === "all") {
+                activeQuestions = [
+                    ...allCoursesMap["ca"],
+                    ...allCoursesMap["qm"],
+                    ...allCoursesMap["mvc"],
+                    ...allCoursesMap["td"],
+                    ...allCoursesMap["climate"]
+                ];
+            } else {
+                activeQuestions = allCoursesMap[modKey] || [];
+            }
+
+            selectQuestion.innerHTML = "";
+            activeQuestions.forEach((q, idx) => {
+                const opt = document.createElement("option");
+                opt.value = idx;
+                opt.textContent = `${idx + 1}. ${q.id} - ${(q.topics || [])[0] || 'Problem'}`;
+                selectQuestion.appendChild(opt);
+            });
+
+            btnRunAll.textContent = `⚡ Benchmark ${activeQuestions.length} Questions`;
+            renderQuestion(0);
+        }
+
+        selectModule.onchange = (e) => {
+            updateModuleSelection(e.target.value);
+        };
+
         async function renderQuestion(index) {
-            if (index < 0 || index >= questions.length) return;
+            if (index < 0 || index >= activeQuestions.length) return;
             currentIndex = index;
             selectQuestion.value = index;
-            statCurrent.textContent = `${index + 1} / ${questions.length}`;
+            statCurrent.textContent = `${index + 1} / ${activeQuestions.length}`;
 
-            const q = questions[index];
+            const q = activeQuestions[index];
             qId.textContent = q.id;
             qTopics.textContent = (q.topics || []).join(", ");
             qRenderMeta.textContent = "Compiling WASM...";
@@ -340,12 +388,10 @@
 
             // 1. Compile question
             let qSvg = q.question_html;
-            let qTime = 0;
             if (q.question_raw) {
                 const res = await typstWasm.compile(q.question_raw, "question");
                 if (res && res.svg) {
                     qSvg = res.svg;
-                    qTime = res.elapsed;
                 }
             }
             qBody.innerHTML = qSvg;
@@ -369,13 +415,11 @@
                 btn.innerHTML = altSvg;
 
                 btn.onclick = () => {
-                    // Check correctness
                     altsGrid.querySelectorAll(".alt-btn").forEach((b, bi) => {
                         b.disabled = true;
                         if (alts[bi].is_correct) b.classList.add("correct");
                         else if (bi === i) b.classList.add("incorrect");
                     });
-                    // Show explanation
                     if (q.explanation_raw) {
                         typstWasm.compile(q.explanation_raw, "study").then(r => {
                             if (r && r.svg) {
@@ -400,31 +444,30 @@
             if (currentIndex > 0) renderQuestion(currentIndex - 1);
         };
         btnNext.onclick = () => {
-            if (currentIndex < questions.length - 1) renderQuestion(currentIndex + 1);
+            if (currentIndex < activeQuestions.length - 1) renderQuestion(currentIndex + 1);
         };
         selectQuestion.onchange = (e) => {
             renderQuestion(parseInt(e.target.value, 10));
         };
 
-        // Full Batch Benchmark across all 106 questions
+        // Full Batch Benchmark across selected questions
         btnRunAll.onclick = async () => {
-            if (isBatchRunning) return;
+            if (isBatchRunning || activeQuestions.length === 0) return;
             isBatchRunning = true;
             btnRunAll.disabled = true;
             btnPrev.disabled = true;
             btnNext.disabled = true;
             selectQuestion.disabled = true;
+            selectModule.disabled = true;
             progressContainer.style.display = "block";
 
-            let totalElapsed = 0;
             const tStart = performance.now();
 
-            for (let i = 0; i < questions.length; i++) {
-                const q = questions[i];
-                progressBar.style.width = `${((i + 1) / questions.length) * 100}%`;
-                statCurrent.textContent = `${i + 1} / ${questions.length}`;
+            for (let i = 0; i < activeQuestions.length; i++) {
+                const q = activeQuestions[i];
+                progressBar.style.width = `${((i + 1) / activeQuestions.length) * 100}%`;
+                statCurrent.textContent = `${i + 1} / ${activeQuestions.length}`;
 
-                // Compile question and alternatives
                 if (q.question_raw) {
                     await typstWasm.compile(q.question_raw, "question");
                 }
@@ -441,22 +484,22 @@
             }
 
             const totalTime = performance.now() - tStart;
-            const avgPerQuestion = (totalTime / questions.length).toFixed(1);
+            const avgPerQuestion = (totalTime / activeQuestions.length).toFixed(1);
             statBatchAvg.textContent = `${avgPerQuestion} ms`;
             statCompileTime.textContent = `${(totalTime / 1000).toFixed(2)}s total`;
 
             progressBar.style.width = "100%";
             setTimeout(() => {
                 progressContainer.style.display = "none";
-            }, 1000);
+            }, 800);
 
             isBatchRunning = false;
             btnRunAll.disabled = false;
             btnPrev.disabled = false;
             btnNext.disabled = false;
             selectQuestion.disabled = false;
+            selectModule.disabled = false;
 
-            // Re-render current question from cache
             renderQuestion(currentIndex);
         };
 
