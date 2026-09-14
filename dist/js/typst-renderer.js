@@ -34,7 +34,9 @@ class TypstWasmEngine {
             try {
                 // Warm up the compiler
                 const t0 = performance.now();
-                await $typst.svg({ mainContent: "$1$" });
+                await $typst.svg({
+                    mainContent: '#set text(font: "Noto Sans")\n#show math.equation: set text(font: "Noto Sans Math")\n$1$'
+                });
                 this.ready = true;
                 const elapsed = performance.now() - t0;
                 console.log(`[Typst WASM] Initialized in ${elapsed.toFixed(1)}ms`);
