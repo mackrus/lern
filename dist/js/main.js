@@ -4,6 +4,7 @@ import { UI, translate } from "./ui.js";
 import { Navigation } from "./navigation.js";
 import { Renderer } from "./render.js";
 import { Biology } from "./biology.js";
+import { typstWasm } from "./typst-renderer.js";
 import { 
     grade_quiz, 
     next_question, 
@@ -24,6 +25,15 @@ window.onerror = function(msg, url, line) {
 async function run() {
     try {
         UI.setupTheme();
+        UI.setupWasmToggle(() => {
+            typstWasm.enabled = !typstWasm.enabled;
+            UI.updateWasmToggle(typstWasm.enabled);
+            if (State.currentCourse) {
+                Renderer.renderQuiz();
+            }
+        });
+        UI.updateWasmToggle(typstWasm.enabled);
+
         UI.updateLoadingStatus("Initializing WASM core...");
         await init({ module_or_path: "./pkg/lern_bg.wasm" });
 

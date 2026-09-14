@@ -105,46 +105,103 @@ for category in os.listdir(content_root):
             elif has_prereqs and not has_formulae and not has_solution_steps:
                 prerequisites_html = page_contents[-1]
 
+            # Extract raw text from Typst files
+            question_raw = ""
+            alt_raws = []
+            prefixes = (
+                "#import",
+                "#set",
+                "#include",
+                "#expl_page",
+                "#formulae_page",
+                "#steps_page",
+                "#prereq_page",
+            )
+            typ_path = os.path.join(questions_path, f"{base}.typ")
+            if os.path.exists(typ_path):
+                with open(typ_path, "r", encoding="utf-8") as f:
+                    typ_content = f.read()
+                pages = typ_content.split("#pagebreak()")
+                first_page = pages[0]
+                clean_lines = [
+                    line
+                    for line in first_page.split("\n")
+                    if not any(line.strip().startswith(p) for p in prefixes)
+                ]
+                question_raw = "\n".join(clean_lines).strip()
+
+                for p in pages[1 : 1 + num_alts]:
+                    clean_p = [
+                        line
+                        for line in p.split("\n")
+                        if not any(line.strip().startswith(pref) for pref in prefixes)
+                    ]
+                    alt_raws.append("\n".join(clean_p).strip())
+
             alternatives = []
             for i, content in enumerate(alternative_contents):
                 alternatives.append(
                     {
                         "content_html": content,
+                        "content_raw": alt_raws[i] if i < len(alt_raws) else None,
                         "is_correct": i == metadata["correct_index"],
                     }
                 )
-
-            # Extract raw text from Typst files
-            question_raw = ""
-            typ_path = os.path.join(questions_path, f"{base}.typ")
-            if os.path.exists(typ_path):
-                with open(typ_path, "r") as f:
-                    typ_content = f.read()
-                first_page = typ_content.split("#pagebreak()")[0]
-                clean_lines = [
-                    line
-                    for line in first_page.split("\n")
-                    if not any(
-                        line.startswith(p) for p in ["#import", "#set", "#include"]
-                    )
-                ]
-                question_raw = "\n".join(clean_lines).strip()
 
             explanation_raw = ""
             if has_expl:
                 expl_path = os.path.join(course_path, "explanations", f"{base}.typ")
                 if os.path.exists(expl_path):
-                    with open(expl_path, "r") as f:
+                    with open(expl_path, "r", encoding="utf-8") as f:
                         expl_content = f.read()
                     clean_lines = [
                         line
                         for line in expl_content.split("\n")
                         if not any(
-                            line.startswith(p)
-                            for p in ["#import", "#set", "#include", "Explanation:"]
+                            line.strip().startswith(p)
+                            for p in [*prefixes, "Explanation:"]
                         )
                     ]
                     explanation_raw = "\n".join(clean_lines).strip()
+
+            formulae_raw = ""
+            if has_formulae:
+                form_path = os.path.join(course_path, "formulae", f"{base}.typ")
+                if os.path.exists(form_path):
+                    with open(form_path, "r", encoding="utf-8") as f:
+                        form_content = f.read()
+                    clean_lines = [
+                        line
+                        for line in form_content.split("\n")
+                        if not any(line.strip().startswith(p) for p in prefixes)
+                    ]
+                    formulae_raw = "\n".join(clean_lines).strip()
+
+            solution_steps_raw = ""
+            if has_solution_steps:
+                steps_path = os.path.join(course_path, "solution_steps", f"{base}.typ")
+                if os.path.exists(steps_path):
+                    with open(steps_path, "r", encoding="utf-8") as f:
+                        steps_content = f.read()
+                    clean_lines = [
+                        line
+                        for line in steps_content.split("\n")
+                        if not any(line.strip().startswith(p) for p in prefixes)
+                    ]
+                    solution_steps_raw = "\n".join(clean_lines).strip()
+
+            prerequisites_raw = ""
+            if has_prereqs:
+                prereq_path = os.path.join(course_path, "prerequisites", f"{base}.typ")
+                if os.path.exists(prereq_path):
+                    with open(prereq_path, "r", encoding="utf-8") as f:
+                        prereq_content = f.read()
+                    clean_lines = [
+                        line
+                        for line in prereq_content.split("\n")
+                        if not any(line.strip().startswith(p) for p in prefixes)
+                    ]
+                    prerequisites_raw = "\n".join(clean_lines).strip()
             course_questions.append(
                 {
                     "id": base,
@@ -155,8 +212,11 @@ for category in os.listdir(content_root):
                     "question_html": question_html,
                     "question_raw": question_raw,
                     "prerequisites_html": prerequisites_html,
+                    "prerequisites_raw": prerequisites_raw,
                     "formulae_html": formulae_html,
+                    "formulae_raw": formulae_raw,
                     "solution_steps_html": solution_steps_html,
+                    "solution_steps_raw": solution_steps_raw,
                     "explanation_html": explanation_html,
                     "explanation_raw": explanation_raw,
                     "alternatives": alternatives,

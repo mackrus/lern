@@ -29,6 +29,7 @@ import {
 } from "../pkg/lern.js";
 import { State } from "./state.js";
 import { UI, translate } from "./ui.js";
+import { typstWasm } from "./typst-renderer.js";
 
 function jsLevenshtein(s1, s2) {
     const len1 = s1.length;
@@ -253,6 +254,16 @@ export const Renderer = {
         } else {
             questionDiv.innerHTML = get_current_question_html();
         }
+
+        if (typstWasm.enabled && currentQuestion && currentQuestion.question_raw) {
+            typstWasm.compile(currentQuestion.question_raw, "question").then(res => {
+                if (res && res.svg) {
+                    const badge = `<div style="font-size: 0.72rem; color: #58a6ff; opacity: 0.85; margin-bottom: 0.5rem; letter-spacing: 0.05em;">⚡ WASM COMPILED IN ${res.elapsed.toFixed(1)}ms${res.cached ? ' (cached)' : ''}</div>`;
+                    questionDiv.innerHTML = badge + res.svg;
+                    UI.fixSvgs();
+                }
+            });
+        }
     },
 
     renderAlternatives(currentQuestion, graded) {
@@ -367,6 +378,16 @@ export const Renderer = {
             btn.className = "alternative";
             btn.innerHTML = get_alternative_html(i);
 
+            const alt = currentQuestion && currentQuestion.alternatives ? currentQuestion.alternatives[i] : null;
+            if (typstWasm.enabled && alt && alt.content_raw) {
+                typstWasm.compile(alt.content_raw, "alternative").then(res => {
+                    if (res && res.svg) {
+                        btn.innerHTML = res.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
+
             if (graded) {
                 const isSelected = selection === i.toString();
                 const isCorrect = is_alternative_correct(i);
@@ -476,6 +497,15 @@ export const Renderer = {
             const isSe = State.currentCourse === "Växtkännedom (Svenska)";
             const noExplanation = isSe ? "Ingen förklaring tillgänglig." : "No explanation available.";
             explanationDiv.innerHTML = rawExplanation || noExplanation;
+
+            if (typstWasm.enabled && currentQuestion && currentQuestion.explanation_raw) {
+                typstWasm.compile(currentQuestion.explanation_raw, "study").then(res => {
+                    if (res && res.svg) {
+                        explanationDiv.innerHTML = res.svg;
+                        UI.fixSvgs();
+                    }
+                });
+            }
         } else {
             explanationDiv.style.display = "none";
             explanationDiv.innerHTML = "";
