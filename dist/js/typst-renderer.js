@@ -1,9 +1,25 @@
 import { $typst, TypstSnippet } from "./typst.bundle.js";
 
 const localFonts = [
-    new URL("../assets/fonts/NotoSans-Regular.ttf", import.meta.url).href,
-    new URL("../assets/fonts/NotoSerif-Regular.ttf", import.meta.url).href,
-    new URL("../assets/fonts/NotoSansMath-Regular.ttf", import.meta.url).href
+    ...[
+        "DejaVuSansMono-Bold.ttf",
+        "DejaVuSansMono-BoldOblique.ttf",
+        "DejaVuSansMono-Oblique.ttf",
+        "DejaVuSansMono.ttf",
+        "LibertinusSerif-Bold.otf",
+        "LibertinusSerif-BoldItalic.otf",
+        "LibertinusSerif-Italic.otf",
+        "LibertinusSerif-Regular.otf",
+        "LibertinusSerif-Semibold.otf",
+        "LibertinusSerif-SemiboldItalic.otf",
+        "NewCM10-Bold.otf",
+        "NewCM10-BoldItalic.otf",
+        "NewCM10-Italic.otf",
+        "NewCM10-Regular.otf",
+        "NewCMMath-Bold.otf",
+        "NewCMMath-Book.otf",
+        "NewCMMath-Regular.otf"
+    ].map(font => new URL(`../assets/fonts/${font}`, import.meta.url).href)
 ];
 
 // Keep initialization self-contained for local/offline deployments. The bundle's
@@ -35,7 +51,7 @@ class TypstWasmEngine {
                 // Warm up the compiler
                 const t0 = performance.now();
                 await $typst.svg({
-                    mainContent: '#set text(font: "Noto Sans")\n#show math.equation: set text(font: "Noto Sans Math")\n$1$'
+                    mainContent: '#set text(font: "Libertinus Serif")\n#show math.equation: set text(font: "NewComputerModernMath")\n$1$'
                 });
                 this.ready = true;
                 const elapsed = performance.now() - t0;
@@ -69,8 +85,8 @@ class TypstWasmEngine {
         }
 
         let header = [
-            '#set text(font: "Noto Sans")',
-            '#show math.equation: set text(font: "Noto Sans Math")',
+            '#set text(font: "Libertinus Serif")',
+            '#show math.equation: set text(font: "NewComputerModernMath")',
             '#let CO = $upright("CO")$',
             '#let CH = $upright("CH")$',
             '#let CaCO = $upright("CaCO")$',
