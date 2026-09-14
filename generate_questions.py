@@ -121,7 +121,13 @@ for category in os.listdir(content_root):
             if os.path.exists(typ_path):
                 with open(typ_path, "r", encoding="utf-8") as f:
                     typ_content = f.read()
-                pages = typ_content.split("#pagebreak()")
+                # Normalize: ensure #pagebreak() before alternatives styled with #set page(width: a_width
+                normalized = re.sub(
+                    r"(?<!#pagebreak\(\)\n)(?<!#pagebreak\(\))\s*(#set page\s*\(\s*width:\s*a_width)",
+                    r"\n#pagebreak()\n\1",
+                    typ_content,
+                )
+                pages = normalized.split("#pagebreak()")
                 first_page = pages[0]
                 clean_lines = [
                     line
@@ -159,6 +165,19 @@ for category in os.listdir(content_root):
                     clean_lines = [
                         line
                         for line in expl_content.split("\n")
+                        if not any(
+                            line.strip().startswith(p)
+                            for p in [*prefixes, "Explanation:"]
+                        )
+                    ]
+                    explanation_raw = "\n".join(clean_lines).strip()
+
+                if not explanation_raw and len(pages) > 1 + num_alts:
+                    raw_p = pages[1 + num_alts]
+                    clean_p = re.split(r"#\s*(?:formulae_page|steps_page|prereq_page)", raw_p)[0]
+                    clean_lines = [
+                        line
+                        for line in clean_p.split("\n")
                         if not any(
                             line.strip().startswith(p)
                             for p in [*prefixes, "Explanation:"]

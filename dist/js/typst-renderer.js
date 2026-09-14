@@ -48,13 +48,23 @@ class TypstWasmEngine {
             };
         }
 
-        let header = "";
+        let header = [
+            '#let CO = $upright("CO")$',
+            '#let CH = $upright("CH")$',
+            '#let CaCO = $upright("CaCO")$',
+            '#let HCO = $upright("HCO")$',
+            '#let N_2O = $upright("N")_2 upright("O")$',
+            '#let H_2CO = $upright("H")_2 upright("CO")$',
+            '#let H_2O = $upright("H")_2 upright("O")$',
+            ''
+        ].join('\n');
+
         if (kind === "alternative") {
-            header = "#set page(width: auto, height: auto, margin: 4pt)\n#set text(size: 14pt)\n";
+            header += "#set page(width: auto, height: auto, margin: 4pt)\n#set text(size: 14pt)\n";
         } else if (kind === "study") {
-            header = "#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: 13pt)\n";
+            header += "#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: 13pt)\n";
         } else {
-            header = "#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: 15pt)\n";
+            header += "#set page(width: 520pt, height: auto, margin: 6pt)\n#set text(size: 15pt)\n";
         }
 
         const t0 = performance.now();
