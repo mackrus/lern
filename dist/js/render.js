@@ -719,13 +719,16 @@ export const Renderer = {
         const prereqHtml = get_current_question_prerequisites_html();
         const formulaeHtml = get_current_question_formulae_html();
         const stepsHtml = get_current_question_solution_steps_html();
+        const prereqRaw = currentQuestion?.prerequisites_raw;
+        const formulaeRaw = currentQuestion?.formulae_raw;
+        const stepsRaw = currentQuestion?.solution_steps_raw;
         const refsJson = get_current_question_references_json();
         const refs = refsJson ? JSON.parse(refsJson) : [];
 
         const tabs = [];
-        if (prereqHtml) tabs.push({ id: "prereqs", labelKey: "tab_prerequisites", html: prereqHtml });
-        if (formulaeHtml) tabs.push({ id: "formulae", labelKey: "tab_formulae", html: formulaeHtml });
-        if (stepsHtml) tabs.push({ id: "steps", labelKey: "tab_solution_steps", html: stepsHtml });
+        if (prereqRaw || prereqHtml) tabs.push({ id: "prereqs", labelKey: "tab_prerequisites", html: prereqHtml });
+        if (formulaeRaw || formulaeHtml) tabs.push({ id: "formulae", labelKey: "tab_formulae", html: formulaeHtml });
+        if (stepsRaw || stepsHtml) tabs.push({ id: "steps", labelKey: "tab_solution_steps", html: stepsHtml });
         if (refs && refs.length > 0) {
             const refsHtml = this.buildReferencesHtml(refs);
             tabs.push({ id: "references", labelKey: "tab_references", html: refsHtml });
