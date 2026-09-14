@@ -5,7 +5,7 @@ import socketserver
 import sys
 import webbrowser
 
-PORT = 8000
+PORT = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else int(os.environ.get("PORT", 8001))
 DIRECTORY = "dist"
 
 
@@ -17,6 +17,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.send_header("Pragma", "no-cache")
         self.send_header("Expires", "0")
+        self.send_header("Cross-Origin-Opener-Policy", "same-origin")
+        self.send_header("Cross-Origin-Embedder-Policy", "credentialless")
         super().end_headers()
 
 
