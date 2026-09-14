@@ -376,8 +376,7 @@ export const Renderer = {
         if (typstWasm.enabled && currentQuestion && currentQuestion.question_raw) {
             typstWasm.compile(currentQuestion.question_raw, "question").then(res => {
                 if (res && res.svg) {
-                    const badge = `<div style="font-size: 0.72rem; color: #58a6ff; opacity: 0.85; margin-bottom: 0.5rem; letter-spacing: 0.05em;">⚡ WASM COMPILED IN ${res.elapsed.toFixed(1)}ms${res.cached ? ' (cached)' : ''}</div>`;
-                    questionDiv.innerHTML = badge + res.svg;
+                    questionDiv.innerHTML = res.svg;
                     UI.fixSvgs();
                 }
             });

@@ -121,23 +121,6 @@ export const UI = {
         ThemeManager.setupThemeToggle();
     },
 
-    setupWasmToggle(onToggle) {
-        const btn = document.getElementById("wasm-toggle");
-        if (!btn) return;
-        btn.onclick = () => {
-            if (onToggle) onToggle();
-        };
-    },
-
-    updateWasmToggle(enabled) {
-        const text = document.getElementById("wasm-badge-text");
-        const btn = document.getElementById("wasm-toggle");
-        if (text) text.textContent = enabled ? "Typst WASM: ON" : "Typst WASM: OFF";
-        if (btn) {
-            btn.style.borderColor = enabled ? "var(--accent-color, #58a6ff)" : "var(--border-color)";
-            btn.style.opacity = enabled ? "1" : "0.65";
-        }
-    },
 
     updateCourseTheme(courseName) {
         ThemeManager.syncWithCourse(courseName);

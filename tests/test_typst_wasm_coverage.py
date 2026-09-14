@@ -54,7 +54,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
         self.assertTrue(os.path.exists(TYPST_BUNDLE), f"Missing {TYPST_BUNDLE}")
 
     def test_frontend_wires_typst_wasm(self):
-        """Ensure render.js and index.html actively route rendering to typstWasm."""
+        """Ensure render.js actively routes rendering to typstWasm without UI debug badges."""
         with open(RENDER_JS, "r", encoding="utf-8") as f:
             render_code = f.read()
         self.assertIn("typstWasm.compile(currentQuestion.question_raw", render_code)
@@ -63,10 +63,11 @@ class TestTypstWasmCoverage(unittest.TestCase):
         self.assertIn("typstWasm.compile(question.question_raw", render_code)
         self.assertIn("typstWasm.compile(question.explanation_raw", render_code)
         self.assertIn("typstWasm.compile(altObj.content_raw", render_code)
+        self.assertNotIn("WASM COMPILED IN", render_code)
 
         with open(INDEX_HTML, "r", encoding="utf-8") as f:
             html_code = f.read()
-        self.assertIn('id="wasm-toggle"', html_code)
+        self.assertNotIn('id="wasm-toggle"', html_code)
 
     def test_all_questions_and_alternatives_have_raw_source(self):
         """Verify that every question and alternative has non-empty raw Typst source."""
