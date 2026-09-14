@@ -36,9 +36,10 @@ export const State = {
             showPrereqs: prereqDiv && prereqDiv.style.display === "block",
             showAlts: toggleAltBtn && toggleAltBtn.dataset.state === "shown",
             selectedTopics: this.currentSavedState ? this.currentSavedState.selectedTopics : null,
-            examEndTime: this.currentExamEndTime,
-            questions: ["biology_custom", "practice", "six_easy", "six_hard"].includes(this.currentMode) && this.currentQuestionsList
-                ? (this.currentCategory === "Biology" ? this.currentQuestionsList.map(q => q.plantIndex) : this.currentQuestionsList.map(q => q.id))
+            questions: this.currentQuestionsList
+                ? (this.currentCategory === "Biology" 
+                    ? this.currentQuestionsList.map(q => (q.plantIndex !== undefined ? q.plantIndex : q.id)) 
+                    : this.currentQuestionsList.map(q => q.id))
                 : null,
             statsUpdated: this.currentSavedState ? this.currentSavedState.statsUpdated : false,
             bioParams: this.currentSavedState ? this.currentSavedState.bioParams : null,

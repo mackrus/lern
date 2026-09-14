@@ -238,55 +238,106 @@ export const Navigation = {
         document.getElementById("quiz").style.display = "block";
 
         let questions = [];
-        
-        if (state && state.questions) {
-            if (categoryName === "Biology") {
-                if (state.questions.length > 0 && typeof state.questions[0] === "number") {
-                    const bioParams = state.bioParams;
-                    const courseData = courseInfo ? (courseInfo.data || []).map((plant, idx) => ({ ...plant, index: idx })) : [];
-                    if (bioParams && courseData.length > 0 && State.Biology) {
-                        const isSe = courseName === "Växtkännedom (Svenska)";
-                        questions = state.questions.map((plantIndex, idx) => {
-                            const plant = courseData[plantIndex];
-                            if (!plant) return null;
-                            return State.Biology.generateQuestion(
-                                plant, 
-                                idx, 
-                                bioParams.qAttr, 
-                                bioParams.aAttr, 
-                                bioParams.isTextInput, 
-                                isSe,
-                                courseData
-                            );
-                        }).filter(Boolean);
+        const isRestoring = !!(state && state.selections);
+
+        if (isRestoring) {
+            // RESTORE existing quiz state without re-randomizing
+            if (state.questions && state.questions.length > 0) {
+                if (categoryName === "Biology") {
+                    if (typeof state.questions[0] === "number") {
+                        const bioParams = state.bioParams;
+                        const courseData = courseInfo ? (courseInfo.data || []).map((plant, idx) => ({ ...plant, index: idx })) : [];
+                        if (bioParams && courseData.length > 0 && State.Biology) {
+                            const isSe = courseName === "Växtkännedom (Svenska)";
+                            questions = state.questions.map((plantIndex, idx) => {
+                                const plant = courseData[plantIndex];
+                                if (!plant) return null;
+                                return State.Biology.generateQuestion(
+                                    plant, 
+                                    idx, 
+                                    bioParams.qAttr, 
+                                    bioParams.aAttr, 
+                                    bioParams.isTextInput, 
+                                    isSe,
+                                    courseData
+                                );
+                            }).filter(Boolean);
+                        }
+                    } else {
+                        questions = state.questions;
                     }
                 } else {
-                    questions = state.questions;
+                    const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
+                    const qMap = new Map(fullQuestions.map(q => [q.id, q]));
+                    questions = state.questions.map(id => (typeof id === "string" ? qMap.get(id) : id)).filter(Boolean);
                 }
-            } else if (categoryName !== "Biology" && state.questions.length > 0 && typeof state.questions[0] === "string") {
-                const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
-                questions = state.questions.map(id => fullQuestions.find(q => q.id === id)).filter(Boolean);
             } else {
-                questions = state.questions;
+                // Fallback for legacy state: preserve deterministic order without re-shuffling
+                const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
+                if (state.selectedTopics) {
+                    questions = fullQuestions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
+                } else if (mode === "practice") {
+                    const pool = fullQuestions.filter(q => q.label === "practice");
+                    questions = (pool.length > 0 ? pool : fullQuestions).slice(0, 10);
+                } else if (mode === "six_easy") {
+                    questions = fullQuestions.filter(q => q.difficulty === "easy").slice(0, 6);
+                } else if (mode === "six_hard") {
+                    questions = fullQuestions.filter(q => q.difficulty === "hard").slice(0, 6);
+                } else if (mode === "exam") {
+                    const pool = fullQuestions.filter(q => q.label === "exam");
+                    questions = pool.length > 0 ? pool : fullQuestions;
+                } else {
+                    questions = fullQuestions;
+                }
             }
-        } else if (categoryName === "Biology") {
-            questions = courseInfo.data || [];
+
+            if (mode === "exam") {
+                State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
+            }
         } else {
-            questions = courseInfo ? (courseInfo.data || []) : [];
-        }
-        
-        // Filtering logic based on mode/state
-        if (state && state.selectedTopics) {
-            questions = questions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
-        } else if (mode === "practice") {
-            questions = questions.filter(q => q.label === "practice").sort(() => 0.5 - Math.random()).slice(0, 10);
-        } else if (mode === "six_easy") {
-            questions = questions.filter(q => q.difficulty === "easy").sort(() => 0.5 - Math.random()).slice(0, 6);
-        } else if (mode === "six_hard") {
-            questions = questions.filter(q => q.difficulty === "hard").sort(() => 0.5 - Math.random()).slice(0, 6);
-        } else if (mode === "exam") {
-            questions = questions.filter(q => q.label === "exam");
-            State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
+            // NEW QUIZ / RESTART: Filter and randomize questions
+            const shuffle = (arr) => {
+                const copy = [...arr];
+                for (let i = copy.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [copy[i], copy[j]] = [copy[j], copy[i]];
+                }
+                return copy;
+            };
+
+            if (categoryName === "Biology") {
+                if (state && state.questions) {
+                    questions = state.questions;
+                } else {
+                    questions = shuffle(courseInfo ? (courseInfo.data || []) : []);
+                }
+            } else {
+                const allQuestions = courseInfo ? (courseInfo.data || []) : [];
+                
+                if (state && state.selectedTopics && state.selectedTopics.length > 0) {
+                    const filtered = allQuestions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
+                    questions = shuffle(filtered);
+                } else if (mode === "practice") {
+                    const practicePool = allQuestions.filter(q => q.label === "practice");
+                    const pool = practicePool.length > 0 ? practicePool : allQuestions;
+                    questions = shuffle(pool).slice(0, 10);
+                } else if (mode === "six_easy") {
+                    const easyPool = allQuestions.filter(q => q.difficulty === "easy");
+                    const pool = easyPool.length > 0 ? easyPool : allQuestions;
+                    questions = shuffle(pool).slice(0, 6);
+                } else if (mode === "six_hard") {
+                    const hardPool = allQuestions.filter(q => q.difficulty === "hard");
+                    const pool = hardPool.length > 0 ? hardPool : allQuestions;
+                    questions = shuffle(pool).slice(0, 6);
+                } else if (mode === "exam") {
+                    const examPool = allQuestions.filter(q => q.label === "exam");
+                    const pool = examPool.length > 0 ? examPool : allQuestions;
+                    questions = shuffle(pool);
+                    State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
+                } else {
+                    questions = shuffle(allQuestions);
+                }
+            }
         }
 
         if (questions.length === 0) {
