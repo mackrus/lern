@@ -14,6 +14,8 @@ import {
     get_topic_stats_json
 } from "../pkg/lern.js";
 import { isNumericalQuestion } from "./math-evaluator.js";
+import { clearDb } from "./db.js";
+import { typstWasm } from "./typst-renderer.js";
 
 // Global error handling
 window.onerror = function(msg, url, line) {
@@ -141,9 +143,12 @@ function attachGlobalEventListeners() {
 
     const purgeBtn = document.getElementById("purge-storage-btn");
     if (purgeBtn) {
-        purgeBtn.onclick = () => {
+        purgeBtn.onclick = async () => {
             if (confirm("Purge ALL data?")) {
+                typstWasm.cache.clear();
+                await clearDb();
                 localStorage.clear();
+                await UI.updateStorageUsage();
                 Navigation.showMenu();
             }
         };

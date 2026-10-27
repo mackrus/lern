@@ -1,5 +1,6 @@
 import { State } from "./state.js";
 import { ThemeManager } from "./theme.js";
+import { getDbPayloadSize } from "./db.js";
 
 export function translate(key, isSwedish) {
     if (isSwedish === undefined) {
@@ -162,27 +163,38 @@ export const UI = {
         return "Needs Review";
     },
 
-    updateStorageUsage() {
+    async updateStorageUsage() {
         let total = 0;
         try {
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const value = localStorage.getItem(key);
-                if (key && value) {
-                    total += (key.length + value.length) * 2;
+            if (typeof localStorage !== "undefined" && localStorage) {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const value = localStorage.getItem(key);
+                    if (key && value) {
+                        total += (key.length + value.length) * 2;
+                    }
                 }
             }
         } catch (e) {
-            console.warn("Failed to calculate storage usage", e);
+            console.warn("Failed to calculate localStorage usage", e);
+        }
+
+        try {
+            const idbBytes = await getDbPayloadSize();
+            total += idbBytes;
+        } catch (e) {
+            console.warn("Failed to calculate IndexedDB usage", e);
         }
         
         const usageSpan = document.getElementById("storage-usage");
-        if (usageSpan) {
-            if (total < 1024) {
-                usageSpan.innerText = `Usage: ${total} bytes`;
-            } else {
-                usageSpan.innerText = `Usage: ${(total / 1024).toFixed(1)} KB`;
-            }
+        if (!usageSpan) return;
+
+        if (total < 1024) {
+            usageSpan.innerText = `Usage: ${total} bytes`;
+        } else if (total < 1024 * 1024) {
+            usageSpan.innerText = `Usage: ${(total / 1024).toFixed(1)} KB`;
+        } else {
+            usageSpan.innerText = `Usage: ${(total / (1024 * 1024)).toFixed(2)} MB`;
         }
     },
 

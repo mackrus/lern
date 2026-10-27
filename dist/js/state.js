@@ -7,6 +7,29 @@ import {
     get_topic_stats_json,
     get_incorrect_indices,
 } from "../pkg/lern.js";
+import { 
+    saveCourseStateDb, 
+    loadCourseStateDb, 
+    deleteCourseStateDb 
+} from "./db.js";
+
+export function safeLocalStorageSet(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (err) {
+        const isQuota = 
+            (typeof DOMException !== "undefined" && err instanceof DOMException &&
+             (err.name === "QuotaExceededError" || err.name === "NS_ERROR_DOM_QUOTA_REACHED" || err.code === 22 || err.code === 1014)) ||
+            (err && (err.name === "QuotaExceededError" || err.name === "NS_ERROR_DOM_QUOTA_REACHED"));
+        if (isQuota) {
+            console.warn(`[Storage] localStorage quota exceeded writing ${key}. Preserving state in IndexedDB.`);
+            return false;
+        }
+        console.error(`[Storage] Failed to write key ${key} to localStorage:`, err);
+        return false;
+    }
+}
 
 export const State = {
     coursesData: null,
@@ -49,7 +72,8 @@ export const State = {
             numericalInputs: this.numericalInputs || {}
         };
         this.currentSavedState = state;
-        localStorage.setItem(`lern_progress_${this.currentCourse}`, JSON.stringify(state));
+        safeLocalStorageSet(`lern_progress_${this.currentCourse}`, JSON.stringify(state));
+        saveCourseStateDb(this.currentCourse, state);
     },
 
     load(courseName) {
@@ -63,6 +87,12 @@ export const State = {
         }
     },
 
+    async loadAsync(courseName) {
+        const syncState = this.load(courseName);
+        if (syncState) return syncState;
+        return await loadCourseStateDb(courseName);
+    },
+
     clear(courseName) {
         this.numericalInputs = {};
         this.currentSavedState = null;
@@ -70,10 +100,11 @@ export const State = {
         this.currentSelectedTopics = null;
         this.currentExamEndTime = null;
         localStorage.removeItem(`lern_progress_${courseName}`);
+        deleteCourseStateDb(courseName);
     },
 
     setLastCourse(courseName) {
-        localStorage.setItem("lern_last_course", courseName);
+        safeLocalStorageSet("lern_last_course", courseName);
     },
 
     getLastCourse() {
@@ -94,7 +125,7 @@ export const State = {
             cumulative[stat.topic].total += stat.total;
         });
 
-        localStorage.setItem(key, JSON.stringify(cumulative));
+        safeLocalStorageSet(key, JSON.stringify(cumulative));
     },
 
     getCumulativeStats(courseName) {
@@ -169,7 +200,7 @@ export const State = {
                         }
 
                         if (modified) {
-                            localStorage.setItem(key, JSON.stringify(state));
+                            safeLocalStorageSet(key, JSON.stringify(state));
                         }
                     }
                 } catch (e) {
