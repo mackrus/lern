@@ -1,4 +1,6 @@
 import { $typst, TypstSnippet } from "./typst.bundle.js";
+import { LruCache } from "./lru-cache.js";
+import { getSvgFromDb, saveSvgToDb } from "./db.js";
 
 const localFonts = [
     ...[
@@ -32,7 +34,7 @@ $typst.use(
 
 class TypstWasmEngine {
     constructor() {
-        this.cache = new Map();
+        this.cache = new LruCache(100);
         this.enabled = true;
         this.ready = false;
         this.initializing = false;
@@ -76,9 +78,20 @@ class TypstWasmEngine {
         const baseSize = kind === "alternative" ? 14 : (kind === "study" ? 13 : 15);
         const currentSize = (baseSize * scale).toFixed(1);
         const cacheKey = `${kind}:${currentSize}:${rawCode}`;
-        if (this.cache.has(cacheKey)) {
+        const l1Svg = this.cache.get(cacheKey);
+        if (l1Svg !== undefined) {
             return {
-                svg: this.cache.get(cacheKey),
+                svg: l1Svg,
+                elapsed: 0,
+                cached: true
+            };
+        }
+
+        const idbSvg = await getSvgFromDb(cacheKey);
+        if (idbSvg) {
+            this.cache.set(cacheKey, idbSvg);
+            return {
+                svg: idbSvg,
                 elapsed: 0,
                 cached: true
             };
@@ -112,6 +125,7 @@ class TypstWasmEngine {
             this.lastCompileTime = elapsed;
             this.totalCompiles++;
             this.cache.set(cacheKey, svg);
+            saveSvgToDb(cacheKey, svg);
             return { svg, elapsed, cached: false };
         } catch (err) {
             console.warn(`[Typst WASM] Compile error for (${kind}):`, err);
