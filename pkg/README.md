@@ -6,29 +6,27 @@ Live Demo: [https://mackrus.github.io/lern/](https://mackrus.github.io/lern/)
 
 ## Overview
 
-**Lern** is a modern web application for practicing physics, mathematics, and botany through interactive quizzes. It combines the high-fidelity typesetting of **Typst** with the performance of **Rust** and **WebAssembly** to deliver a crisp and professional learning experience.
-
-Inspired by platforms like Brilliant.com, Lern focuses on a modern aesthetic: monospace fonts, sharp edges, and zero-distraction layouts.
+**Lern** is a modern web application for practicing mathematics, physics, and botany through interactive quizzes. It combines the high-fidelity typesetting of **Typst** with the performance of **Rust** and **WebAssembly** to deliver a crisp, zero-distraction learning experience.
 
 ## Tech Stack
 
-- **Core Logic**: Rust (compiled to WASM via `wasm-pack`).
-- **Content Engine**: [Typst](https://typst.app/) compiled in the browser through Typst WebAssembly and rendered as live SVG.
-- **Automation**: Python (using `uv` for aggregation and build scripting).
-- **Frontend**: Vanilla JavaScript & CSS (hosting the Rust and Typst WASM modules and rendering raw Typst content at runtime).
-- **Persistence**: `localStorage` (your progress never leaves your machine).
+- **Core Logic**: Rust (`src/lib.rs`, `src/quiz.rs`) compiled to WebAssembly via `wasm-pack` (`dist/pkg/`).
+- **Content Engine**: Client-side [Typst](https://typst.app/) WebAssembly (`@myriaddreamin/typst.ts`) compiling raw Typst source to SVG at runtime with bundled local fonts and idle next-question prefetching.
+- **Automation & Tooling**: Python (via `uv` and `ruff`) for question aggregation and Node.js for integration tests.
+- **Frontend**: Vanilla ES Modules & CSS (`dist/js/`, `dist/css/`) including a zero-dependency symbolic/complex math evaluator (`dist/js/math-evaluator.js`).
+- **Persistence & Caching**: Two-tier storage using in-memory `LruCache`, `IndexedDB` (`lern_db` for compiled SVGs and course snapshots), and `localStorage` (all progress stays on your machine).
 
 ## Key Features
 
-- **Physics & Math Quizzes**: 80+ questions across Quantum Mechanics and Thermodynamics.
-- **Botanical Identification (Biology)**: Sweden plant species matching featuring Swedish common names, botanical Latin names, and photo galleries.
-- **Flexible Training Modes**: Select from multiple quiz modes (Topic Traversal, Six easy pieces, Six not so easy pieces, Practice, Exam) with dynamic hover guides explaining how each mode works.
-- **High-Fidelity Math**: Every question and alternative is rendered at runtime using Typst's native math engine; the normal rendering path does not rely on precompiled question SVGs.
-- **Topic-Based Learning**: Filter questions by granular topics like Spin, Entropy, or Harmonic Oscillator.
-- **Textbook References**: Integrated "Where do I read about this?" sidebar pointing to standard texts (Griffiths for QM, Finn's for Thermo).
-- **Performance Analytics**: Track your strengths and weaknesses across different topics over time.
-- **Privacy First**: Everything is stored locally. No cookies, no tracking, no accounts required.
-- **Themes**: Minimalist Dark and Light modes.
+- **Mathematics & Physics Courses (276 Questions)**:
+  - **Mathematics**: *Complex Analysis* and *Multivariable Calculus*.
+  - **Physics**: *Quantum Mechanics*, *Thermodynamics*, and *Climate Physics*.
+- **Botanical Identification (185 Species)**: Swedish plant species training (*Växtkännedom*) pairing Swedish common names, botanical Latin names, and photos across multiple-choice and fuzzy free-text modes (graded with Levenshtein similarity and character-level visual diffs).
+- **Live Symbolic & Complex Input**: Numerical questions automatically render an interactive expression bar (`pi`, `e`, `i`, `sqrt()`, powers, fractions, trig/log) with real-time evaluation instead of revealing multiple-choice options.
+- **4-Tab Study Guide**: Each question includes on-demand *Prerequisites*, *Formulae*, progressive *Solution Steps* (strategy without spoiling the final answer), and textbook/lecture *References* (with direct links to resources like [complexanalysis.org](https://complexanalysis.org)).
+- **Copy as AI Tutor Prompt**: One-click prompt builder that formats the current question, notation, and Socratic tutoring instructions for an LLM without leaking the solution.
+- **Flexible Training Modes**: *Topic Traversal*, *Six Easy Pieces*, *Six Not-So-Easy Pieces*, *Practice*, and timed *Exam* mode.
+- **Performance Analytics**: Track per-topic accuracy within a session and cumulatively over time.
 
 ## Getting Started
 
@@ -36,8 +34,9 @@ Inspired by platforms like Brilliant.com, Lern focuses on a modern aesthetic: mo
 
 - [Rust](https://rustup.rs/) (with `wasm-pack`)
 - [Python 3.10+](https://www.python.org/) (with `uv`)
+- [Node.js 20+](https://nodejs.org/) (for running the test suite)
 
-### Build and Run
+### Build, Test, and Run
 
 1. **Clone the repository**:
 
@@ -47,13 +46,19 @@ Inspired by platforms like Brilliant.com, Lern focuses on a modern aesthetic: mo
    ```
 
 2. **Build the project**:
-   This script builds the Rust WASM module, makes the checked-in Typst WASM runtime assets available, and aggregates raw Typst content with the question metadata. Typst question content is compiled in the browser; the build does not generate precompiled question SVGs.
+   Compiles the Rust WASM core (`dist/pkg/`), ensures Typst WASM runtime assets are in `dist/js/`, and aggregates raw Typst source and metadata into `dist/questions.json`.
 
    ```bash
    ./build.sh
    ```
 
-3. **Serve locally**:
+3. **Run the test suite**:
+
+   ```bash
+   npm run test:all
+   ```
+
+4. **Serve locally**:
 
    ```bash
    uv run serve.py
@@ -63,16 +68,16 @@ Inspired by platforms like Brilliant.com, Lern focuses on a modern aesthetic: mo
 
 ## Repository Structure
 
-- `content/`: Typst source files for questions, explanations, and prerequisites.
-- `src/`: Rust source code for quiz logic and WASM bindings.
-- `dist/`: The web application root (HTML, CSS, JS, and compiled assets).
-- `dist/assets/fonts/`: Fonts bundled for deterministic Typst WASM rendering.
-- `generate_questions.py`: Aggregator script that syncs metadata and assets.
-- `.github/workflows/`: Automated CI/CD for GitHub Pages deployment.
+- `content/`: Course modules (`mathematics/`, `physics/`, `biology/`) with `.typ` sources for questions, explanations, formulae, solution steps, and prerequisites.
+- `src/`: Rust source code for quiz state, deterministic shuffling, grading, and WASM bindings.
+- `dist/`: Web application root (`index.html`, `css/`, `js/`, `pkg/`, and bundled fonts in `assets/fonts/`).
+- `tests/`: Automated Node.js and Python test suites for WASM parity, math evaluation, IndexedDB/LRU caching, and exhaustive Typst compilation.
+- `generate_questions.py`: Aggregator script that packages raw Typst content and metadata into `dist/questions.json`.
+- `.github/workflows/deploy.yml`: Automated CI/CD running `build.sh` and `npm run test:all` before deploying to GitHub Pages.
 
 ## Principles
 
 - **No Slop**: Clean, understandable code and crisp UI.
 - **Native Notation**: All content is written in native Typst code (no LaTeX backslashes).
 - **Indefinite Navigation**: Quiz navigation wraps around for continuous practice.
-- **Privacy**: User data belongs to the user.
+- **Privacy First**: Everything is stored locally—no cookies, tracking, or accounts.
