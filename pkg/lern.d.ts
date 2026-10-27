@@ -3,7 +3,11 @@
 
 export function can_go_back(): boolean;
 
+export function evaluate_text_answer_wasm(user: string, expected: string): number;
+
 export function get_alternative_html(index: number): string | undefined;
+
+export function get_alternative_raw(index: number): string | undefined;
 
 export function get_alternatives_count(): number;
 
@@ -11,7 +15,7 @@ export function get_current_question_explanation_html(): string | undefined;
 
 export function get_current_question_explanation_raw(): string | undefined;
 
-export function get_current_question_formulae_html(): string | undefined;
+export function get_current_question_formulae_raw(): string | undefined;
 
 export function get_current_question_html(): string | undefined;
 
@@ -21,21 +25,25 @@ export function get_current_question_index(): number;
 
 export function get_current_question_label(): string | undefined;
 
-export function get_current_question_prerequisites_html(): string | undefined;
+export function get_current_question_prerequisites_raw(): string | undefined;
 
 export function get_current_question_raw(): string | undefined;
 
 export function get_current_question_references_json(): string | undefined;
 
-export function get_current_question_solution_steps_html(): string | undefined;
+export function get_current_question_solution_steps_raw(): string | undefined;
 
 export function get_current_selection(): string | undefined;
 
 export function get_explanation_html_by_index(index: number): string | undefined;
 
+export function get_explanation_raw_by_index(index: number): string | undefined;
+
 export function get_incorrect_indices(): Uint32Array;
 
 export function get_question_html_by_index(index: number): string | undefined;
+
+export function get_question_raw_by_index(index: number): string | undefined;
 
 export function get_references_json_by_index(index: number): string | undefined;
 
@@ -72,22 +80,26 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
     readonly can_go_back: () => number;
+    readonly evaluate_text_answer_wasm: (a: number, b: number, c: number, d: number) => number;
     readonly get_alternative_html: (a: number) => [number, number];
+    readonly get_alternative_raw: (a: number) => [number, number];
     readonly get_alternatives_count: () => number;
     readonly get_current_question_explanation_html: () => [number, number];
     readonly get_current_question_explanation_raw: () => [number, number];
-    readonly get_current_question_formulae_html: () => [number, number];
+    readonly get_current_question_formulae_raw: () => [number, number];
     readonly get_current_question_html: () => [number, number];
     readonly get_current_question_id: () => [number, number];
     readonly get_current_question_label: () => [number, number];
-    readonly get_current_question_prerequisites_html: () => [number, number];
+    readonly get_current_question_prerequisites_raw: () => [number, number];
     readonly get_current_question_raw: () => [number, number];
     readonly get_current_question_references_json: () => [number, number];
-    readonly get_current_question_solution_steps_html: () => [number, number];
+    readonly get_current_question_solution_steps_raw: () => [number, number];
     readonly get_current_selection: () => [number, number];
     readonly get_explanation_html_by_index: (a: number) => [number, number];
+    readonly get_explanation_raw_by_index: (a: number) => [number, number];
     readonly get_incorrect_indices: () => [number, number];
     readonly get_question_html_by_index: (a: number) => [number, number];
+    readonly get_question_raw_by_index: (a: number) => [number, number];
     readonly get_references_json_by_index: (a: number) => [number, number];
     readonly get_selections_json: () => [number, number];
     readonly get_topic_stats_json: () => [number, number];
@@ -105,9 +117,9 @@ export interface InitOutput {
     readonly next_question: () => void;
     readonly grade_quiz: () => void;
     readonly __wbindgen_externrefs: WebAssembly.Table;
-    readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
+    readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __externref_table_dealloc: (a: number) => void;
     readonly __wbindgen_start: () => void;
 }

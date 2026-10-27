@@ -4,22 +4,12 @@ import { getSvgFromDb, saveSvgToDb } from "./db.js";
 
 const localFonts = [
     ...[
-        "DejaVuSansMono-Bold.ttf",
-        "DejaVuSansMono-BoldOblique.ttf",
-        "DejaVuSansMono-Oblique.ttf",
         "DejaVuSansMono.ttf",
         "LibertinusSerif-Bold.otf",
         "LibertinusSerif-BoldItalic.otf",
         "LibertinusSerif-Italic.otf",
         "LibertinusSerif-Regular.otf",
-        "LibertinusSerif-Semibold.otf",
-        "LibertinusSerif-SemiboldItalic.otf",
-        "NewCM10-Bold.otf",
-        "NewCM10-BoldItalic.otf",
-        "NewCM10-Italic.otf",
-        "NewCM10-Regular.otf",
         "NewCMMath-Bold.otf",
-        "NewCMMath-Book.otf",
         "NewCMMath-Regular.otf"
     ].map(font => new URL(`../assets/fonts/${font}`, import.meta.url).href)
 ];
@@ -42,6 +32,7 @@ class TypstWasmEngine {
         this.lastCompileTime = 0;
         this.totalCompiles = 0;
         this.fontScale = 1.0;
+        this.prefetchTimeout = null;
     }
 
     async init() {
@@ -100,6 +91,7 @@ class TypstWasmEngine {
         let header = [
             '#set text(font: "Libertinus Serif")',
             '#show math.equation: set text(font: "NewComputerModernMath")',
+            '#let list_style = (indent: 1em, body-indent: 0.5em, spacing: 1.2em)',
             '#let CO = $upright("CO")$',
             '#let CH = $upright("CH")$',
             '#let CaCO = $upright("CaCO")$',
@@ -131,6 +123,27 @@ class TypstWasmEngine {
             console.warn(`[Typst WASM] Compile error for (${kind}):`, err);
             return null;
         }
+    }
+
+    prefetchQuestion(question) {
+        if (!this.enabled || !question) return;
+        const schedule = typeof window !== "undefined" && window.requestIdleCallback
+            ? window.requestIdleCallback.bind(window)
+            : (cb) => setTimeout(cb, 120);
+
+        schedule(async () => {
+            if (!this.enabled) return;
+            if (question.question_raw) {
+                await this.compile(question.question_raw, "question");
+            }
+            if (Array.isArray(question.alternatives)) {
+                for (const alt of question.alternatives) {
+                    if (alt && alt.content_raw) {
+                        await this.compile(alt.content_raw, "alternative");
+                    }
+                }
+            }
+        });
     }
 }
 

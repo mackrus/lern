@@ -9,11 +9,39 @@ export function can_go_back() {
 }
 
 /**
+ * @param {string} user
+ * @param {string} expected
+ * @returns {number}
+ */
+export function evaluate_text_answer_wasm(user, expected) {
+    const ptr0 = passStringToWasm0(user, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ptr1 = passStringToWasm0(expected, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len1 = WASM_VECTOR_LEN;
+    const ret = wasm.evaluate_text_answer_wasm(ptr0, len0, ptr1, len1);
+    return ret;
+}
+
+/**
  * @param {number} index
  * @returns {string | undefined}
  */
 export function get_alternative_html(index) {
     const ret = wasm.get_alternative_html(index);
+    let v1;
+    if (ret[0] !== 0) {
+        v1 = getStringFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    }
+    return v1;
+}
+
+/**
+ * @param {number} index
+ * @returns {string | undefined}
+ */
+export function get_alternative_raw(index) {
+    const ret = wasm.get_alternative_raw(index);
     let v1;
     if (ret[0] !== 0) {
         v1 = getStringFromWasm0(ret[0], ret[1]).slice();
@@ -59,8 +87,8 @@ export function get_current_question_explanation_raw() {
 /**
  * @returns {string | undefined}
  */
-export function get_current_question_formulae_html() {
-    const ret = wasm.get_current_question_formulae_html();
+export function get_current_question_formulae_raw() {
+    const ret = wasm.get_current_question_formulae_raw();
     let v1;
     if (ret[0] !== 0) {
         v1 = getStringFromWasm0(ret[0], ret[1]).slice();
@@ -119,8 +147,8 @@ export function get_current_question_label() {
 /**
  * @returns {string | undefined}
  */
-export function get_current_question_prerequisites_html() {
-    const ret = wasm.get_current_question_prerequisites_html();
+export function get_current_question_prerequisites_raw() {
+    const ret = wasm.get_current_question_prerequisites_raw();
     let v1;
     if (ret[0] !== 0) {
         v1 = getStringFromWasm0(ret[0], ret[1]).slice();
@@ -158,8 +186,8 @@ export function get_current_question_references_json() {
 /**
  * @returns {string | undefined}
  */
-export function get_current_question_solution_steps_html() {
-    const ret = wasm.get_current_question_solution_steps_html();
+export function get_current_question_solution_steps_raw() {
+    const ret = wasm.get_current_question_solution_steps_raw();
     let v1;
     if (ret[0] !== 0) {
         v1 = getStringFromWasm0(ret[0], ret[1]).slice();
@@ -196,6 +224,20 @@ export function get_explanation_html_by_index(index) {
 }
 
 /**
+ * @param {number} index
+ * @returns {string | undefined}
+ */
+export function get_explanation_raw_by_index(index) {
+    const ret = wasm.get_explanation_raw_by_index(index);
+    let v1;
+    if (ret[0] !== 0) {
+        v1 = getStringFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    }
+    return v1;
+}
+
+/**
  * @returns {Uint32Array}
  */
 export function get_incorrect_indices() {
@@ -211,6 +253,20 @@ export function get_incorrect_indices() {
  */
 export function get_question_html_by_index(index) {
     const ret = wasm.get_question_html_by_index(index);
+    let v1;
+    if (ret[0] !== 0) {
+        v1 = getStringFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    }
+    return v1;
+}
+
+/**
+ * @param {number} index
+ * @returns {string | undefined}
+ */
+export function get_question_raw_by_index(index) {
+    const ret = wasm.get_question_raw_by_index(index);
     let v1;
     if (ret[0] !== 0) {
         v1 = getStringFromWasm0(ret[0], ret[1]).slice();

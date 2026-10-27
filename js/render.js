@@ -3,15 +3,16 @@ import {
     get_current_selection,
     get_alternatives_count,
     get_alternative_html,
+    get_alternative_raw,
     is_alternative_correct,
     get_current_question_label,
     get_current_question_html,
     get_current_question_raw,
     get_current_question_explanation_raw,
     get_current_question_references_json,
-    get_current_question_prerequisites_html,
-    get_current_question_formulae_html,
-    get_current_question_solution_steps_html,
+    get_current_question_prerequisites_raw,
+    get_current_question_formulae_raw,
+    get_current_question_solution_steps_raw,
     get_total_questions,
     get_selections_json,
     set_question_index,
@@ -20,61 +21,21 @@ import {
     next_question,
     previous_question,
     grade_quiz,
+    evaluate_text_answer_wasm,
     get_score,
     get_topic_stats_json,
     get_incorrect_indices,
     get_question_html_by_index,
+    get_question_raw_by_index,
     get_explanation_html_by_index,
+    get_explanation_raw_by_index,
     get_references_json_by_index,
     restore_quiz_state
 } from "../pkg/lern.js";
 import { State } from "./state.js";
 import { UI, translate } from "./ui.js";
 import { typstWasm } from "./typst-renderer.js";
-import { isNumericalQuestion, matchAlternative, cleanTypstMath, evaluateMath } from "./math-evaluator.js";
-
-function deterministicShuffle(items, id) {
-    const result = [...items];
-    if (!id || result.length < 2) return result;
-
-    let seed = 0n;
-    for (const byte of new TextEncoder().encode(id)) {
-        seed = (seed * 31n + BigInt(byte)) & ((1n << 64n) - 1n);
-    }
-    for (let i = result.length - 1; i > 0; i--) {
-        seed = (seed * 6364136223846793005n + 1442695040888963407n) & ((1n << 64n) - 1n);
-        const j = Number((seed >> 32n) % BigInt(i + 1));
-        [result[i], result[j]] = [result[j], result[i]];
-    }
-    return result;
-}
-
-function displayedAlternatives(question) {
-    return question?.alternatives ? deterministicShuffle(question.alternatives, question.id) : [];
-}
-
-function jsLevenshtein(s1, s2) {
-    const len1 = s1.length;
-    const len2 = s2.length;
-    if (len1 === 0) return len2;
-    if (len2 === 0) return len1;
-    
-    const dp = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
-    for (let i = 0; i <= len1; i++) dp[i][0] = i;
-    for (let j = 0; j <= len2; j++) dp[0][j] = j;
-    
-    for (let i = 1; i <= len1; i++) {
-        for (let j = 1; j <= len2; j++) {
-            const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
-            dp[i][j] = Math.min(
-                dp[i - 1][j] + 1,
-                dp[i][j - 1] + 1,
-                dp[i - 1][j - 1] + cost
-            );
-        }
-    }
-    return dp[len1][len2];
-}
+import { isNumericalQuestion, cleanTypstMath, evaluateMath } from "./math-evaluator.js";
 
 function diffStrings(userStr, correctStr) {
     const s1 = userStr;
@@ -214,6 +175,29 @@ export const Renderer = {
         const sidebarHeader = document.querySelector("#alternatives-area h3");
         if (sidebarHeader) sidebarHeader.innerText = translate("your_answer_header");
 
+        // Prefetch next question in idle time
+        if (!graded && State.currentQuestionsList && State.currentQuestionsList.length > 1) {
+            const nextIdx = (currentIndex + 1) % State.currentQuestionsList.length;
+            const nextQuestion = State.currentQuestionsList[nextIdx];
+            if (nextQuestion) {
+                typstWasm.prefetchQuestion(nextQuestion);
+            }
+        }
+    },
+
+    matchWasmAlternative(userInput, questionIndex) {
+        const userVal = evaluateMath(userInput);
+        if (!userVal) return -1;
+        set_question_index(questionIndex);
+        const count = get_alternatives_count();
+        for (let a = 0; a < count; a++) {
+            const altRaw = get_alternative_raw(a);
+            const altVal = evaluateMath(altRaw);
+            if (altVal && userVal.equals(altVal)) {
+                return a;
+            }
+        }
+        return -1;
     },
 
     syncTextInput() {
@@ -249,16 +233,8 @@ export const Renderer = {
             if (isNumericalQuestion(q)) {
                 const typed = State.numericalInputs ? State.numericalInputs[q.id] : null;
                 if (typed !== undefined && typed !== null && typeof typed === "string" && typed.trim().length > 0) {
-                    const match = matchAlternative(typed.trim(), q);
-                    if (match.matchedIndex >= 0) {
-                        set_question_index(i);
-                        const expectedAlternative = q.alternatives[match.matchedIndex];
-                        const displayed = displayedAlternatives(q);
-                        let displayedIndex = displayed.indexOf(expectedAlternative);
-                        selections[i] = (displayedIndex >= 0 ? displayedIndex : match.matchedIndex).toString();
-                    } else {
-                        selections[i] = "999999";
-                    }
+                    const matchedIdx = this.matchWasmAlternative(typed.trim(), i);
+                    selections[i] = matchedIdx >= 0 ? matchedIdx.toString() : "999999";
                     modified = true;
                 } else if (selections[i] !== undefined && selections[i] !== null && selections[i] !== "") {
                     if (/^\d+$/.test(selections[i])) {
@@ -267,16 +243,8 @@ export const Renderer = {
                             continue;
                         }
                     }
-                    const match = matchAlternative(selections[i].trim(), q);
-                    if (match.matchedIndex >= 0) {
-                        set_question_index(i);
-                        const expectedAlternative = q.alternatives[match.matchedIndex];
-                        const displayed = displayedAlternatives(q);
-                        let displayedIndex = displayed.indexOf(expectedAlternative);
-                        selections[i] = (displayedIndex >= 0 ? displayedIndex : match.matchedIndex).toString();
-                    } else {
-                        selections[i] = "999999";
-                    }
+                    const matchedIdx = this.matchWasmAlternative(selections[i].trim(), i);
+                    selections[i] = matchedIdx >= 0 ? matchedIdx.toString() : "999999";
                     modified = true;
                 } else {
                     selections[i] = null;
@@ -525,9 +493,9 @@ export const Renderer = {
             if (/^\d+$/.test(selection)) {
                 if (graded) {
                     const idx = parseInt(selection, 10);
-                    const displayed = displayedAlternatives(currentQuestion);
-                    if (idx >= 0 && idx < displayed.length) {
-                        savedVal = cleanTypstMath(displayed[idx].content_raw);
+                    const altRaw = get_alternative_raw(idx);
+                    if (altRaw) {
+                        savedVal = cleanTypstMath(altRaw);
                     }
                 }
             } else {
@@ -627,17 +595,9 @@ export const Renderer = {
 
         if (graded) {
             const expected = currentQuestion.expected_answer || "";
-            
-            // Normalize for comparison
-            const selNorm = selection.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
-            const expNorm = expected.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
-            
-            const dist = jsLevenshtein(selNorm, expNorm);
-            const maxLen = Math.max(selNorm.length, expNorm.length);
-            const ratio = maxLen === 0 ? 1.0 : (1.0 - dist / maxLen);
-            
-            const isCorrect = ratio === 1.0;
-            const isPartial = !isCorrect && ratio >= 0.7;
+            const score = evaluate_text_answer_wasm(selection, expected);
+            const isCorrect = score === 1.0;
+            const isPartial = score === 0.5;
 
             if (isCorrect) {
                 input.classList.add("graded-correct");
@@ -712,16 +672,16 @@ export const Renderer = {
         for (let i = 0; i < count; i++) {
             const btn = document.createElement("button");
             btn.className = "alternative";
-            const displayed = displayedAlternatives(currentQuestion);
-            const alt = displayed[i];
-            if (alt && alt.content_raw) {
+            const altRaw = get_alternative_raw(i);
+            const altHtml = get_alternative_html(i);
+            if (altRaw) {
                 btn.innerText = "Rendering…";
             } else {
-                btn.innerHTML = alt?.content_html || get_alternative_html(i);
+                btn.innerHTML = altHtml || "";
             }
 
-            if (typstWasm.enabled && alt && alt.content_raw) {
-                typstWasm.compile(alt.content_raw, "alternative").then(result => {
+            if (typstWasm.enabled && altRaw) {
+                typstWasm.compile(altRaw, "alternative").then(result => {
                     if (this.alternativesRenderToken !== token) return;
                     if (result && result.svg) {
                         btn.innerHTML = result.svg;
@@ -765,19 +725,16 @@ export const Renderer = {
         const toggleAltBtn = document.getElementById("toggle-alt-btn");
 
         // Prerequisites, Formulae, Solution Steps, and References (Study Guide)
-        const prereqHtml = get_current_question_prerequisites_html();
-        const formulaeHtml = get_current_question_formulae_html();
-        const stepsHtml = get_current_question_solution_steps_html();
-        const prereqRaw = currentQuestion?.prerequisites_raw;
-        const formulaeRaw = currentQuestion?.formulae_raw;
-        const stepsRaw = currentQuestion?.solution_steps_raw;
+        const prereqRaw = currentQuestion?.prerequisites_raw || get_current_question_prerequisites_raw();
+        const formulaeRaw = currentQuestion?.formulae_raw || get_current_question_formulae_raw();
+        const stepsRaw = currentQuestion?.solution_steps_raw || get_current_question_solution_steps_raw();
         const refsJson = get_current_question_references_json();
         const refs = refsJson ? JSON.parse(refsJson) : [];
 
         const tabs = [];
-        if (prereqRaw || prereqHtml) tabs.push({ id: "prereqs", labelKey: "tab_prerequisites", html: prereqHtml });
-        if (formulaeRaw || formulaeHtml) tabs.push({ id: "formulae", labelKey: "tab_formulae", html: formulaeHtml });
-        if (stepsRaw || stepsHtml) tabs.push({ id: "steps", labelKey: "tab_solution_steps", html: stepsHtml });
+        if (prereqRaw) tabs.push({ id: "prereqs", labelKey: "tab_prerequisites", raw: prereqRaw });
+        if (formulaeRaw) tabs.push({ id: "formulae", labelKey: "tab_formulae", raw: formulaeRaw });
+        if (stepsRaw) tabs.push({ id: "steps", labelKey: "tab_solution_steps", raw: stepsRaw });
         if (refs && refs.length > 0) {
             const refsHtml = this.buildReferencesHtml(refs);
             tabs.push({ id: "references", labelKey: "tab_references", html: refsHtml });
@@ -806,36 +763,29 @@ export const Renderer = {
                     `).join("") + `</div>`;
                 }
 
-                const initialStudyContent = currentQuestion && currentQuestion[`${activeTab.id}_raw`]
+                const initialStudyContent = activeTab.raw
                     ? "Rendering…"
                     : (activeTab.html || "Rendering…");
                 prereqDiv.innerHTML = tabsHtmlStr + `<div class="study-content">${initialStudyContent}</div>`;
 
-                if (typstWasm.enabled && currentQuestion) {
-                    let rawStudy = null;
-                    if (activeTab.id === "prereqs") rawStudy = currentQuestion.prerequisites_raw;
-                    else if (activeTab.id === "formulae") rawStudy = currentQuestion.formulae_raw;
-                    else if (activeTab.id === "steps") rawStudy = currentQuestion.solution_steps_raw;
-
-                    if (rawStudy) {
-                        const token = ++this.studyRenderToken;
-                        typstWasm.compile(rawStudy, "study").then(result => {
-                            if (this.studyRenderToken !== token) return;
-                            const content = prereqDiv.querySelector(".study-content");
-                            if (content) {
-                                if (result && result.svg) {
-                                    content.innerHTML = result.svg;
-                                    UI.fixSvgs();
-                                } else {
-                                    content.innerText = "Rendering unavailable";
-                                }
+                if (typstWasm.enabled && activeTab.raw) {
+                    const token = ++this.studyRenderToken;
+                    typstWasm.compile(activeTab.raw, "study").then(result => {
+                        if (this.studyRenderToken !== token) return;
+                        const content = prereqDiv.querySelector(".study-content");
+                        if (content) {
+                            if (result && result.svg) {
+                                content.innerHTML = result.svg;
+                                UI.fixSvgs();
+                            } else {
+                                content.innerText = "Rendering unavailable";
                             }
-                        }).catch(() => {
-                            if (this.studyRenderToken !== token) return;
-                            const content = prereqDiv.querySelector(".study-content");
-                            if (content) content.innerText = "Rendering unavailable";
-                        });
-                    }
+                        }
+                    }).catch(() => {
+                        if (this.studyRenderToken !== token) return;
+                        const content = prereqDiv.querySelector(".study-content");
+                        if (content) content.innerText = "Rendering unavailable";
+                    });
                 }
 
                 prereqDiv.querySelectorAll(".study-tab-btn").forEach(btn => {
@@ -872,12 +822,17 @@ export const Renderer = {
         if (graded) {
             explanationDiv.style.display = "block";
             const currentIndex = get_current_question_index();
-            const rawExplanation = get_explanation_html_by_index(currentIndex);
+            const explHtml = get_explanation_html_by_index(currentIndex);
+            const explRaw = currentQuestion?.explanation_raw || get_current_question_explanation_raw();
             const isSe = State.currentCourse === "Växtkännedom (Svenska)";
             const noExplanation = isSe ? "Ingen förklaring tillgänglig." : "No explanation available.";
-            explanationDiv.innerText = currentQuestion && currentQuestion.explanation_raw
-                ? "Rendering…"
-                : (rawExplanation || noExplanation);
+            if (explRaw) {
+                explanationDiv.innerText = "Rendering…";
+            } else if (explHtml) {
+                explanationDiv.innerHTML = explHtml;
+            } else {
+                explanationDiv.innerText = noExplanation;
+            }
 
             if (typstWasm.enabled && currentQuestion && currentQuestion.explanation_raw) {
                 const explToken = ++this.explanationRenderToken;
@@ -1125,7 +1080,7 @@ export const Renderer = {
             const eHtml = get_explanation_html_by_index(idx);
             const question = State.currentQuestionsList[idx];
             const sel = selections[idx];
-            let selectedAlternative = null;
+            let selectedAlternativeRaw = null;
 
             // Build user answer HTML
             let userAnswerHtml = "";
@@ -1133,13 +1088,8 @@ export const Renderer = {
                 userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span>`;
             } else if (question && question.is_text_input) {
                 const expected = question.expected_answer || "";
-                const selNorm = sel.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
-                const expNorm = expected.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
-                const dist = jsLevenshtein(selNorm, expNorm);
-                const maxLen = Math.max(selNorm.length, expNorm.length);
-                const ratio = maxLen === 0 ? 1.0 : (1.0 - dist / maxLen);
-                
-                const isPartial = ratio >= 0.7;
+                const score = evaluate_text_answer_wasm(sel, expected);
+                const isPartial = score === 0.5;
                 const diffs = diffStrings(sel, expected);
                 
                 if (isPartial) {
@@ -1164,12 +1114,14 @@ export const Renderer = {
                     userAnswerHtml = `<strong class="answer-incorrect">${typed}</strong> ${userValStr}<br><span class="label">${translate("correct_answer")}</span> <strong class="answer-correct">${correctValStr}</strong> <span style="opacity: 0.85;">(${correctClean})</span>`;
                 }
             } else {
-                // MC: get the alternative HTML via WASM (needs correct question context)
+                // MC: get the alternative directly from WASM
                 set_question_index(idx);
-                const displayed = displayedAlternatives(question);
-                selectedAlternative = displayed[parseInt(sel)];
-                const altHtml = selectedAlternative?.content_html || get_alternative_html(parseInt(sel));
-                if (altHtml) {
+                const selIdx = parseInt(sel, 10);
+                selectedAlternativeRaw = get_alternative_raw(selIdx);
+                const altHtml = get_alternative_html(selIdx);
+                if (selectedAlternativeRaw) {
+                    userAnswerHtml = `<strong class="answer-incorrect">Rendering…</strong>`;
+                } else if (altHtml) {
                     // Check if it contains an img (photo quiz) — show as thumbnail
                     if (altHtml.includes("<img")) {
                         const wrapper = document.createElement("div");
@@ -1231,8 +1183,8 @@ export const Renderer = {
                 });
             }
             const reviewAnswer = item.querySelector(".review-user-answer");
-            if (reviewAnswer && selectedAlternative?.content_raw) {
-                typstWasm.compile(selectedAlternative.content_raw, "alternative").then(result => {
+            if (reviewAnswer && selectedAlternativeRaw) {
+                typstWasm.compile(selectedAlternativeRaw, "alternative").then(result => {
                     if (result?.svg) {
                         reviewAnswer.innerHTML = `<strong class="answer-incorrect">${result.svg}</strong>`;
                         UI.fixSvgs();
