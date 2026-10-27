@@ -1023,4 +1023,92 @@ mod tests {
         assert_eq!(quiz3.get_score(), 0.0);
         assert_eq!(quiz3.incorrect_question_indices(), vec![0]);
     }
+
+    #[test]
+    fn test_quiz_recreation_with_restored_selections_identical_score() {
+        let q1 = make_question("cons_1", vec!["Math"], vec![("A", false), ("B", true), ("C", false)]);
+        let q2 = make_question("cons_2", vec!["Math"], vec![("X", true), ("Y", false)]);
+        let q3 = make_text_question("cons_3", vec!["Bio"], "gran");
+
+        let mut quiz = Quiz::new(vec![q1.clone(), q2.clone(), q3.clone()]);
+
+        // Find correct index for q1
+        let q1_correct_idx = quiz.questions[0].alternatives.iter().position(|a| a.is_correct).unwrap();
+        quiz.set_question_index(0);
+        quiz.select_answer(q1_correct_idx.to_string());
+
+        // Select wrong index for q2
+        let q2_wrong_idx = quiz.questions[1].alternatives.iter().position(|a| !a.is_correct).unwrap();
+        quiz.set_question_index(1);
+        quiz.select_answer(q2_wrong_idx.to_string());
+
+        // Correct answer for q3
+        quiz.set_question_index(2);
+        quiz.select_answer("gran".to_string());
+
+        quiz.grade();
+        let initial_score = quiz.get_score();
+        let initial_incorrect = quiz.incorrect_question_indices();
+        let initial_stats = quiz.get_topic_stats();
+        let saved_selections = quiz.selections.clone();
+
+        assert_eq!(initial_score, 2.0);
+        assert_eq!(initial_incorrect, vec![1]);
+
+        // Recreate quiz from source questions (simulating page reload)
+        let mut reloaded_quiz = Quiz::new(vec![q1, q2, q3]);
+        reloaded_quiz.restore_state(1, saved_selections, true);
+
+        assert_eq!(reloaded_quiz.get_score(), initial_score, "Score must match after recreation");
+        assert_eq!(reloaded_quiz.incorrect_question_indices(), initial_incorrect, "Incorrect indices must match");
+        let reloaded_stats = reloaded_quiz.get_topic_stats();
+        assert_eq!(reloaded_stats.len(), initial_stats.len());
+        for (s1, s2) in initial_stats.iter().zip(reloaded_stats.iter()) {
+            assert_eq!(s1.topic, s2.topic);
+            assert_eq!(s1.correct, s2.correct);
+            assert_eq!(s1.total, s2.total);
+        }
+    }
+
+    #[test]
+    fn test_deterministic_shuffle_idempotent_recreation() {
+        let alts = vec![
+            ("Opt1", false),
+            ("Opt2", true),
+            ("Opt3", false),
+            ("Opt4", false),
+        ];
+        let q = make_question("idemp_q", vec![], alts);
+
+        let base_quiz = Quiz::new(vec![q.clone()]);
+        let base_order: Vec<String> = base_quiz.questions[0]
+            .alternatives
+            .iter()
+            .map(|a| a.content_html.clone())
+            .collect();
+
+        // 100 recreations must produce identical alternative order
+        for _ in 0..100 {
+            let next_quiz = Quiz::new(vec![q.clone()]);
+            let next_order: Vec<String> = next_quiz.questions[0]
+                .alternatives
+                .iter()
+                .map(|a| a.content_html.clone())
+                .collect();
+            assert_eq!(base_order, next_order, "Shuffle order must never drift across recreations");
+        }
+    }
+
+    #[test]
+    fn test_out_of_bounds_numerical_dummy_selection() {
+        let q = make_question("dummy_sel", vec![], vec![("A", true), ("B", false)]);
+        let mut quiz = Quiz::new(vec![q]);
+
+        // "999999" is used by frontend when numerical matching fails
+        quiz.select_answer("999999".to_string());
+        quiz.grade();
+
+        assert_eq!(quiz.get_score(), 0.0, "Out-of-bounds selection must safely score 0.0");
+        assert_eq!(quiz.incorrect_question_indices(), vec![0]);
+    }
 }

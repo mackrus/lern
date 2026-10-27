@@ -234,6 +234,7 @@ export const Renderer = {
     },
 
     resolveNumericalAnswers() {
+        if (is_graded()) return;
         this.syncTextInput();
         const selectionsJson = get_selections_json();
         if (!selectionsJson) return;
@@ -241,22 +242,37 @@ export const Renderer = {
         const questions = State.currentQuestionsList;
         if (!questions || !Array.isArray(questions)) return;
 
+        const savedIndex = get_current_question_index();
         let modified = false;
         for (let i = 0; i < questions.length; i++) {
             const q = questions[i];
             if (isNumericalQuestion(q)) {
-                const typed = (State.numericalInputs && State.numericalInputs[q.id]) || selections[i];
-                if (typed && typeof typed === "string" && typed.trim().length > 0) {
+                const typed = State.numericalInputs ? State.numericalInputs[q.id] : null;
+                if (typed !== undefined && typed !== null && typeof typed === "string" && typed.trim().length > 0) {
                     const match = matchAlternative(typed.trim(), q);
                     if (match.matchedIndex >= 0) {
-                        // Rust shuffles alternatives deterministically before grading,
-                        // while State.currentQuestionsList retains the source order.
-                        // Translate the source-order match to the displayed/WASM order.
                         set_question_index(i);
                         const expectedAlternative = q.alternatives[match.matchedIndex];
                         const displayed = displayedAlternatives(q);
-                        let displayedIndex = -1;
-                        displayedIndex = displayed.indexOf(expectedAlternative);
+                        let displayedIndex = displayed.indexOf(expectedAlternative);
+                        selections[i] = (displayedIndex >= 0 ? displayedIndex : match.matchedIndex).toString();
+                    } else {
+                        selections[i] = "999999";
+                    }
+                    modified = true;
+                } else if (selections[i] !== undefined && selections[i] !== null && selections[i] !== "") {
+                    if (/^\d+$/.test(selections[i])) {
+                        const idx = parseInt(selections[i], 10);
+                        if (idx === 999999 || (idx >= 0 && idx < q.alternatives.length)) {
+                            continue;
+                        }
+                    }
+                    const match = matchAlternative(selections[i].trim(), q);
+                    if (match.matchedIndex >= 0) {
+                        set_question_index(i);
+                        const expectedAlternative = q.alternatives[match.matchedIndex];
+                        const displayed = displayedAlternatives(q);
+                        let displayedIndex = displayed.indexOf(expectedAlternative);
                         selections[i] = (displayedIndex >= 0 ? displayedIndex : match.matchedIndex).toString();
                     } else {
                         selections[i] = "999999";
@@ -269,8 +285,9 @@ export const Renderer = {
         }
 
         if (modified) {
-            restore_quiz_state(get_current_question_index(), JSON.stringify(selections), false);
+            restore_quiz_state(savedIndex, JSON.stringify(selections), false);
         }
+        set_question_index(savedIndex);
     },
 
     fontSizeScales: [0.8, 0.9, 1.0, 1.15, 1.3, 1.5, 1.7],
@@ -505,7 +522,17 @@ export const Renderer = {
         let savedVal = (State.numericalInputs && State.numericalInputs[currentQuestion.id]) || "";
         const selection = get_current_selection();
         if (!savedVal && selection && typeof selection === "string" && !selection.startsWith("999999")) {
-            savedVal = selection;
+            if (/^\d+$/.test(selection)) {
+                if (graded) {
+                    const idx = parseInt(selection, 10);
+                    const displayed = displayedAlternatives(currentQuestion);
+                    if (idx >= 0 && idx < displayed.length) {
+                        savedVal = cleanTypstMath(displayed[idx].content_raw);
+                    }
+                }
+            } else {
+                savedVal = selection;
+            }
         }
         input.value = savedVal;
         input.disabled = graded;
@@ -520,11 +547,14 @@ export const Renderer = {
         container.appendChild(numericalContainer);
 
         // Live evaluation while typing: ONLY evaluate the user's math expression without checking alternatives
-        const updateEvaluation = () => {
+        const updateEvaluation = (isTyping = false) => {
             const val = input.value.trim();
-            if (!State.numericalInputs) State.numericalInputs = {};
-            State.numericalInputs[currentQuestion.id] = input.value;
-            select_answer(input.value);
+            if (isTyping) {
+                if (!State.numericalInputs) State.numericalInputs = {};
+                State.numericalInputs[currentQuestion.id] = input.value;
+                select_answer(input.value);
+                State.save();
+            }
 
             if (!val) {
                 feedback.className = "numerical-feedback";
@@ -564,17 +594,17 @@ export const Renderer = {
                 feedback.innerHTML = `No answer given.<br><span style="opacity: 0.9;">Expected: <strong>${correctVal ? correctVal.format() : correctClean}</strong> (${correctClean})</span>`;
             }
         } else {
-            input.oninput = updateEvaluation;
+            input.oninput = () => updateEvaluation(true);
             input.onkeydown = (e) => {
                 if (e.key === "Enter") {
-                    updateEvaluation();
+                    updateEvaluation(true);
                     State.save();
                     next_question();
                     this.renderQuiz();
                 }
             };
             if (input.value) {
-                updateEvaluation();
+                updateEvaluation(false);
             }
             setTimeout(() => input.focus(), 20);
         }
@@ -653,6 +683,7 @@ export const Renderer = {
         
         input.oninput = () => {
             select_answer(input.value);
+            State.save();
         };
         input.onkeydown = (e) => {
             if (e.key === "Enter") {

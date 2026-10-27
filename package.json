@@ -1,5 +1,10 @@
 {
   "type": "module",
+  "scripts": {
+    "test": "node tests/test_answer_caching.js",
+    "test:persistence": "node tests/test_state_persistence.js",
+    "test:all": "cargo test && node tests/test_question_integrity.js && node tests/test_state_persistence.js && node tests/test_math_evaluator.js && node tests/test_copy_prompt.js && node tests/test_answer_caching.js"
+  },
   "devDependencies": {
     "@myriaddreamin/typst-ts-renderer": "^0.7.0",
     "@myriaddreamin/typst-ts-web-compiler": "^0.7.0",
