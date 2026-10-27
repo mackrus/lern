@@ -1,0 +1,38 @@
+# Lecture 	Content 
+-------------------------------------------------------------
+1 	Complex numbers, Elementary functions. (LN 1) 	
+-------------------------------------------------------------
+2 	Elementary functions (LN 1), Limits and Continuity (LN 2). 	
+-------------------------------------------------------------
+3 	Limits at infinity (LN2), Differentiability & Cauchy Riemann equations (LN2). 	
+-------------------------------------------------------------
+4 	CR-eq in polar coordinates, analytic functions (LN3). 	
+-------------------------------------------------------------
+5 	Contour integrals, Anti-derivatives (LN3). 	
+-------------------------------------------------------------
+6 	Cauchy Goursat Theorem (LN4) 	
+-------------------------------------------------------------
+7 	Cauchy Goursat Theorem (LN4), Cauchy integral formula (LN5). 	
+-------------------------------------------------------------
+8 	Continuation of Cauchy integral formulae (LN5). 	
+-------------------------------------------------------------
+9 	Applications of Cauchy integral formulae; Liouville's theorem, fundamental theorem of Algebra, maximum modulus principle (LN5).
+-------------------------------------------------------------
+10 	Laurent Series (LN6). 	
+-------------------------------------------------------------
+11 	Power Series (LN7). 	P.185: 9
+-------------------------------------------------------------
+12 	Examples of Power Series and Laurent Series (LN7) 	
+-------------------------------------------------------------
+13 	Isolated Zeros, and function behavior near them (LN8) 	
+-------------------------------------------------------------
+14 	Isolated Singularities, and function behavior near them. (LN 8) 	
+-------------------------------------------------------------
+15 	Residue Theorem. (LN8, LN9) 	
+-------------------------------------------------------------
+16 	Application of Residue theorem. (LN9, LN10) 	
+-------------------------------------------------------------
+17 	Application of Residue theorem. (LN9, LN10) 	
+-------------------------------------------------------------
+18 	Argument Principle and Rouché's theorem (LN10) 	
+-------------------------------------------------------------
