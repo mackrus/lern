@@ -72,6 +72,7 @@ const {
     restore_quiz_state,
     select_answer,
     grade_quiz,
+    evaluate_text_answer_wasm,
     get_score,
     get_selections_json,
     is_graded,
@@ -80,6 +81,7 @@ const {
     get_total_questions,
     get_alternatives_count,
     get_alternative_html,
+    get_alternative_raw,
     is_alternative_correct,
     get_incorrect_indices,
     get_topic_stats_json
@@ -162,7 +164,7 @@ runSuite("Deterministic Shuffle Parity between Rust WASM and JS", () => {
                 );
 
                 for (let aIdx = 0; aIdx < count; aIdx++) {
-                    const rustHtml = get_alternative_html(aIdx);
+                    const rustRaw = get_alternative_raw(aIdx);
                     const rustCorrect = is_alternative_correct(aIdx);
                     const jsAlt = jsShuffled[aIdx];
 
@@ -172,9 +174,9 @@ runSuite("Deterministic Shuffle Parity between Rust WASM and JS", () => {
                         `Correctness mismatch in ${courseName} Q${qIdx} alt ${aIdx}`
                     );
                     assert.equal(
-                        rustHtml,
-                        jsAlt.content_html,
-                        `HTML mismatch in ${courseName} Q${qIdx} alt ${aIdx}`
+                        rustRaw,
+                        jsAlt.content_raw,
+                        `Raw content mismatch in ${courseName} Q${qIdx} alt ${aIdx}`
                     );
                 }
                 testedCount++;
@@ -692,6 +694,9 @@ runSuite("Free Text Input Normalization and Scoring Across Reload", () => {
     init_quiz(JSON.stringify([textQ]));
     restore_quiz_state(0, typoSelections, true);
     assert.equal(get_score(), 0.5, "Partial score must remain 0.5 after reload");
+    assert.equal(evaluate_text_answer_wasm(expected, expected), 1.0);
+    assert.equal(evaluate_text_answer_wasm(typoAnswer, expected), 0.5);
+    assert.equal(evaluate_text_answer_wasm("completely_wrong_string", expected), 0.0);
 });
 
 // ---------------------------------------------------------------------------

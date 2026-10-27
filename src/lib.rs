@@ -1,7 +1,7 @@
 pub mod quiz;
 
 use wasm_bindgen::prelude::*;
-use quiz::{Quiz, Question};
+use quiz::{Quiz, Question, evaluate_text_answer};
 use std::sync::Mutex;
 use once_cell::sync::Lazy;
 
@@ -66,23 +66,22 @@ pub fn get_current_question_explanation_raw() -> Option<String> {
 }
 
 #[wasm_bindgen]
-pub fn get_current_question_prerequisites_html() -> Option<String> {
+pub fn get_current_question_prerequisites_raw() -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
-    state.as_ref()?.current_question().and_then(|q| q.prerequisites_html.clone())
+    state.as_ref()?.current_question().and_then(|q| q.prerequisites_raw.clone())
 }
 
 #[wasm_bindgen]
-pub fn get_current_question_formulae_html() -> Option<String> {
+pub fn get_current_question_formulae_raw() -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
-    state.as_ref()?.current_question().and_then(|q| q.formulae_html.clone())
+    state.as_ref()?.current_question().and_then(|q| q.formulae_raw.clone())
 }
 
 #[wasm_bindgen]
-pub fn get_current_question_solution_steps_html() -> Option<String> {
+pub fn get_current_question_solution_steps_raw() -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
-    state.as_ref()?.current_question().and_then(|q| q.solution_steps_html.clone())
+    state.as_ref()?.current_question().and_then(|q| q.solution_steps_raw.clone())
 }
-
 
 #[wasm_bindgen]
 pub fn get_current_question_explanation_html() -> Option<String> {
@@ -108,6 +107,11 @@ pub fn grade_quiz() {
     if let Some(quiz) = state.as_mut() {
         quiz.grade();
     }
+}
+
+#[wasm_bindgen]
+pub fn evaluate_text_answer_wasm(user: &str, expected: &str) -> f64 {
+    evaluate_text_answer(user, expected)
 }
 
 #[wasm_bindgen]
@@ -167,6 +171,12 @@ pub fn get_alternative_html(index: usize) -> Option<String> {
 }
 
 #[wasm_bindgen]
+pub fn get_alternative_raw(index: usize) -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()?.current_question()?.alternatives.get(index).and_then(|a| a.content_raw.clone())
+}
+
+#[wasm_bindgen]
 pub fn is_alternative_correct(index: usize) -> bool {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref()
@@ -207,15 +217,28 @@ pub fn get_question_html_by_index(index: usize) -> Option<String> {
 }
 
 #[wasm_bindgen]
+pub fn get_question_raw_by_index(index: usize) -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()?.questions.get(index).and_then(|q| q.question_raw.clone())
+}
+
+#[wasm_bindgen]
 pub fn get_explanation_html_by_index(index: usize) -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
     state.as_ref()?.questions.get(index).and_then(|q| q.explanation_html.clone())
 }
 
 #[wasm_bindgen]
+pub fn get_explanation_raw_by_index(index: usize) -> Option<String> {
+    let state = QUIZ_STATE.lock().unwrap();
+    state.as_ref()?.questions.get(index).and_then(|q| q.explanation_raw.clone())
+}
+
+#[wasm_bindgen]
 pub fn get_references_json_by_index(index: usize) -> Option<String> {
     let state = QUIZ_STATE.lock().unwrap();
-    state.as_ref()?.questions.get(index).map(|q| serde_json::to_string(&q.references).unwrap())
+    state.as_ref()?.current_question().map(|q| serde_json::to_string(&q.references).unwrap())
+        .or_else(|| state.as_ref()?.questions.get(index).map(|q| serde_json::to_string(&q.references).unwrap()))
 }
 
 #[wasm_bindgen]

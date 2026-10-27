@@ -18,6 +18,7 @@ INDEX_HTML = "dist/index.html"
 def compile_typst_snippet(snippet: str, kind: str = "alternative") -> tuple[bool, str]:
     """Validate that a raw Typst snippet compiles cleanly with standard header."""
     header = (
+        "#let list_style = (indent: 1em, body-indent: 0.5em, spacing: 1.2em)\n"
         '#let CO = $upright("CO")$\n'
         '#let CH = $upright("CH")$\n'
         '#let CaCO = $upright("CaCO")$\n'
@@ -33,7 +34,7 @@ def compile_typst_snippet(snippet: str, kind: str = "alternative") -> tuple[bool
 
     full_source = header + snippet
     cmd = ["typst", "compile", "-", "-", "--format", "svg"]
-    res = subprocess.run(cmd, input=full_source, text=True, capture_output=True)
+    res = subprocess.run(cmd, check=False, input=full_source, text=True, capture_output=True)
     if res.returncode != 0:
         return False, res.stderr.strip()
     return True, ""
@@ -58,11 +59,11 @@ class TestTypstWasmCoverage(unittest.TestCase):
         with open(RENDER_JS, "r", encoding="utf-8") as f:
             render_code = f.read()
         self.assertIn("typstWasm.compile(currentQuestion.question_raw", render_code)
-        self.assertIn("typstWasm.compile(alt.content_raw", render_code)
+        self.assertIn("typstWasm.compile(altRaw", render_code)
         self.assertIn("typstWasm.compile(currentQuestion.explanation_raw", render_code)
         self.assertIn("typstWasm.compile(question.question_raw", render_code)
         self.assertIn("typstWasm.compile(question.explanation_raw", render_code)
-        self.assertIn("typstWasm.compile(selectedAlternative.content_raw", render_code)
+        self.assertIn("typstWasm.compile(selectedAlternativeRaw", render_code)
         self.assertNotIn("WASM COMPILED IN", render_code)
 
         with open(INDEX_HTML, "r", encoding="utf-8") as f:
@@ -126,7 +127,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
             if category == "Biology":
                 continue
 
-            for course_name, course_data in courses.items():
+            for course_data in courses.values():
                 for q in course_data.get("data", []):
                     qid = q["id"]
 
@@ -159,7 +160,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
             if category == "Biology":
                 continue
 
-            for course_name, course_data in courses.items():
+            for course_data in courses.values():
                 questions = course_data.get("data", [])
                 sample_qs = questions if full_mode else questions[:8]
 
@@ -198,7 +199,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
         library_path = "content/biology/växtkännedom_(svenska)/questions/library.json"
         self.assertTrue(os.path.exists(library_path))
         with open(library_path, "r", encoding="utf-8") as f:
-            library = json.load(f)
+            json.load(f)
 
         # Test generation logic with node
         cmd = [
@@ -219,7 +220,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
             });
             """
         ]
-        res = subprocess.run(cmd, capture_output=True, text=True)
+        res = subprocess.run(cmd, check=False, capture_output=True, text=True)
         self.assertEqual(res.returncode, 0, f"Biology question generation failed: {res.stderr}")
         self.assertIn("OK", res.stdout)
 

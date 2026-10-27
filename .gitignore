@@ -1,4 +1,5 @@
 /target
+/pkg
 /dist/pkg
 /dist/content
 /dist/questions.json

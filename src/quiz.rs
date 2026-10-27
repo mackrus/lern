@@ -2,7 +2,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Alternative {
+    #[serde(default)]
     pub content_html: String,
+    #[serde(default)]
+    pub content_raw: Option<String>,
     pub is_correct: bool,
 }
 
@@ -20,11 +23,12 @@ pub struct Question {
     pub label: Option<String>,
     pub topics: Vec<String>,
     pub references: Vec<Reference>,
+    #[serde(default)]
     pub question_html: String,
     pub question_raw: Option<String>,
-    pub prerequisites_html: Option<String>,
-    pub formulae_html: Option<String>,
-    pub solution_steps_html: Option<String>,
+    pub prerequisites_raw: Option<String>,
+    pub formulae_raw: Option<String>,
+    pub solution_steps_raw: Option<String>,
     pub explanation_html: Option<String>,
     pub explanation_raw: Option<String>,
     pub is_text_input: Option<bool>,
@@ -247,19 +251,24 @@ fn similarity_ratio(s1: &str, s2: &str) -> f64 {
     1.0 - (dist as f64) / (max_len as f64)
 }
 
+pub fn evaluate_text_answer(sel: &str, expected: &str) -> f64 {
+    let sel_norm = normalize_answer(sel);
+    let exp_norm = normalize_answer(expected);
+    if sel_norm == exp_norm {
+        return 1.0;
+    }
+    let ratio = similarity_ratio(&sel_norm, &exp_norm);
+    if ratio >= 0.7 {
+        return 0.5;
+    }
+    0.0
+}
+
 fn grade_question(question: &Question, selected: Option<&str>) -> f64 {
     if let Some(sel) = selected {
         if question.is_text_input.unwrap_or(false) {
             if let Some(expected) = &question.expected_answer {
-                let sel_norm = normalize_answer(sel);
-                let exp_norm = normalize_answer(expected);
-                if sel_norm == exp_norm {
-                    return 1.0;
-                }
-                let ratio = similarity_ratio(&sel_norm, &exp_norm);
-                if ratio >= 0.7 {
-                    return 0.5;
-                }
+                return evaluate_text_answer(sel, expected);
             }
         } else if let Ok(idx) = sel.parse::<usize>() {
             if let Some(alt) = question.alternatives.get(idx) {
@@ -300,9 +309,9 @@ mod tests {
             references: vec![],
             question_html: "<p>What is 1+1?</p>".to_string(),
             question_raw: Some("What is 1+1?".to_string()),
-            prerequisites_html: Some("<p>Addition</p>".to_string()),
-            formulae_html: None,
-            solution_steps_html: None,
+            prerequisites_raw: Some("Addition".to_string()),
+            formulae_raw: None,
+            solution_steps_raw: None,
             explanation_html: Some("<p>Because 1+1=2</p>".to_string()),
             explanation_raw: Some("Because 1+1=2".to_string()),
             is_text_input: None,
@@ -310,10 +319,12 @@ mod tests {
             alternatives: vec![
                 Alternative {
                     content_html: "1".to_string(),
+                    content_raw: Some("1".to_string()),
                     is_correct: false,
                 },
                 Alternative {
                     content_html: "2".to_string(),
+                    content_raw: Some("2".to_string()),
                     is_correct: true,
                 },
             ],
@@ -368,9 +379,9 @@ mod tests {
             references: vec![],
             question_html: "Q".to_string(),
             question_raw: Some("Q".to_string()),
-            prerequisites_html: None,
-            formulae_html: None,
-            solution_steps_html: None,
+            prerequisites_raw: None,
+            formulae_raw: None,
+            solution_steps_raw: None,
             explanation_html: None,
             explanation_raw: None,
             is_text_input: None,
@@ -378,18 +389,22 @@ mod tests {
             alternatives: vec![
                 Alternative {
                     content_html: "A".to_string(),
+                    content_raw: Some("A".to_string()),
                     is_correct: false,
                 },
                 Alternative {
                     content_html: "B".to_string(),
+                    content_raw: Some("B".to_string()),
                     is_correct: false,
                 },
                 Alternative {
                     content_html: "C".to_string(),
+                    content_raw: Some("C".to_string()),
                     is_correct: true,
                 },
                 Alternative {
                     content_html: "D".to_string(),
+                    content_raw: Some("D".to_string()),
                     is_correct: false,
                 },
             ],
@@ -428,9 +443,9 @@ mod tests {
             references: vec![],
             question_html: "Q1".to_string(),
             question_raw: None,
-            prerequisites_html: None,
-            formulae_html: None,
-            solution_steps_html: None,
+            prerequisites_raw: None,
+            formulae_raw: None,
+            solution_steps_raw: None,
             explanation_html: None,
             explanation_raw: None,
             is_text_input: None,
@@ -457,9 +472,9 @@ mod tests {
             references: vec![],
             question_html: format!("<p>{}</p>", id),
             question_raw: None,
-            prerequisites_html: None,
-            formulae_html: None,
-            solution_steps_html: None,
+            prerequisites_raw: None,
+            formulae_raw: None,
+            solution_steps_raw: None,
             explanation_html: None,
             explanation_raw: None,
             is_text_input: None,
@@ -468,6 +483,7 @@ mod tests {
                 .into_iter()
                 .map(|(html, correct)| Alternative {
                     content_html: html.to_string(),
+                    content_raw: Some(html.to_string()),
                     is_correct: correct,
                 })
                 .collect(),
@@ -482,9 +498,9 @@ mod tests {
             references: vec![],
             question_html: format!("<p>{}</p>", id),
             question_raw: None,
-            prerequisites_html: None,
-            formulae_html: None,
-            solution_steps_html: None,
+            prerequisites_raw: None,
+            formulae_raw: None,
+            solution_steps_raw: None,
             explanation_html: None,
             explanation_raw: None,
             is_text_input: Some(true),
@@ -707,9 +723,9 @@ mod tests {
             references: vec![],
             question_html: "Q".to_string(),
             question_raw: None,
-            prerequisites_html: None,
-            formulae_html: None,
-            solution_steps_html: None,
+            prerequisites_raw: None,
+            formulae_raw: None,
+            solution_steps_raw: None,
             explanation_html: None,
             explanation_raw: None,
             is_text_input: Some(true),
@@ -967,16 +983,16 @@ mod tests {
                 references: vec![],
                 question_html: format!("<p>Thermo Q{}</p>", i),
                 question_raw: None,
-                prerequisites_html: None,
-                formulae_html: None,
-                solution_steps_html: None,
+                prerequisites_raw: None,
+                formulae_raw: None,
+                solution_steps_raw: None,
                 explanation_html: None,
                 explanation_raw: None,
                 is_text_input: None,
                 expected_answer: None,
                 alternatives: vec![
-                    Alternative { content_html: "A".to_string(), is_correct: false },
-                    Alternative { content_html: "B".to_string(), is_correct: true },
+                    Alternative { content_html: "A".to_string(), content_raw: Some("A".to_string()), is_correct: false },
+                    Alternative { content_html: "B".to_string(), content_raw: Some("B".to_string()), is_correct: true },
                 ],
             })
             .collect();

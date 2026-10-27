@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
 """Incremental Typst SVG compiler with dependency-aware SHA-256 caching."""
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import glob
 import hashlib
 import json
@@ -11,6 +9,7 @@ import re
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 CACHE_FILE = ".typst_cache.json"
 DIST_CONTENT = "dist/content"
@@ -85,7 +84,7 @@ def compile_question(file_path: str) -> tuple[str, bool, str]:
         "--root",
         ".",
     ]
-    res = subprocess.run(cmd, capture_output=True, text=True)
+    res = subprocess.run(cmd, check=False, capture_output=True, text=True)
     if res.returncode != 0:
         return file_path, False, res.stderr.strip()
     return file_path, True, ""
@@ -106,7 +105,7 @@ def main() -> int:
         try:
             with open(CACHE_FILE, "r", encoding="utf-8") as f:
                 cache = json.load(f)
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             cache = {}
 
     question_files = [
