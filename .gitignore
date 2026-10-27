@@ -3,6 +3,7 @@
 /dist/pkg
 /dist/content
 /dist/questions.json
+.typst_cache.json
 .ruff_cache/
 __pycache__/
 *.pyc
