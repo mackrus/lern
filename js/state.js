@@ -17,6 +17,8 @@ export const State = {
     examTimerInterval: null,
     currentSavedState: null,
     currentQuestionsList: null,
+    currentBioParams: null,
+    currentSelectedTopics: null,
     numericalInputs: {},
 
     save() {
@@ -35,14 +37,15 @@ export const State = {
             graded: is_graded(),
             showPrereqs: prereqDiv && prereqDiv.style.display === "block",
             showAlts: toggleAltBtn && toggleAltBtn.dataset.state === "shown",
-            selectedTopics: this.currentSavedState ? this.currentSavedState.selectedTopics : null,
+            selectedTopics: this.currentSelectedTopics || (this.currentSavedState ? this.currentSavedState.selectedTopics : null),
             questions: this.currentQuestionsList
                 ? (this.currentCategory === "Biology" 
                     ? this.currentQuestionsList.map(q => (q.plantIndex !== undefined ? q.plantIndex : q.id)) 
                     : this.currentQuestionsList.map(q => q.id))
                 : null,
             statsUpdated: this.currentSavedState ? this.currentSavedState.statsUpdated : false,
-            bioParams: this.currentSavedState ? this.currentSavedState.bioParams : null,
+            bioParams: this.currentBioParams || (this.currentSavedState ? this.currentSavedState.bioParams : null),
+            examEndTime: this.currentExamEndTime || (this.currentSavedState ? this.currentSavedState.examEndTime : null),
             numericalInputs: this.numericalInputs || {}
         };
         this.currentSavedState = state;
@@ -63,6 +66,9 @@ export const State = {
     clear(courseName) {
         this.numericalInputs = {};
         this.currentSavedState = null;
+        this.currentBioParams = null;
+        this.currentSelectedTopics = null;
+        this.currentExamEndTime = null;
         localStorage.removeItem(`lern_progress_${courseName}`);
     },
 

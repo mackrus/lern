@@ -32,6 +32,9 @@ export const Navigation = {
         State.currentCategory = null;
         State.currentMode = null;
         State.currentSavedState = null;
+        State.currentBioParams = null;
+        State.currentSelectedTopics = null;
+        State.currentExamEndTime = null;
         State.numericalInputs = {};
         if (State.examTimerInterval) clearInterval(State.examTimerInterval);
         localStorage.removeItem("lern_last_course");
@@ -208,19 +211,22 @@ export const Navigation = {
         if (isRestoring) {
             State.currentSavedState = state;
             State.numericalInputs = (state && state.numericalInputs) ? { ...state.numericalInputs } : {};
-            if (state && state.bioParams) {
-                State.currentSavedState.bioParams = state.bioParams;
-            }
+            State.currentBioParams = state.bioParams || null;
+            State.currentSelectedTopics = state.selectedTopics || null;
+            State.currentExamEndTime = state.examEndTime || null;
         } else {
             State.currentSavedState = null;
             State.numericalInputs = {};
+            State.currentBioParams = (state && state.bioParams) ? state.bioParams : null;
+            State.currentSelectedTopics = (state && state.selectedTopics) ? state.selectedTopics : null;
+            State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (mode === "exam" ? Date.now() + 5 * 60 * 60 * 1000 : null);
             localStorage.removeItem(`lern_progress_${courseName}`);
         }
 
         let categoryName = (state && state.category) ? state.category : State.currentCategory;
         let courseInfo = null;
         
-        if (!categoryName) {
+        if (!categoryName || !State.coursesData?.[categoryName]?.[courseName]) {
             for (const cat in State.coursesData) {
                 if (State.coursesData[cat][courseName]) {
                     categoryName = cat;
@@ -246,7 +252,7 @@ export const Navigation = {
             if (state.questions && state.questions.length > 0) {
                 if (categoryName === "Biology") {
                     if (typeof state.questions[0] === "number") {
-                        const bioParams = state.bioParams;
+                        const bioParams = state.bioParams || State.currentBioParams;
                         const courseData = courseInfo ? (courseInfo.data || []).map((plant, idx) => ({ ...plant, index: idx })) : [];
                         if (bioParams && courseData.length > 0 && State.Biology) {
                             const isSe = courseName === "Växtkännedom (Svenska)";
@@ -275,8 +281,9 @@ export const Navigation = {
             } else {
                 // Fallback for legacy state: preserve deterministic order without re-shuffling
                 const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
-                if (state.selectedTopics) {
-                    questions = fullQuestions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
+                const selectedTopics = state.selectedTopics || State.currentSelectedTopics;
+                if (selectedTopics) {
+                    questions = fullQuestions.filter(q => q.topics && q.topics.some(t => selectedTopics.includes(t)));
                 } else if (mode === "practice") {
                     const pool = fullQuestions.filter(q => q.label === "practice");
                     questions = (pool.length > 0 ? pool : fullQuestions).slice(0, 10);
@@ -293,7 +300,7 @@ export const Navigation = {
             }
 
             if (mode === "exam") {
-                State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (Date.now() + 5 * 60 * 60 * 1000);
+                State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (State.currentExamEndTime || Date.now() + 5 * 60 * 60 * 1000);
             }
         } else {
             // NEW QUIZ / RESTART: Filter and randomize questions
@@ -350,7 +357,7 @@ export const Navigation = {
         State.currentQuestionsList = questions;
         init_quiz(JSON.stringify(questions));
 
-        if (state && state.selections) {
+        if (state && state.selections && (state.questions && state.questions.length > 0)) {
             restore_quiz_state(state.index, state.selections, state.graded);
         }
 

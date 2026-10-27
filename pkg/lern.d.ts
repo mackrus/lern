@@ -98,12 +98,12 @@ export interface InitOutput {
     readonly is_graded: () => number;
     readonly restore_quiz_state: (a: number, b: number, c: number, d: number) => [number, number];
     readonly select_answer: (a: number, b: number) => void;
-    readonly grade_quiz: () => void;
-    readonly get_current_question_index: () => number;
-    readonly previous_question: () => void;
-    readonly next_question: () => void;
-    readonly set_question_index: (a: number) => void;
     readonly get_score: () => number;
+    readonly previous_question: () => void;
+    readonly set_question_index: (a: number) => void;
+    readonly get_current_question_index: () => number;
+    readonly next_question: () => void;
+    readonly grade_quiz: () => void;
     readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
