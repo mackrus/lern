@@ -59,7 +59,18 @@ export function buildTutorPrompt({
     let answerFormatLine = "";
     let optionsBlock = "";
 
-    if (q.is_text_input) {
+    if (q.question_type === "python_code") {
+        answerFormatLine = "Answer format: Python 3 coding challenge (verified by automated unit tests)";
+        const parts = [];
+        if (q.starter_code && q.starter_code.trim()) {
+            parts.push("Starter Code:\n```python\n" + q.starter_code.trim() + "\n```");
+        }
+        if (Array.isArray(q.test_cases) && q.test_cases.length > 0) {
+            const tcLines = q.test_cases.map((tc, i) => `${i + 1}. ${tc.label}: ${tc.code}`);
+            parts.push("Unit Tests:\n" + tcLines.join("\n"));
+        }
+        optionsBlock = parts.join("\n\n");
+    } else if (q.is_text_input) {
         answerFormatLine = isSe ? "Svarsformat: Fritext" : "Answer format: Free text input";
     } else if (isNum) {
         answerFormatLine = isSe

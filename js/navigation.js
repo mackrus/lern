@@ -17,7 +17,8 @@ export const Navigation = {
             "mode-selection", 
             "topic-selection", 
             "quiz", 
-            "biology-mode-selection"
+            "biology-mode-selection",
+            "python-sandbox-view"
         ];
         sections.forEach(id => {
             const el = document.getElementById(id);
@@ -36,6 +37,8 @@ export const Navigation = {
         State.currentSelectedTopics = null;
         State.currentExamEndTime = null;
         State.numericalInputs = {};
+        State.pythonInputs = {};
+        State.pythonTestResults = {};
         if (State.examTimerInterval) clearInterval(State.examTimerInterval);
         localStorage.removeItem("lern_last_course");
         
@@ -134,7 +137,7 @@ export const Navigation = {
             }
 
             btn.onclick = () => {
-                if (isInProgress) {
+                if (isInProgress && categoryName !== "Programming") {
                     this.startQuiz(courseName, progress.mode, progress);
                 } else {
                     this.showModeSelection(courseName);
@@ -211,12 +214,16 @@ export const Navigation = {
         if (isRestoring) {
             State.currentSavedState = state;
             State.numericalInputs = (state && state.numericalInputs) ? { ...state.numericalInputs } : {};
+            State.pythonInputs = (state && state.pythonInputs) ? { ...state.pythonInputs } : {};
+            State.pythonTestResults = (state && state.pythonTestResults) ? { ...state.pythonTestResults } : {};
             State.currentBioParams = state.bioParams || null;
             State.currentSelectedTopics = state.selectedTopics || null;
             State.currentExamEndTime = state.examEndTime || null;
         } else {
             State.currentSavedState = null;
             State.numericalInputs = {};
+            State.pythonInputs = {};
+            State.pythonTestResults = {};
             State.currentBioParams = (state && state.bioParams) ? state.bioParams : null;
             State.currentSelectedTopics = (state && state.selectedTopics) ? state.selectedTopics : null;
             State.currentExamEndTime = (state && state.examEndTime) ? state.examEndTime : (mode === "exam" ? Date.now() + 5 * 60 * 60 * 1000 : null);
@@ -280,10 +287,19 @@ export const Navigation = {
                 }
             } else {
                 // Fallback for legacy state: preserve deterministic order without re-shuffling
-                const fullQuestions = courseInfo ? (courseInfo.data || []) : [];
+                const rawQuestions = courseInfo ? (courseInfo.data || []) : [];
+                const hasPythonChallenges = rawQuestions.some(q => q.question_type === "python_code");
+                const fullQuestions = (hasPythonChallenges && mode !== "code_challenges")
+                    ? rawQuestions.filter(q => q.question_type !== "python_code")
+                    : rawQuestions;
                 const selectedTopics = state.selectedTopics || State.currentSelectedTopics;
                 if (selectedTopics) {
                     questions = fullQuestions.filter(q => q.topics && q.topics.some(t => selectedTopics.includes(t)));
+                } else if (mode === "theory") {
+                    questions = fullQuestions;
+                } else if (mode === "code_challenges") {
+                    const pool = rawQuestions.filter(q => q.question_type === "python_code");
+                    questions = pool.length > 0 ? pool : rawQuestions;
                 } else if (mode === "practice") {
                     const pool = fullQuestions.filter(q => q.label === "practice");
                     questions = (pool.length > 0 ? pool : fullQuestions).slice(0, 10);
@@ -320,11 +336,20 @@ export const Navigation = {
                     questions = shuffle(courseInfo ? (courseInfo.data || []) : []);
                 }
             } else {
-                const allQuestions = courseInfo ? (courseInfo.data || []) : [];
+                const rawQuestions = courseInfo ? (courseInfo.data || []) : [];
+                const hasPythonChallenges = rawQuestions.some(q => q.question_type === "python_code");
+                const allQuestions = (hasPythonChallenges && mode !== "code_challenges")
+                    ? rawQuestions.filter(q => q.question_type !== "python_code")
+                    : rawQuestions;
                 
                 if (state && state.selectedTopics && state.selectedTopics.length > 0) {
                     const filtered = allQuestions.filter(q => q.topics && q.topics.some(t => state.selectedTopics.includes(t)));
                     questions = shuffle(filtered);
+                } else if (mode === "theory") {
+                    questions = shuffle(allQuestions);
+                } else if (mode === "code_challenges") {
+                    const codePool = rawQuestions.filter(q => q.question_type === "python_code");
+                    questions = codePool.length > 0 ? codePool : rawQuestions;
                 } else if (mode === "practice") {
                     const practicePool = allQuestions.filter(q => q.label === "practice");
                     const pool = practicePool.length > 0 ? practicePool : allQuestions;

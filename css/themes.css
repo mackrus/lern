@@ -128,8 +128,48 @@ body.biology-mode.light-mode {
 }
 
 /* --------------------------------------------------------------------------
+   Programming Mode
+   - Dark: Obsidian Slate with Warm Amber-Gold Terminal Accent
+   - Bright: Solarized Warm Ivory with Deep Bronze Accent
+   -------------------------------------------------------------------------- */
+body.programming-mode {
+    --bg-color: #0d1017;
+    --text-color: #f0f4f8;
+    --surface-color: #121722;
+    --hover-color: #1a2233;
+    --border-color: #283246;
+    --prereq-bg: #0a0d13;
+    --prereq-border: #283246;
+    --header-color: #f59e0b;
+    --accent-color: #f59e0b;
+    --svg-filter: invert(94%) sepia(8%) saturate(400%) hue-rotate(180deg) brightness(103%) contrast(102%);
+}
+
+body.programming-mode.light-mode {
+    --bg-color: #fdf6e3;
+    --text-color: #1e293b;
+    --surface-color: #f5efdc;
+    --hover-color: #eae1c8;
+    --border-color: #d3c6aa;
+    --prereq-bg: #f3ecda;
+    --prereq-border: #d3c6aa;
+    --header-color: #b45309;
+    --accent-color: #d97706;
+    --svg-filter: none;
+}
+
+/* --------------------------------------------------------------------------
    Discipline Header Typography for lern Logo
    -------------------------------------------------------------------------- */
+body.programming-mode .lern-anim {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
+    color: var(--header-color);
+    transition: all 0.5s ease;
+}
+
 body.biology-mode .lern-anim {
     font-family: 'Playfair Display', serif;
     font-style: italic;

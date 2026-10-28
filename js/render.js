@@ -36,6 +36,7 @@ import { State } from "./state.js";
 import { UI, translate } from "./ui.js";
 import { typstWasm } from "./typst-renderer.js";
 import { isNumericalQuestion, cleanTypstMath, evaluateMath } from "./math-evaluator.js";
+import { PythonIDE } from "./python-ide.js";
 
 function diffStrings(userStr, correctStr) {
     const s1 = userStr;
@@ -173,7 +174,23 @@ export const Renderer = {
         if (backBtn) backBtn.innerText = translate("back_to_menu");
         
         const sidebarHeader = document.querySelector("#alternatives-area h3");
-        if (sidebarHeader) sidebarHeader.innerText = translate("your_answer_header");
+        if (sidebarHeader) {
+            sidebarHeader.innerText = translate("your_answer_header");
+        }
+
+        const appWithSidebar = document.getElementById("app-with-sidebar");
+        const sidebarCol = document.getElementById("sidebar-column");
+        if (appWithSidebar && appWithSidebar.classList) {
+            if (PythonIDE.isPythonQuestion(currentQuestion)) {
+                appWithSidebar.classList.add("python-quiz-layout");
+                if (sidebarCol) sidebarCol.style.display = "none";
+            } else {
+                if (typeof appWithSidebar.classList.remove === "function") {
+                    appWithSidebar.classList.remove("python-quiz-layout");
+                }
+                if (sidebarCol) sidebarCol.style.display = "block";
+            }
+        }
 
         // Prefetch next question in idle time
         if (!graded && State.currentQuestionsList && State.currentQuestionsList.length > 1) {
@@ -339,12 +356,26 @@ export const Renderer = {
     renderHeader(graded) {
         this.initFontSizeControls();
         const questionLabel = document.getElementById("question-label");
-        const label = get_current_question_label();
-        if (label) {
-            questionLabel.innerText = label;
-            questionLabel.style.display = "block";
+        const currentIndex = get_current_question_index();
+        const currentQuestion = State.currentQuestionsList ? State.currentQuestionsList[currentIndex] : null;
+        if (PythonIDE.isPythonQuestion(currentQuestion) && currentQuestion.difficulty) {
+            const diff = currentQuestion.difficulty.toLowerCase();
+            questionLabel.innerText = diff.toUpperCase();
+            questionLabel.className = `py-difficulty-badge ${diff}`;
+            questionLabel.style.display = "inline-block";
+            questionLabel.style.background = "";
+            questionLabel.style.color = "";
         } else {
-            questionLabel.style.display = "none";
+            questionLabel.className = "";
+            questionLabel.style.background = "var(--text-color)";
+            questionLabel.style.color = "var(--bg-color)";
+            const label = get_current_question_label();
+            if (label) {
+                questionLabel.innerText = label;
+                questionLabel.style.display = "block";
+            } else {
+                questionLabel.style.display = "none";
+            }
         }
 
         const copyPromptBtn = document.getElementById("copy-prompt-btn");
@@ -370,6 +401,9 @@ export const Renderer = {
                 num.classList.add("current");
             } else if (selections[i] !== null) {
                 num.classList.add("answered");
+                if (selections[i] === "PASS") {
+                    num.classList.add("passed-challenge");
+                }
             }
 
             num.onclick = () => {
@@ -413,13 +447,25 @@ export const Renderer = {
     renderAlternatives(currentQuestion, graded) {
         const alternativesDiv = document.getElementById("alternatives");
         alternativesDiv.innerHTML = "";
+        const pyWorkspace = document.getElementById("python-challenge-workspace");
         
-        if (currentQuestion.is_text_input) {
-            this.renderTextInput(alternativesDiv, currentQuestion, graded);
-        } else if (isNumericalQuestion(currentQuestion)) {
-            this.renderNumericalQuestion(alternativesDiv, currentQuestion, graded);
+        if (PythonIDE.isPythonQuestion(currentQuestion)) {
+            const targetContainer = pyWorkspace || alternativesDiv;
+            targetContainer.style.display = "block";
+            PythonIDE.renderChallenge(targetContainer, currentQuestion, graded);
         } else {
-            this.renderStandardAlternatives(alternativesDiv, currentQuestion, graded);
+            if (pyWorkspace) {
+                pyWorkspace.style.display = "none";
+                pyWorkspace.innerHTML = "";
+            }
+            PythonIDE.disposeActiveEditor();
+            if (currentQuestion.is_text_input) {
+                this.renderTextInput(alternativesDiv, currentQuestion, graded);
+            } else if (isNumericalQuestion(currentQuestion)) {
+                this.renderNumericalQuestion(alternativesDiv, currentQuestion, graded);
+            } else {
+                this.renderStandardAlternatives(alternativesDiv, currentQuestion, graded);
+            }
         }
     },
 
@@ -806,7 +852,7 @@ export const Renderer = {
         if (graded) {
             toggleAltBtn.style.display = "none";
             altArea.style.display = "block";
-        } else if (currentQuestion.is_text_input || isNumericalQuestion(currentQuestion)) {
+        } else if (currentQuestion.is_text_input || isNumericalQuestion(currentQuestion) || PythonIDE.isPythonQuestion(currentQuestion)) {
             toggleAltBtn.style.display = "none";
             altArea.style.display = "block";
         } else {
@@ -817,9 +863,33 @@ export const Renderer = {
                 : translate("show_alts");
         }
         
-        // Explanation
+        // Explanation & Solution Button (for Python Code Challenges)
         const explanationDiv = document.getElementById("explanation");
-        if (graded) {
+        const showSolBtn = document.getElementById("show-solution-btn");
+        const isPy = PythonIDE.isPythonQuestion(currentQuestion);
+
+        if (explanationDiv && explanationDiv.dataset.questionId !== (currentQuestion?.id || "")) {
+            explanationDiv.dataset.questionId = currentQuestion?.id || "";
+            explanationDiv.dataset.revealed = "false";
+        }
+
+        if (showSolBtn) {
+            if (isPy && !graded) {
+                showSolBtn.style.display = "block";
+                const revealed = explanationDiv?.dataset.revealed === "true";
+                showSolBtn.innerText = revealed ? "Hide Solution" : "Show Solution";
+                showSolBtn.onclick = () => {
+                    if (!explanationDiv) return;
+                    explanationDiv.dataset.revealed = explanationDiv.dataset.revealed === "true" ? "false" : "true";
+                    this.renderControls(currentQuestion, graded);
+                };
+            } else {
+                showSolBtn.style.display = "none";
+            }
+        }
+
+        const shouldShowExplanation = graded || (isPy && explanationDiv?.dataset.revealed === "true");
+        if (shouldShowExplanation) {
             explanationDiv.style.display = "block";
             const currentIndex = get_current_question_index();
             const explHtml = get_explanation_html_by_index(currentIndex);
@@ -1084,7 +1154,17 @@ export const Renderer = {
 
             // Build user answer HTML
             let userAnswerHtml = "";
-            if (sel === null || sel === undefined) {
+            if (question && PythonIDE.isPythonQuestion(question)) {
+                const testRes = State.pythonTestResults && State.pythonTestResults[question.id];
+                if (testRes) {
+                    const summaryStr = testRes.error
+                        ? `Execution error: ${testRes.error}`
+                        : `Passed ${testRes.passed_count} / ${testRes.total_count} unit tests`;
+                    userAnswerHtml = `<strong class="answer-incorrect">${summaryStr}</strong>`;
+                } else {
+                    userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span>`;
+                }
+            } else if (sel === null || sel === undefined) {
                 userAnswerHtml = `<span class="answer-missing">${translate("no_answer_given")}</span>`;
             } else if (question && question.is_text_input) {
                 const expected = question.expected_answer || "";

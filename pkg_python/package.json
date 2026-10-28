@@ -1,0 +1,17 @@
+{
+  "name": "python_runner",
+  "type": "module",
+  "description": "In-browser Python interpreter and test runner powered by RustPython and WebAssembly",
+  "version": "0.1.0",
+  "license": "MIT",
+  "files": [
+    "python_runner_bg.wasm",
+    "python_runner.js",
+    "python_runner.d.ts"
+  ],
+  "main": "python_runner.js",
+  "types": "python_runner.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
