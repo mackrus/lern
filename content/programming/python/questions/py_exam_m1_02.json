@@ -1,0 +1,38 @@
+{
+  "question_type": "python_code",
+  "label": "exam",
+  "difficulty": "medium",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Memoized Recurrence & Even/Odd Split",
+      "topic": "Memoized Recurrence & Even/Odd Split"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def recurrence_mem(n: int) -> int:\n    \"\"\"Compute 4th-order recurrence efficiently for large n.\"\"\"\n    pass\n\n\ndef split_even_odd(lst: list) -> tuple[list, list]:\n    \"\"\"Recursively split lst into (even_index_elements, odd_index_elements).\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "recurrence_mem(10) == -21",
+      "code": "assert recurrence_mem(3) == 1 and recurrence_mem(10) == -21"
+    },
+    {
+      "label": "recurrence_mem(90) == -1100087778366101931",
+      "code": "assert recurrence_mem(90) == -1100087778366101931"
+    },
+    {
+      "label": "split_even_odd([]) and split_even_odd([0])",
+      "code": "assert split_even_odd([]) == ([], [])\nassert split_even_odd([0]) == ([0], [])"
+    },
+    {
+      "label": "split_even_odd([0, 1, 2, 3, 4]) == ([0, 2, 4], [1, 3])",
+      "code": "assert split_even_odd([0, 1]) == ([0], [1])\nassert split_even_odd([0, 1, 2]) == ([0, 2], [1])\nassert split_even_odd([0, 1, 2, 3, 4]) == ([0, 2, 4], [1, 3])"
+    }
+  ]
+}

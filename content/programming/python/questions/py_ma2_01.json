@@ -1,0 +1,34 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "easy",
+  "topics": [
+    "Linked Lists"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "LinkedList length, to_list, __str__",
+      "topic": "LinkedList length, to_list, __str__"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "class LinkedList:\n    class Node:\n        def __init__(self, data, succ=None):\n            self.data = data\n            self.succ = succ\n\n    def __init__(self):\n        self.first = None\n\n    def __iter__(self):\n        current = self.first\n        while current:\n            yield current.data\n            current = current.succ\n\n    def insert(self, x):\n        if self.first is None or x <= self.first.data:\n            self.first = self.Node(x, self.first)\n        else:\n            f = self.first\n            while f.succ and x > f.succ.data:\n                f = f.succ\n            f.succ = self.Node(x, f.succ)\n\n    def length(self) -> int:\n        # Exc 1: Return number of elements\n        pass\n\n    def to_list(self) -> list:\n        # Exc 4: Return standard Python list of elements\n        pass\n\n    def __str__(self) -> str:\n        # Exc 5: Return '(x1, x2, ...)'\n        pass\n",
+  "test_cases": [
+    {
+      "label": "length() on empty and populated list",
+      "code": "lst = LinkedList()\nassert lst.length() == 0\nfor x in [3, 1, 2, 6]: lst.insert(x)\nassert lst.length() == 4"
+    },
+    {
+      "label": "to_list() preserves self and returns sorted list",
+      "code": "lst = LinkedList()\nassert lst.to_list() == []\nfor x in [1, 2, 1, 6]: lst.insert(x)\nassert lst.to_list() == [1, 1, 2, 6]\nassert lst.to_list() == [1, 1, 2, 6]"
+    },
+    {
+      "label": "__str__() formats '()', '(3)', '(2, 3, 4)'",
+      "code": "lst = LinkedList()\nassert str(lst) == '()'\nlst.insert(3)\nassert str(lst) == '(3)'\nlst.insert(2)\nlst.insert(4)\nassert str(lst) == '(2, 3, 4)'"
+    }
+  ]
+}

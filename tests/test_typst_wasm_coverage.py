@@ -91,11 +91,12 @@ class TestTypstWasmCoverage(unittest.TestCase):
                     if not q_raw or not q_raw.strip():
                         missing.append((course_name, qid, "question_raw"))
 
-                    # Alternatives raw source
+                    # Alternatives raw source (unless python_code challenge)
                     alternatives = q.get("alternatives", [])
-                    self.assertGreater(
-                        len(alternatives), 0, f"Question {qid} in {course_name} has no alternatives"
-                    )
+                    if q.get("question_type") != "python_code":
+                        self.assertGreater(
+                            len(alternatives), 0, f"Question {qid} in {course_name} has no alternatives"
+                        )
 
                     for idx, alt in enumerate(alternatives):
                         total_alternatives += 1
@@ -113,7 +114,7 @@ class TestTypstWasmCoverage(unittest.TestCase):
             f"Found {len(missing)} items missing raw Typst source for WASM rendering:\n"
             + "\n".join(f"  {m[0]} -> {m[1]} -> {m[2]}" for m in missing[:15]),
         )
-        self.assertEqual(total_questions, 276)
+        self.assertEqual(total_questions, 314)
         self.assertGreaterEqual(total_alternatives, 1000)
 
     def test_no_leaked_macros_or_unmatched_delimiters(self):

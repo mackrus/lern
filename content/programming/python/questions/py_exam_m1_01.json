@@ -1,0 +1,34 @@
+{
+  "question_type": "python_code",
+  "label": "exam",
+  "difficulty": "easy",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Base-3 & Palindrome Recursion",
+      "topic": "Base-3 & Palindrome Recursion"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def base3(x: int) -> str:\n    \"\"\"Return non-negative integer x in base 3 using recursion.\"\"\"\n    pass\n\n\ndef is_palindrome(s: str) -> bool:\n    \"\"\"Return True if s is a palindrome using recursion.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "base3 single digits (0, 1, 2)",
+      "code": "assert [base3(x) for x in [0, 1, 2]] == ['0', '1', '2']"
+    },
+    {
+      "label": "base3 exam examples [3, 6, 20, 27, 28, 52]",
+      "code": "assert [base3(x) for x in [3, 6, 20, 27, 28, 52]] == ['10', '20', '202', '1000', '1001', '1221']"
+    },
+    {
+      "label": "is_palindrome exam examples",
+      "code": "assert is_palindrome('racecar') is True\nassert is_palindrome('Realisationsvinstbeskattning') is False\nassert is_palindrome('madam') is True\nassert is_palindrome('22/11/22') is True"
+    }
+  ]
+}

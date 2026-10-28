@@ -270,6 +270,8 @@ fn grade_question(question: &Question, selected: Option<&str>) -> f64 {
             if let Some(expected) = &question.expected_answer {
                 return evaluate_text_answer(sel, expected);
             }
+        } else if sel == "PASS" {
+            return 1.0;
         } else if let Ok(idx) = sel.parse::<usize>() {
             if let Some(alt) = question.alternatives.get(idx) {
                 if alt.is_correct {

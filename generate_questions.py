@@ -33,14 +33,14 @@ library = {}
 
 content_root = "content"
 
-for category in os.listdir(content_root):
+for category in sorted(os.listdir(content_root)):
     category_path = os.path.join(content_root, category)
     if not os.path.isdir(category_path):
         continue
 
     library[category.title()] = {}
 
-    for course_dir in os.listdir(category_path):
+    for course_dir in sorted(os.listdir(category_path)):
         course_path = os.path.join(category_path, course_dir)
         if not os.path.isdir(course_path):
             continue
@@ -71,14 +71,18 @@ for category in os.listdir(content_root):
 
         course_questions = []
         # Get all base filenames from content/category/course/questions/*.json
-        json_files = [f for f in os.listdir(questions_path) if f.endswith(".json")]
+        json_files = sorted(
+            f for f in os.listdir(questions_path) if f.endswith(".json")
+        )
 
         for json_file in json_files:
             base = json_file.replace(".json", "")
             metadata_path = os.path.join(questions_path, json_file)
             with open(metadata_path, "r", encoding="utf-8") as f:
                 metadata = json.load(f)
-            num_alts = metadata.get("num_alternatives", 4)
+            question_type = metadata.get("question_type")
+            is_python_code = question_type == "python_code"
+            num_alts = 0 if is_python_code else metadata.get("num_alternatives", 4)
             has_expl = metadata.get("has_explanation", False)
             has_formulae = metadata.get("has_formulae", False)
             has_solution_steps = metadata.get("has_solution_steps", False)
@@ -158,21 +162,27 @@ for category in os.listdir(content_root):
                         prereq_content = f.read()
                     prerequisites_raw = clean_typst_block(prereq_content)
 
-            course_questions.append(
-                {
-                    "id": base,
-                    "label": metadata.get("label"),
-                    "difficulty": metadata.get("difficulty", "medium"),
-                    "topics": metadata.get("topics", []),
-                    "references": metadata.get("references", []),
-                    "question_raw": question_raw,
-                    "prerequisites_raw": prerequisites_raw,
-                    "formulae_raw": formulae_raw,
-                    "solution_steps_raw": solution_steps_raw,
-                    "explanation_raw": explanation_raw,
-                    "alternatives": alternatives,
-                }
-            )
+            q_entry = {
+                "id": base,
+                "label": metadata.get("label"),
+                "difficulty": metadata.get("difficulty", "medium"),
+                "topics": metadata.get("topics", []),
+                "references": metadata.get("references", []),
+                "question_raw": question_raw,
+                "prerequisites_raw": prerequisites_raw,
+                "formulae_raw": formulae_raw,
+                "solution_steps_raw": solution_steps_raw,
+                "explanation_raw": explanation_raw,
+                "alternatives": alternatives,
+            }
+            if is_python_code:
+                q_entry["question_type"] = "python_code"
+                q_entry["starter_code"] = metadata.get("starter_code", "")
+                if metadata.get("setup_code"):
+                    q_entry["setup_code"] = metadata["setup_code"]
+                q_entry["test_cases"] = metadata.get("test_cases", [])
+
+            course_questions.append(q_entry)
 
         if course_questions:
             display_name = course_dir.replace("_", " ").title()

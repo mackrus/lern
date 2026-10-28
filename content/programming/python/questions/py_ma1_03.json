@@ -1,0 +1,42 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "medium",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Binary Representation & Largest Element",
+      "topic": "Binary Representation & Largest Element"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def get_binary(x: int) -> str:\n    \"\"\"Return the binary representation of integer x recursively.\"\"\"\n    pass\n\n\ndef largest(a: list):\n    \"\"\"Return the largest element in non-empty list a without mutating a.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "get_binary(0) == '0' and get_binary(1) == '1'",
+      "code": "assert get_binary(0) == '0' and get_binary(1) == '1'"
+    },
+    {
+      "label": "get_binary(2) == '10' and get_binary(15) == '1111'",
+      "code": "assert get_binary(2) == '10' and get_binary(15) == '1111' and get_binary(16) == '10000'"
+    },
+    {
+      "label": "Negative numbers: get_binary(-15) == '-1111'",
+      "code": "assert get_binary(-1) == '-1' and get_binary(-15) == '-1111' and get_binary(-16) == '-10000'"
+    },
+    {
+      "label": "largest([5, 3, 7, 11, 4]) == 11 without mutating input",
+      "code": "lst = [5, 3, 7, 11, 4]\nassert largest(lst) == 11\nassert lst == [5, 3, 7, 11, 4]"
+    },
+    {
+      "label": "largest with negative numbers",
+      "code": "assert largest([-1, -5, -3, -2, -4]) == -1"
+    }
+  ]
+}

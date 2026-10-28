@@ -1,0 +1,42 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "easy",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Recursive Multiplication",
+      "topic": "Recursive Multiplication"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def multiply(m: int, n: int) -> int:\n    \"\"\"Compute m * n recursively using only addition/subtraction.\"\"\"\n    # Write your recursive implementation here\n    pass\n",
+  "test_cases": [
+    {
+      "label": "multiply(2, 5) == 10",
+      "code": "assert multiply(2, 5) == 10"
+    },
+    {
+      "label": "multiply(5, 2) == 10",
+      "code": "assert multiply(5, 2) == 10"
+    },
+    {
+      "label": "multiply(1, 5) == 5",
+      "code": "assert multiply(1, 5) == 5"
+    },
+    {
+      "label": "multiply(9, 0) == 0",
+      "code": "assert multiply(9, 0) == 0"
+    },
+    {
+      "label": "multiply(0, 9) == 0",
+      "code": "assert multiply(0, 9) == 0"
+    }
+  ]
+}

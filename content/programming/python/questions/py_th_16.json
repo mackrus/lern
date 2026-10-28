@@ -1,0 +1,20 @@
+{
+  "label": "exam",
+  "difficulty": "easy",
+  "topics": [
+    "Recursive Descent Calculator"
+  ],
+  "references": [
+    {
+      "book": "Python Theory & Complexity",
+      "chapter": "Recursive Descent Calculator",
+      "topic": "Recursive Descent Calculator"
+    }
+  ],
+  "correct_index": 0,
+  "num_alternatives": 4,
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true
+}

@@ -372,12 +372,16 @@
         }
 
         .mode-btn {
-            display: flex !important;
+            display: flex;
             flex-direction: column !important;
             align-items: flex-start !important;
             text-align: left !important;
             padding: 1.2rem 1.5rem !important;
             gap: 0.35rem !important;
+        }
+
+        .mode-btn[hidden] {
+            display: none !important;
         }
 
         .mode-btn .mode-title {
@@ -801,6 +805,416 @@
         .numerical-feedback.error {
             color: #f85149;
         }
+
+        /* Python IDE & Playground Styles */
+        #app-with-sidebar.python-quiz-layout {
+            flex-direction: column;
+            align-items: stretch;
+            max-width: 1150px;
+            gap: 1.5rem;
+        }
+        #app-with-sidebar.python-quiz-layout #main-column {
+            flex: none;
+            width: 100%;
+            max-width: 100%;
+        }
+        #app-with-sidebar.python-quiz-layout #sidebar-column {
+            display: none !important;
+        }
+        #python-challenge-workspace {
+            margin-bottom: 2rem;
+        }
+        .py-difficulty-badge {
+            display: inline-block;
+            padding: 0.15rem 0.55rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            border: 1px solid var(--border-color);
+        }
+        .py-difficulty-badge.easy {
+            color: #4ade80;
+            border-color: rgba(74, 222, 128, 0.45);
+            background: rgba(74, 222, 128, 0.1);
+        }
+        .py-difficulty-badge.medium {
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.45);
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .py-difficulty-badge.hard {
+            color: #f87171;
+            border-color: rgba(248, 113, 113, 0.45);
+            background: rgba(248, 113, 113, 0.1);
+        }
+        .nav-num.passed-challenge {
+            border-color: #4ade80;
+            color: #4ade80;
+            opacity: 1;
+        }
+
+        .py-ide-card, .py-sandbox-output-card {
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .py-ide-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-color);
+            flex-wrap: wrap;
+        }
+
+        .py-toolbar-left, .py-toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+
+        .py-toolbar-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.82rem;
+            padding: 0.32rem 0.68rem;
+            margin: 0 !important;
+            cursor: pointer;
+            transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+        }
+
+        .py-toolbar-btn::after {
+            display: none !important;
+        }
+
+        .py-toolbar-btn:hover:not(:disabled) {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: var(--hover-color);
+        }
+
+        .py-toolbar-btn.primary {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .py-toolbar-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .py-preset-select {
+            background: var(--surface-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+            font-size: 0.82rem;
+            padding: 0.3rem 0.55rem;
+            outline: none;
+        }
+
+        .py-editor-mount {
+            width: 100%;
+            height: 350px;
+            position: relative;
+            background: #1e1e1e;
+        }
+
+        .py-editor-mount.sandbox-height {
+            height: 480px;
+        }
+
+        .py-fallback-textarea {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0.9rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+        }
+
+        .py-vim-statusbar {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.35rem 0.75rem;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-color);
+            font-size: 0.76rem;
+        }
+
+        .py-vim-badge {
+            font-weight: bold;
+            padding: 0.1rem 0.45rem;
+            letter-spacing: 0.05em;
+            border: 1px solid var(--border-color);
+        }
+
+        .py-vim-badge.mode-normal {
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.4);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .py-vim-badge.mode-insert {
+            color: #4ade80;
+            border-color: rgba(74, 222, 128, 0.4);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .py-vim-badge.mode-visual {
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .py-vim-badge.mode-off {
+            opacity: 0.6;
+        }
+
+        .py-vim-cmd {
+            font-weight: bold;
+            color: var(--accent-color);
+            min-width: 2.5ch;
+            display: inline-flex !important;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .py-vim-cmd > span:first-child {
+            display: none;
+        }
+
+        .py-vim-cmd input {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.78rem;
+            outline: none;
+            width: 140px;
+        }
+
+        .py-vim-hint {
+            margin-left: auto;
+            opacity: 0.55;
+        }
+
+        .py-tests-panel {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--surface-color);
+        }
+
+        .py-tests-summary {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.55rem;
+            opacity: 0.9;
+        }
+
+        .py-tests-summary.passed {
+            color: #4ade80;
+        }
+
+        .py-tests-summary.failed {
+            color: #f87171;
+        }
+
+        .py-tests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            max-height: 170px;
+            overflow-y: auto;
+        }
+
+        .py-test-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            font-size: 0.8rem;
+        }
+
+        .py-test-item.passed {
+            border-left: 3px solid #4ade80;
+        }
+
+        .py-test-item.failed {
+            border-left: 3px solid #f87171;
+        }
+
+        .py-test-item.pending {
+            opacity: 0.75;
+        }
+
+        .py-test-icon {
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .py-test-item.passed .py-test-icon {
+            color: #4ade80;
+        }
+
+        .py-test-item.failed .py-test-icon {
+            color: #f87171;
+        }
+
+        .py-test-error {
+            margin-top: 0.2rem;
+            color: #f87171;
+            font-size: 0.76rem;
+            word-break: break-word;
+        }
+
+        .py-terminal-panel {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-color);
+        }
+
+        .py-terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.75;
+        }
+
+        .py-terminal-clear {
+            font-size: 0.74rem;
+            padding: 0.1rem 0.35rem;
+            margin: 0 !important;
+            opacity: 0.8;
+        }
+
+        .py-terminal-clear::after {
+            display: none !important;
+        }
+
+        .py-terminal-output {
+            margin: 0;
+            padding: 0.75rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.83rem;
+            line-height: 1.5;
+            min-height: 90px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: var(--text-color);
+        }
+
+        .py-terminal-output.sandbox-output-height {
+            min-height: 480px;
+            max-height: 525px;
+        }
+
+        .py-terminal-output.has-error {
+            color: #f87171;
+        }
+
+        .py-sandbox-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .py-sandbox-header h2 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        .py-sandbox-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+
+        @media (max-width: 980px) {
+            .py-sandbox-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .py-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .py-modal-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            max-width: 520px;
+            width: 100%;
+            padding: 1.5rem;
+        }
+
+        .py-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .py-modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .py-keymap-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.45rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+            gap: 1rem;
+        }
+
+        .py-keymap-row kbd {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 0.12rem 0.4rem;
+            font-size: 0.8rem;
+        }
     </style>
 <body>
     <div id="app-wrapper">
@@ -846,6 +1260,9 @@
                 </div>
                 <h2>Select Mode:</h2>
                 <div id="mode-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                    <button id="mode-sandbox" class="alternative" style="display: none;">Playground</button>
+                    <button id="mode-theory" class="alternative" style="display: none;">Theory</button>
+                    <button id="mode-code-challenges" class="alternative" style="display: none;">Code challenges</button>
                     <button id="mode-topic" class="alternative mode-btn">
                         <span class="mode-title">Topic Traversal</span>
                         <span class="mode-desc">Select specific subtopics to target your study.</span>
@@ -900,11 +1317,13 @@
                     
                     <div class="controls-container" style="display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-bottom: 2rem; align-items: center;">
                         <button id="prereq-btn" style="display: none; margin: 0; font-size: 1.2rem; font-weight: bold;">Show Study Guide</button>
+                        <button id="show-solution-btn" style="display: none; margin: 0; font-size: 1.2rem; font-weight: bold;">Show Solution</button>
                         <button id="copy-prompt-btn" style="margin: 0; margin-left: auto; font-size: 0.85rem; opacity: 0.6; letter-spacing: 0.02em;">Copy as Prompt</button>
                     </div>
                     <div id="prerequisites" style="display: none;"></div>
 
                     <div id="explanation" style="display: none;"></div>
+                    <div id="python-challenge-workspace" style="display: none;"></div>
                     <div id="result"></div>
 
                     <div id="navigation-btns">

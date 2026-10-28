@@ -1,0 +1,38 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "hard",
+  "topics": [
+    "Recursive Descent Calculator"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "arglist, 1-arg & n-arg Calculator Functions",
+      "topic": "arglist, 1-arg & n-arg Calculator Functions"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "import math as m\nfrom tokenizer import TokenizeWrapper\n\n\nclass CalculatorSyntaxError(Exception):\n    pass\n\n\nclass EvaluationError(Exception):\n    pass\n\n\ndef fib(n: float) -> int:\n    if n < 0 or not float(n).is_integer():\n        raise EvaluationError(\"Argument to fib must be a non-negative integer\")\n    a, b = 0, 1\n    for _ in range(int(n)):\n        a, b = b, a + b\n    return a\n\n\ndef fac(n: float) -> int:\n    if n < 0 or not float(n).is_integer():\n        raise EvaluationError(\"Argument to fac must be a non-negative integer\")\n    res = 1\n    for i in range(2, int(n) + 1):\n        res *= i\n    return res\n\n\ndef mean(lst: list) -> float:\n    return sum(lst) / len(lst)\n\n\ndef statement(wtok, variables):\n    result = assignment(wtok, variables)\n    if not wtok.is_at_end():\n        raise CalculatorSyntaxError(\"Expected EOL\")\n    return result\n\n\ndef assignment(wtok, variables):\n    result = expression(wtok, variables)\n    while wtok.get_current() == \"=\":\n        wtok.next()\n        if wtok.is_name():\n            variables[wtok.get_current()] = result\n            wtok.next()\n        else:\n            raise CalculatorSyntaxError(\"Expected variable name\")\n    variables[\"ans\"] = result\n    return result\n\n\ndef expression(wtok, variables):\n    result = term(wtok, variables)\n    while wtok.get_current() in (\"+\", \"-\"):\n        op = wtok.get_current()\n        wtok.next()\n        result = result + term(wtok, variables) if op == \"+\" else result - term(wtok, variables)\n    return result\n\n\ndef term(wtok, variables):\n    result = factor(wtok, variables)\n    while wtok.get_current() in (\"*\", \"/\"):\n        op = wtok.get_current()\n        wtok.next()\n        rhs = factor(wtok, variables)\n        if op == \"*\":\n            result *= rhs\n        else:\n            if rhs == 0:\n                raise EvaluationError(\"Division by zero\")\n            result /= rhs\n    return result\n\n\ndef arglist(wtok, variables) -> list:\n    # Parse '(a1, a2, ...)' and return list of evaluated arguments\n    pass\n\n\ndef factor(wtok, variables):\n    # Support functions_1 (sin, cos, exp, log, fib, fac), functions_n (max, min, sum, mean),\n    # parentheses, numbers, variables, and unary '-'\n    pass\n",
+  "test_cases": [
+    {
+      "label": "arglist('(1+3, 2, 3*4)') == [4.0, 2.0, 12.0]",
+      "code": "assert arglist(TokenizeWrapper('(1+3, 2, 3*4)'), {}) == [4.0, 2.0, 12.0]"
+    },
+    {
+      "label": "1-arg functions: sin, cos, log, exp, fib, fac",
+      "code": "v = {'ans': 0.0, 'E': m.e, 'PI': m.pi}\nassert abs(statement(TokenizeWrapper('sin(PI)+1'), v) - 1.0) < 1e-6\nassert abs(statement(TokenizeWrapper('log(E)'), v) - 1.0) < 1e-6\nassert statement(TokenizeWrapper('fac(3)+fib(4)'), v) == 9\nassert statement(TokenizeWrapper('fib(100)'), v) == 354224848179261915075"
+    },
+    {
+      "label": "n-arg functions: max, min, sum, mean",
+      "code": "v = {'ans': 0.0, 'E': m.e, 'PI': m.pi}\nassert statement(TokenizeWrapper('mean(1, 2, 3)'), v) == 2.0\nassert statement(TokenizeWrapper('max(1=x, 2+3, 4)'), v) == 5.0\nassert statement(TokenizeWrapper('min(x, 4)'), v) == 1.0"
+    },
+    {
+      "label": "Domain errors raise EvaluationError",
+      "code": "v = {'ans': 0.0, 'E': m.e, 'PI': m.pi}\nfor bad in ['log(0)', 'log(-1)', 'fib(-1)', 'fac(1.5)']:\n    try:\n        statement(TokenizeWrapper(bad), v)\n        assert False, f'Expected EvaluationError for {bad}'\n    except EvaluationError:\n        pass"
+    }
+  ]
+}

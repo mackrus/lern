@@ -5,7 +5,9 @@ export const Physics = {
     renderModeSelection(courseName) {
         document.getElementById("mode-selection").style.display = "block";
         document.getElementById("selected-course-title-mode").innerText = courseName;
-        document.getElementById("back-to-courses-from-mode").onclick = () => {
+        const backBtn = document.getElementById("back-to-courses-from-mode");
+        backBtn.innerText = "← Back to Courses";
+        backBtn.onclick = () => {
             Navigation.showCategoryCourses(State.currentCategory || "Physics");
         };
 
@@ -18,38 +20,162 @@ export const Physics = {
             }
         }
         const labels = new Set(questions.map(q => q.label).filter(Boolean));
+        const isPythonCourse = courseName.toLowerCase() === "python" || questions.some(q => q.question_type === "python_code");
 
-        document.getElementById("mode-topic").onclick = () => this.showTopicSelection(courseName);
-        document.getElementById("mode-six-easy").onclick = () => Navigation.startQuiz(courseName, "six_easy");
-        document.getElementById("mode-six-hard").onclick = () => Navigation.startQuiz(courseName, "six_hard");
-
+        const sandboxBtn = document.getElementById("mode-sandbox");
+        const theoryBtn = document.getElementById("mode-theory");
+        const challengesBtn = document.getElementById("mode-code-challenges");
+        const topicBtn = document.getElementById("mode-topic");
+        const sixEasyBtn = document.getElementById("mode-six-easy");
+        const sixHardBtn = document.getElementById("mode-six-hard");
         const practiceBtn = document.getElementById("mode-practice");
-        if (labels.has("practice")) {
-            practiceBtn.style.display = "";
-            practiceBtn.onclick = () => Navigation.startQuiz(courseName, "practice");
-        } else {
-            practiceBtn.style.display = "none";
+        const examBtn = document.getElementById("mode-exam");
+
+        const setBtnVisible = (btn, visible) => {
+            if (!btn) return;
+            btn.hidden = !visible;
+            btn.style.display = visible ? "" : "none";
+        };
+
+        if (isPythonCourse) {
+            if (sandboxBtn) {
+                setBtnVisible(sandboxBtn, true);
+                sandboxBtn.onclick = () => {
+                    import("./python-ide.js").then(m => m.PythonIDE.showSandbox(courseName));
+                };
+            }
+            if (theoryBtn) {
+                setBtnVisible(theoryBtn, true);
+                theoryBtn.onclick = () => {
+                    this.renderTheorySubModes(courseName);
+                };
+            }
+            if (challengesBtn) {
+                setBtnVisible(challengesBtn, true);
+                challengesBtn.onclick = () => {
+                    const saved = State.load(courseName);
+                    if (saved && !saved.graded && saved.mode === "code_challenges") {
+                        Navigation.startQuiz(courseName, "code_challenges", saved);
+                    } else {
+                        Navigation.startQuiz(courseName, "code_challenges");
+                    }
+                };
+            }
+            [topicBtn, sixEasyBtn, sixHardBtn, practiceBtn, examBtn].forEach(btn => {
+                setBtnVisible(btn, false);
+            });
+            return;
         }
 
-        const examBtn = document.getElementById("mode-exam");
-        if (labels.has("exam")) {
-            examBtn.style.display = "";
-            examBtn.onclick = () => Navigation.startQuiz(courseName, "exam");
-        } else {
-            examBtn.style.display = "none";
+        [sandboxBtn, theoryBtn, challengesBtn].forEach(btn => {
+            setBtnVisible(btn, false);
+        });
+        if (topicBtn) {
+            setBtnVisible(topicBtn, true);
+            topicBtn.onclick = () => this.showTopicSelection(courseName, false);
+        }
+        if (sixEasyBtn) {
+            setBtnVisible(sixEasyBtn, true);
+            sixEasyBtn.onclick = () => Navigation.startQuiz(courseName, "six_easy");
+        }
+        if (sixHardBtn) {
+            setBtnVisible(sixHardBtn, true);
+            sixHardBtn.onclick = () => Navigation.startQuiz(courseName, "six_hard");
+        }
+
+        if (practiceBtn) {
+            if (labels.has("practice")) {
+                setBtnVisible(practiceBtn, true);
+                practiceBtn.onclick = () => Navigation.startQuiz(courseName, "practice");
+            } else {
+                setBtnVisible(practiceBtn, false);
+            }
+        }
+
+        if (examBtn) {
+            if (labels.has("exam")) {
+                setBtnVisible(examBtn, true);
+                examBtn.onclick = () => Navigation.startQuiz(courseName, "exam");
+            } else {
+                setBtnVisible(examBtn, false);
+            }
         }
 
     },
 
-    showTopicSelection(courseName) {
+    renderTheorySubModes(courseName) {
+        document.getElementById("app-content").style.display = "block";
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("topic-selection").style.display = "none";
+        document.getElementById("quiz").style.display = "none";
+        document.getElementById("mode-selection").style.display = "block";
+
+        document.getElementById("selected-course-title-mode").innerText = `${courseName} — Theory`;
+        const backBtn = document.getElementById("back-to-courses-from-mode");
+        backBtn.innerText = "← Back";
+        backBtn.onclick = () => this.renderModeSelection(courseName);
+
+        let questions = [];
+        for (const cat in State.coursesData) {
+            if (State.coursesData[cat][courseName]) {
+                questions = (State.coursesData[cat][courseName].data || []).filter(q => q.question_type !== "python_code");
+                break;
+            }
+        }
+        const labels = new Set(questions.map(q => q.label).filter(Boolean));
+
+        const sandboxBtn = document.getElementById("mode-sandbox");
+        const theoryBtn = document.getElementById("mode-theory");
+        const challengesBtn = document.getElementById("mode-code-challenges");
+        const topicBtn = document.getElementById("mode-topic");
+        const sixEasyBtn = document.getElementById("mode-six-easy");
+        const sixHardBtn = document.getElementById("mode-six-hard");
+        const practiceBtn = document.getElementById("mode-practice");
+        const examBtn = document.getElementById("mode-exam");
+
+        const setBtnVisible = (btn, visible) => {
+            if (!btn) return;
+            btn.hidden = !visible;
+            btn.style.display = visible ? "" : "none";
+        };
+
+        [sandboxBtn, theoryBtn, challengesBtn].forEach(btn => {
+            setBtnVisible(btn, false);
+        });
+
+        if (topicBtn) {
+            setBtnVisible(topicBtn, true);
+            topicBtn.onclick = () => this.showTopicSelection(courseName, true);
+        }
+        if (sixEasyBtn) {
+            setBtnVisible(sixEasyBtn, true);
+            sixEasyBtn.onclick = () => Navigation.startQuiz(courseName, "six_easy");
+        }
+        if (sixHardBtn) {
+            setBtnVisible(sixHardBtn, true);
+            sixHardBtn.onclick = () => Navigation.startQuiz(courseName, "six_hard");
+        }
+        if (practiceBtn) {
+            setBtnVisible(practiceBtn, labels.has("practice") || questions.length > 0);
+            practiceBtn.onclick = () => Navigation.startQuiz(courseName, "practice");
+        }
+        if (examBtn) {
+            setBtnVisible(examBtn, labels.has("exam") || questions.length > 0);
+            examBtn.onclick = () => Navigation.startQuiz(courseName, "exam");
+        }
+    },
+
+    showTopicSelection(courseName, isPythonTheory = false) {
         document.getElementById("app-content").style.display = "block";
         document.getElementById("menu").style.display = "none";
         document.getElementById("mode-selection").style.display = "none";
         document.getElementById("topic-selection").style.display = "block";
         document.getElementById("quiz").style.display = "none";
         
-        document.getElementById("selected-course-title").innerText = courseName;
-        document.getElementById("back-to-courses").onclick = () => this.renderModeSelection(courseName);
+        document.getElementById("selected-course-title").innerText = isPythonTheory ? `${courseName} — Theory` : courseName;
+        const backBtn = document.getElementById("back-to-courses");
+        backBtn.innerText = isPythonTheory ? "← Back to Theory" : "← Back to Courses";
+        backBtn.onclick = () => isPythonTheory ? this.renderTheorySubModes(courseName) : this.renderModeSelection(courseName);
 
         let questions = [];
         let courseInfo = null;
@@ -61,7 +187,9 @@ export const Physics = {
         }
         
         if (courseInfo && courseInfo.data) {
-            questions = courseInfo.data;
+            questions = isPythonTheory
+                ? courseInfo.data.filter(q => q.question_type !== "python_code")
+                : courseInfo.data;
         }
 
         const topics = new Set();

@@ -1,0 +1,20 @@
+{
+  "label": "practice",
+  "difficulty": "easy",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Theory & Complexity",
+      "chapter": "Recursion & Complexity",
+      "topic": "Recursion & Complexity"
+    }
+  ],
+  "correct_index": 0,
+  "num_alternatives": 4,
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true
+}

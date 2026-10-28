@@ -1,0 +1,34 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "easy",
+  "topics": [
+    "Higher-Order Functions & Monte Carlo"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Monte Carlo Pi & Exact Hypersphere Volume",
+      "topic": "Monte Carlo Pi & Exact Hypersphere Volume"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "import math\nimport random\n\n\ndef approximate_pi(n: int) -> float:\n    \"\"\"Estimate pi using n random points in [-1, 1]^2.\"\"\"\n    pass\n\n\ndef hypersphere_exact(n: int, d: int, r: float = 1.0) -> float:\n    \"\"\"Return exact volume of a d-dimensional sphere of radius r.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "approximate_pi(2000) is within [2.8, 3.4]",
+      "code": "random.seed(42)\npi_est = approximate_pi(2000)\nassert 2.8 < pi_est < 3.4, f'Got {pi_est}'"
+    },
+    {
+      "label": "hypersphere_exact(n, d=2) == pi",
+      "code": "assert abs(hypersphere_exact(100, 2) - math.pi) < 1e-6"
+    },
+    {
+      "label": "hypersphere_exact(n, d=11) == 1.8841038793898994",
+      "code": "assert abs(hypersphere_exact(100, 11) - 1.8841038793898994) < 1e-5"
+    }
+  ]
+}

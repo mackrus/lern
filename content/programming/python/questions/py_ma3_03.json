@@ -1,0 +1,30 @@
+{
+  "question_type": "python_code",
+  "label": "exam",
+  "difficulty": "medium",
+  "topics": [
+    "Higher-Order Functions & Monte Carlo"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Uniform Interval Estimators & Matrix Multiplication",
+      "topic": "Uniform Interval Estimators & Matrix Multiplication"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def estimate_bounds(samples: list[float]) -> tuple[float, float]:\n    \"\"\"Return unbiased estimators (a_hat, b_hat) for uniform interval [a, b].\"\"\"\n    pass\n\n\ndef matrix_multiply(a: list[list], b: list[list]) -> list[list]:\n    \"\"\"Return matrix product C = a * b.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "estimate_bounds([5.0, 9.0, 13.0]) computes exact unbiased bounds",
+      "code": "a_hat, b_hat = estimate_bounds([5.0, 9.0, 13.0])\nassert abs(a_hat - 1.0) < 1e-9 and abs(b_hat - 17.0) < 1e-9"
+    },
+    {
+      "label": "matrix_multiply computes 4x3 by 3x2 product",
+      "code": "a = [[8, 2, 2], [3, 1, 9], [4, 3, 2], [2, 3, 9]]\nb = [[6, 2], [9, 4], [8, 7]]\nassert matrix_multiply(a, b) == [[82, 38], [99, 73], [67, 34], [111, 79]]"
+    }
+  ]
+}

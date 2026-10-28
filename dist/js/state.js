@@ -43,6 +43,8 @@ export const State = {
     currentBioParams: null,
     currentSelectedTopics: null,
     numericalInputs: {},
+    pythonInputs: {},
+    pythonTestResults: {},
 
     save() {
         if (!this.currentCourse) return;
@@ -69,7 +71,9 @@ export const State = {
             statsUpdated: this.currentSavedState ? this.currentSavedState.statsUpdated : false,
             bioParams: this.currentBioParams || (this.currentSavedState ? this.currentSavedState.bioParams : null),
             examEndTime: this.currentExamEndTime || (this.currentSavedState ? this.currentSavedState.examEndTime : null),
-            numericalInputs: this.numericalInputs || {}
+            numericalInputs: this.numericalInputs || {},
+            pythonInputs: this.pythonInputs || {},
+            pythonTestResults: this.pythonTestResults || {}
         };
         this.currentSavedState = state;
         safeLocalStorageSet(`lern_progress_${this.currentCourse}`, JSON.stringify(state));
@@ -95,6 +99,8 @@ export const State = {
 
     clear(courseName) {
         this.numericalInputs = {};
+        this.pythonInputs = {};
+        this.pythonTestResults = {};
         this.currentSavedState = null;
         this.currentBioParams = null;
         this.currentSelectedTopics = null;

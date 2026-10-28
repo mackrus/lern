@@ -1,0 +1,38 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "medium",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Nested List Recursion (count)",
+      "topic": "Nested List Recursion (count)"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def count(x, s: list) -> int:\n    \"\"\"Count occurrences of x on all levels in nested list s.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "Empty list returns 0",
+      "code": "assert count(1, []) == 0"
+    },
+    {
+      "label": "Nested scalar search: count(1, lst) == 6",
+      "code": "lst = [1, 'a', [[1, [1, 4]]], 7, 1, [1, 4], 1]\nassert count('a', lst) == 1\nassert count(1, lst) == 6\nassert count(4, lst) == 2"
+    },
+    {
+      "label": "Sublist search: count([1, 4], lst) == 2",
+      "code": "lst = [1, 'a', [[1, [1, 4]]], 7, 1, [1, 4], 1]\nassert count([1, 4], lst) == 2\nassert count('x', lst) == 0"
+    },
+    {
+      "label": "Does not mutate input list",
+      "code": "lst = [1, [1, 4], 2]\n_ = count(1, lst)\nassert lst == [1, [1, 4], 2]"
+    }
+  ]
+}

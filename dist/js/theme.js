@@ -10,6 +10,7 @@ export const ThemeManager = {
         MATHEMATICS: "mathematics",
         PHYSICS: "physics",
         BIOLOGY: "biology",
+        PROGRAMMING: "programming",
         DEFAULT: "default"
     },
 
@@ -17,6 +18,7 @@ export const ThemeManager = {
         mathematics: "math-mode",
         physics: "physics-mode",
         biology: "biology-mode",
+        programming: "programming-mode",
         default: ""
     },
 
@@ -36,6 +38,7 @@ export const ThemeManager = {
                 if (lowerCat.includes("math")) return this.DISCIPLINES.MATHEMATICS;
                 if (lowerCat.includes("physic")) return this.DISCIPLINES.PHYSICS;
                 if (lowerCat.includes("bio")) return this.DISCIPLINES.BIOLOGY;
+                if (lowerCat.includes("program") || lowerCat.includes("python")) return this.DISCIPLINES.PROGRAMMING;
             }
             // If name is a course in any category
             for (const cat in State.coursesData) {
@@ -55,6 +58,9 @@ export const ThemeManager = {
         }
         if (lower.includes("bio") || lower.includes("växt") || lower.includes("plant")) {
             return this.DISCIPLINES.BIOLOGY;
+        }
+        if (lower.includes("program") || lower.includes("python") || lower.includes("code")) {
+            return this.DISCIPLINES.PROGRAMMING;
         }
         return this.DISCIPLINES.DEFAULT;
     },
@@ -108,6 +114,9 @@ export const ThemeManager = {
                 const isLight = body.classList.contains("light-mode");
                 if (icon) icon.innerText = isLight ? "☀️" : "🌙";
                 localStorage.setItem("theme", isLight ? "light" : "dark");
+                if (window.monaco && window.monaco.editor) {
+                    window.monaco.editor.setTheme(isLight ? "vs" : "vs-dark");
+                }
             };
         }
     }

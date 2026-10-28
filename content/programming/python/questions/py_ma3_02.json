@@ -1,0 +1,34 @@
+{
+  "question_type": "python_code",
+  "label": "exam",
+  "difficulty": "easy",
+  "topics": [
+    "Higher-Order Functions & Monte Carlo"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Higher-Order Functions & Comprehensions",
+      "topic": "Higher-Order Functions & Comprehensions"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "from functools import reduce\n\n\ndef top_grade_students(records) -> list[str]:\n    \"\"\"Return names of students with grade == 5 using higher-order functions.\"\"\"\n    pass\n\n\ndef even_not_div4(numbers: list[int]) -> list[int]:\n    \"\"\"Return elements divisible by 2 but not by 4.\"\"\"\n    pass\n\n\ndef sum_of_squares_hof(n: int) -> int:\n    \"\"\"Compute 1^2 + 2^2 + ... + n^2 using map, reduce, and lambda.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "top_grade_students filters students with grade 5",
+      "code": "names = ['Anna', 'Anton', 'Jakob', 'Ludwig', 'Nils', 'Oliver', 'Rafael', 'Tim']\ngrades = [3, 4, 5, 5, 4, 3, 5, 5]\nassert top_grade_students(zip(names, grades)) == ['Jakob', 'Ludwig', 'Rafael', 'Tim']"
+    },
+    {
+      "label": "even_not_div4 filters multiples of 2 not divisible by 4",
+      "code": "assert even_not_div4([2, 4, 6, 7, 8, 10]) == [2, 6, 10]\nassert even_not_div4([4, 8, 12, 16, 20]) == []"
+    },
+    {
+      "label": "sum_of_squares_hof(4) == 30 and sum_of_squares_hof(10) == 385",
+      "code": "assert sum_of_squares_hof(4) == 30\nassert sum_of_squares_hof(10) == 385"
+    }
+  ]
+}

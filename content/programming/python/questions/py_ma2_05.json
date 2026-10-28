@@ -1,0 +1,31 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "hard",
+  "topics": [
+    "Binary Search Trees",
+    "Linked Lists"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Linear-time to_LinkedList & BST Node Deletion",
+      "topic": "Linear-time to_LinkedList & BST Node Deletion"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "from linked_list import LinkedList\n\n\nclass BST:\n    class Node:\n        def __init__(self, key, left=None, right=None):\n            self.key = key\n            self.left = left\n            self.right = right\n\n        def __iter__(self):\n            if self.left:\n                yield from self.left\n            yield self.key\n            if self.right:\n                yield from self.right\n\n    def __init__(self, root=None):\n        self.root = root\n\n    def __iter__(self):\n        if self.root:\n            yield from self.root\n\n    def __str__(self):\n        return \"<\" + \", \".join(str(x) for x in self) + \">\"\n\n    def insert(self, key):\n        self.root = self._insert(self.root, key)\n\n    def _insert(self, r, key):\n        if r is None:\n            return self.Node(key)\n        elif key < r.key:\n            r.left = self._insert(r.left, key)\n        elif key > r.key:\n            r.right = self._insert(r.right, key)\n        return r\n\n    def to_linked_list(self) -> LinkedList:\n        # Convert BST to LinkedList in Theta(n) time\n        pass\n\n    def remove(self, key):\n        self.root = self._remove(self.root, key)\n\n    def _remove(self, node, k):\n        # Remove key k from subtree rooted at node\n        pass\n",
+  "test_cases": [
+    {
+      "label": "to_linked_list() returns sorted LinkedList",
+      "code": "bst = BST()\nassert str(bst.to_linked_list()) == '()'\nfor x in [4, 1, 3, 6, 7, 5, 8]: bst.insert(x)\nassert str(bst.to_linked_list()) == '(1, 3, 4, 5, 6, 7, 8)'"
+    },
+    {
+      "label": "remove() handles leaf, single-child, and two-child root nodes",
+      "code": "bst = BST()\nfor x in [10, 5, 3, 8, 1, 4, 6, 9, 2, 7]: bst.insert(x)\nbst.remove(2)\nassert str(bst) == '<1, 3, 4, 5, 6, 7, 8, 9, 10>'\nbst.remove(1)\nassert str(bst) == '<3, 4, 5, 6, 7, 8, 9, 10>'\nbst.remove(5)\nassert str(bst) == '<3, 4, 6, 7, 8, 9, 10>'\nbst.remove(10)\nassert str(bst) == '<3, 4, 6, 7, 8, 9>'"
+    }
+  ]
+}

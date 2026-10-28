@@ -1,0 +1,31 @@
+{
+  "question_type": "python_code",
+  "label": "exam",
+  "difficulty": "medium",
+  "topics": [
+    "Linked Lists",
+    "Binary Search Trees"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "BST.max() & LinkedList.middle()",
+      "topic": "BST.max() & LinkedList.middle()"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "class BST:\n    class Node:\n        def __init__(self, key, left=None, right=None):\n            self.key = key\n            self.left = left\n            self.right = right\n\n    def __init__(self):\n        self.root = None\n\n    def insert(self, key):\n        self.root = self._insert(self.root, key)\n\n    def _insert(self, r, key):\n        if r is None:\n            return self.Node(key)\n        if key < r.key:\n            r.left = self._insert(r.left, key)\n        elif key > r.key:\n            r.right = self._insert(r.right, key)\n        return r\n\n    def max(self):\n        # Return maximum key in BST, or None if empty\n        pass\n\n\nclass LinkedList:\n    class Node:\n        def __init__(self, data, succ=None):\n            self.data = data\n            self.succ = succ\n\n    def __init__(self):\n        self.first = None\n\n    def insert(self, x):\n        if self.first is None or x <= self.first.data:\n            self.first = self.Node(x, self.first)\n        else:\n            f = self.first\n            while f.succ and x > f.succ.data:\n                f = f.succ\n            f.succ = self.Node(x, f.succ)\n\n    def middle(self):\n        # Return value at index n // 2\n        pass\n",
+  "test_cases": [
+    {
+      "label": "BST.max() on populated and empty trees",
+      "code": "for seq, expected in [([5, 8, 3, 7, 2, 6, 9], 9), ([4, 1, 3, 6, 7, 5, 8], 8), ([], None)]:\n    b = BST()\n    for i in seq: b.insert(i)\n    assert b.max() == expected"
+    },
+    {
+      "label": "LinkedList.middle() matches lst[len(lst)//2]",
+      "code": "for seq in [[0], [1, 2], [1, 2, 3], [1, 2, 3, 5], [1, 2, 3, 5, 8], list(range(20))]:\n    ll = LinkedList()\n    for x in seq: ll.insert(x)\n    assert ll.middle() == seq[len(seq) // 2]"
+    }
+  ]
+}

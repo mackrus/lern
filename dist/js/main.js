@@ -21,6 +21,7 @@ import { isNumericalQuestion } from "./math-evaluator.js";
 import { buildTutorPrompt } from "./prompt.js";
 import { clearDb } from "./db.js";
 import { typstWasm } from "./typst-renderer.js";
+import { PythonIDE } from "./python-ide.js";
 
 // Global error handling
 window.onerror = function(msg, url, line) {
@@ -105,9 +106,10 @@ function attachGlobalEventListeners() {
 
     const gradeBtn = document.getElementById("grade-btn");
     if (gradeBtn) {
-        gradeBtn.onclick = (e) => {
+        gradeBtn.onclick = async (e) => {
             e.preventDefault();
             Renderer.resolveNumericalAnswers();
+            await PythonIDE.resolveAllPythonAnswers();
             grade_quiz();
             
             // Update cumulative stats once per session
@@ -186,7 +188,25 @@ function attachGlobalEventListeners() {
             // Detect user's current attempt if any
             let userAttempt = null;
             const sel = typeof get_current_selection === "function" ? get_current_selection() : null;
-            if (currentQuestion.is_text_input) {
+            if (PythonIDE.isPythonQuestion(currentQuestion)) {
+                const editorCode = PythonIDE.getCurrentEditorCode(currentQuestion.id);
+                const lastRes = PythonIDE.getLastOutput(currentQuestion.id);
+                const attemptParts = [];
+                if (editorCode && editorCode.trim() && editorCode.trim() !== (currentQuestion.starter_code || "").trim()) {
+                    attemptParts.push("```python\n" + editorCode.trim() + "\n```");
+                }
+                if (lastRes) {
+                    if (lastRes.error) {
+                        attemptParts.push(`Last execution error: ${lastRes.error}`);
+                    } else {
+                        attemptParts.push(`Test status: Passed ${lastRes.passed_count}/${lastRes.total_count} tests`);
+                    }
+                    if (lastRes.stdout && lastRes.stdout.trim()) {
+                        attemptParts.push(`Stdout:\n${lastRes.stdout.trim()}`);
+                    }
+                }
+                userAttempt = attemptParts.length > 0 ? attemptParts.join("\n\n") : null;
+            } else if (currentQuestion.is_text_input) {
                 const inputEl = document.getElementById("answer-input");
                 userAttempt = (inputEl && inputEl.value) || sel || null;
             } else if (isNumericalQuestion(currentQuestion)) {

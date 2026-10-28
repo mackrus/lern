@@ -1,0 +1,20 @@
+{
+  "label": "exam",
+  "difficulty": "medium",
+  "topics": [
+    "Higher-Order Functions & Monte Carlo"
+  ],
+  "references": [
+    {
+      "book": "Python Theory & Complexity",
+      "chapter": "Higher-Order Functions & Monte Carlo",
+      "topic": "Higher-Order Functions & Monte Carlo"
+    }
+  ],
+  "correct_index": 0,
+  "num_alternatives": 4,
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true
+}

@@ -1,0 +1,38 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "hard",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Tower of Hanoi (bricklek) & Memoized Fibonacci",
+      "topic": "Tower of Hanoi (bricklek) & Memoized Fibonacci"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def hanoi_moves(source: str, target: str, helper: str, n: int) -> list[str]:\n    \"\"\"Return list of move strings to move n disks from source to target using helper.\"\"\"\n    pass\n\n\ndef fib_mem(n: int) -> int:\n    \"\"\"Return the n-th Fibonacci number using memoized recursion.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "hanoi_moves base cases (n=0, n=1)",
+      "code": "assert hanoi_moves('f', 't', 'h', 0) == []\nassert hanoi_moves('f', 't', 'h', 1) == ['f->t']"
+    },
+    {
+      "label": "hanoi_moves(n=2) and hanoi_moves(n=3)",
+      "code": "assert hanoi_moves('f', 't', 'h', 2) == ['f->h', 'f->t', 'h->t']\nassert hanoi_moves('f', 't', 'h', 3) == ['f->t', 'f->h', 't->h', 'f->t', 'h->f', 'h->t', 'f->t']"
+    },
+    {
+      "label": "hanoi_moves(n=4) has 15 moves",
+      "code": "res = hanoi_moves('f', 't', 'h', 4)\nassert len(res) == 15 and res[0] == 'f->h' and res[-1] == 'h->t'"
+    },
+    {
+      "label": "fib_mem(100) == 354224848179261915075",
+      "code": "assert fib_mem(0) == 0 and fib_mem(1) == 1 and fib_mem(10) == 55\nassert fib_mem(100) == 354224848179261915075"
+    }
+  ]
+}

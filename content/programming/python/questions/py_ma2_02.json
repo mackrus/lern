@@ -1,0 +1,34 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "medium",
+  "topics": [
+    "Linked Lists"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "LinkedList remove_last and remove",
+      "topic": "LinkedList remove_last and remove"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "class LinkedList:\n    class Node:\n        def __init__(self, data, succ=None):\n            self.data = data\n            self.succ = succ\n\n    def __init__(self):\n        self.first = None\n\n    def insert(self, x):\n        if self.first is None or x <= self.first.data:\n            self.first = self.Node(x, self.first)\n        else:\n            f = self.first\n            while f.succ and x > f.succ.data:\n                f = f.succ\n            f.succ = self.Node(x, f.succ)\n\n    def remove_last(self):\n        # Exc 2: Remove and return last element\n        pass\n\n    def remove(self, x) -> bool:\n        # Exc 3: Remove first occurrence of x, return True/False\n        pass\n",
+  "test_cases": [
+    {
+      "label": "remove_last() removes in reverse order and empties list",
+      "code": "lst = LinkedList()\nfor x in [3, 1, 2, 6, 1]: lst.insert(x)\nassert [lst.remove_last() for _ in range(5)] == [6, 3, 2, 1, 1]\nassert lst.first is None"
+    },
+    {
+      "label": "remove() on empty list returns False",
+      "code": "lst = LinkedList()\nassert lst.remove(9) is False"
+    },
+    {
+      "label": "remove() handles head, interior, duplicates, and tail",
+      "code": "lst = LinkedList()\nfor x in [1, 2, 2, 3, 5, 6, 6]: lst.insert(x)\nassert lst.remove(0) is False\nassert lst.remove(4) is False\nassert lst.remove(9) is False\nassert lst.remove(3) is True\nassert lst.remove(3) is False\nassert lst.remove(1) is True\nassert lst.remove(2) is True\nassert lst.remove(2) is True\nassert lst.remove(2) is False\nassert lst.remove(6) is True\nassert lst.remove(6) is True\nassert lst.remove(5) is True\nassert lst.first is None"
+    }
+  ]
+}

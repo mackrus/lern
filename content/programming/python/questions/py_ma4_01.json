@@ -1,0 +1,34 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "hard",
+  "topics": [
+    "Recursive Descent Calculator"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Recursive Descent Arithmetic & Assignments",
+      "topic": "Recursive Descent Arithmetic & Assignments"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "from tokenizer import TokenizeWrapper\n\n\nclass CalculatorSyntaxError(Exception):\n    pass\n\n\nclass EvaluationError(Exception):\n    pass\n\n\ndef statement(wtok, variables):\n    result = assignment(wtok, variables)\n    if not wtok.is_at_end():\n        raise CalculatorSyntaxError(\"Expected EOL\")\n    return result\n\n\ndef assignment(wtok, variables):\n    result = expression(wtok, variables)\n    while wtok.get_current() == \"=\":\n        wtok.next()\n        if wtok.is_name():\n            variables[wtok.get_current()] = result\n            wtok.next()\n        else:\n            raise CalculatorSyntaxError(\"Expected variable name after '='\")\n    variables[\"ans\"] = result\n    return result\n\n\ndef expression(wtok, variables):\n    result = term(wtok, variables)\n    while wtok.get_current() in (\"+\", \"-\"):\n        op = wtok.get_current()\n        wtok.next()\n        if op == \"+\":\n            result += term(wtok, variables)\n        else:\n            result -= term(wtok, variables)\n    return result\n\n\ndef term(wtok, variables):\n    # Complete multiplication and division (raise EvaluationError on / 0)\n    pass\n\n\ndef factor(wtok, variables):\n    # Complete parentheses, numbers, variable lookup, and unary minus\n    pass\n",
+  "test_cases": [
+    {
+      "label": "Basic arithmetic & precedence",
+      "code": "vars_d = {'ans': 0.0}\nfor expr, ans in [('1+2', 3.0), ('2-2+1', 1.0), ('2*3', 6.0), ('8/2*2', 8.0), ('(2+1)*(2+2)', 12.0), ('-(-2-3)', 5.0)]:\n    assert statement(TokenizeWrapper(expr), vars_d) == ans"
+    },
+    {
+      "label": "Chained variable assignments (1=x)+(2=y)=z",
+      "code": "vars_d = {'ans': 0.0}\nassert statement(TokenizeWrapper('1+2-2=x'), vars_d) == 1.0\nassert statement(TokenizeWrapper('2*x+4'), vars_d) == 6.0\nassert statement(TokenizeWrapper('(1=x)+(2=y)=z'), vars_d) == 3.0\nassert vars_d['z'] == 3.0 and vars_d['ans'] == 3.0"
+    },
+    {
+      "label": "SyntaxError and EvaluationError handling",
+      "code": "vars_d = {'ans': 0.0}\ntry:\n    statement(TokenizeWrapper('1/0'), vars_d)\n    assert False, 'Expected EvaluationError'\nexcept EvaluationError:\n    pass\ntry:\n    statement(TokenizeWrapper('unknown_var + 1'), vars_d)\n    assert False, 'Expected EvaluationError'\nexcept EvaluationError:\n    pass\ntry:\n    statement(TokenizeWrapper('2 + * 3'), vars_d)\n    assert False, 'Expected CalculatorSyntaxError'\nexcept CalculatorSyntaxError:\n    pass"
+    }
+  ]
+}

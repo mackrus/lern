@@ -5,6 +5,14 @@ echo "Building WASM..."
 wasm-pack build --target web --out-dir dist/pkg
 rm -f dist/pkg/.gitignore
 
+if [ ! -f "dist/pkg_python/python_runner_bg.wasm" ]; then
+    echo "Building Python WASM runner..."
+    wasm-pack build crates/python_runner --target web --out-dir ../../dist/pkg_python
+    rm -f dist/pkg_python/.gitignore
+else
+    echo "Using checked-in Python WASM asset: dist/pkg_python/python_runner_bg.wasm"
+fi
+
 echo "Installing Typst WASM assets..."
 typst_assets=(
     "node_modules/@myriaddreamin/typst-ts-renderer/pkg/typst_ts_renderer_bg.wasm"

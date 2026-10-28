@@ -1,0 +1,30 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "medium",
+  "topics": [
+    "Linked Lists"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Linear-time copy() & Person Operator Overloading",
+      "topic": "Linear-time copy() & Person Operator Overloading"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "class Person:\n    def __init__(self, name: str, pnr: str):\n        self.name = name\n        self.pnr = pnr\n\n    def __str__(self):\n        return f\"{self.name}:{self.pnr}\"\n\n    # Exc 7: Implement comparison methods (__lt__, __le__, __gt__, __ge__, __eq__)\n\n\nclass LinkedList:\n    class Node:\n        def __init__(self, data, succ=None):\n            self.data = data\n            self.succ = succ\n\n    def __init__(self):\n        self.first = None\n\n    def __iter__(self):\n        curr = self.first\n        while curr:\n            yield curr.data\n            curr = curr.succ\n\n    def insert(self, x):\n        if self.first is None or x <= self.first.data:\n            self.first = self.Node(x, self.first)\n        else:\n            f = self.first\n            while f.succ and x > f.succ.data:\n                f = f.succ\n            f.succ = self.Node(x, f.succ)\n\n    def copy(self):\n        # Exc 6: Return a deep copy of the LinkedList in Theta(n) time\n        pass\n",
+  "test_cases": [
+    {
+      "label": "copy() produces independent LinkedList with identical elements",
+      "code": "lst = LinkedList()\nassert list(lst.copy()) == []\nfor x in [3, 1, 4, 1, 5]: lst.insert(x)\ncp = lst.copy()\nassert list(cp) == [1, 1, 3, 4, 5]\nassert cp.first is not lst.first\ncp.insert(0)\nassert list(lst) == [1, 1, 3, 4, 5]"
+    },
+    {
+      "label": "Person instances can be inserted and sorted in LinkedList",
+      "code": "plst = LinkedList()\np1 = Person('Markus', '111')\np2 = Person('Gustav', '222')\np3 = Person('Anna', '333')\nfor p in [p1, p2, p3]: plst.insert(p)\nassert [str(x) for x in plst] == ['Anna:333', 'Gustav:222', 'Markus:111']"
+    }
+  ]
+}

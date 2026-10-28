@@ -41,7 +41,14 @@ for (const [category, courses] of Object.entries(db)) {
             if (category === "Biology") continue;
 
             const alternatives = question.alternatives || [];
-            if (question.is_text_input) {
+            if (question.question_type === "python_code") {
+                assert.equal(typeof question.starter_code, "string", `${questionId}: python_code question missing starter_code`);
+                assert.ok(question.starter_code.trim().length > 0, `${questionId}: python_code starter_code is empty`);
+                assert.ok(Array.isArray(question.test_cases) && question.test_cases.length > 0, `${questionId}: python_code needs test_cases`);
+                for (const tc of question.test_cases) {
+                    assert.ok(tc.label && tc.code, `${questionId}: invalid test_case entry`);
+                }
+            } else if (question.is_text_input) {
                 textInputCount++;
                 assert.ok(question.expected_answer, `${questionId}: text question has no expected answer`);
             } else {

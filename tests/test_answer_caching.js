@@ -151,7 +151,7 @@ runSuite("Deterministic Shuffle Parity between Rust WASM and JS", () => {
 
             for (let qIdx = 0; qIdx < questions.length; qIdx++) {
                 const q = questions[qIdx];
-                if (q.is_text_input) continue;
+                if (q.is_text_input || q.question_type === "python_code") continue;
 
                 set_question_index(qIdx);
                 const jsShuffled = deterministicShuffle(q.alternatives, q.id);
@@ -207,6 +207,10 @@ runSuite("Multiple Choice Reload Lifecycle (Score, Order, Selections preserved)"
             // Answer every question with its correct alternative
             for (let i = 0; i < initialQuestions.length; i++) {
                 set_question_index(i);
+                if (initialQuestions[i].question_type === "python_code") {
+                    select_answer("PASS");
+                    continue;
+                }
                 const count = get_alternatives_count();
                 let correctIdx = -1;
                 for (let a = 0; a < count; a++) {

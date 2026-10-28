@@ -1,0 +1,20 @@
+{
+  "label": "practice",
+  "difficulty": "easy",
+  "topics": [
+    "Binary Search Trees"
+  ],
+  "references": [
+    {
+      "book": "Python Theory & Complexity",
+      "chapter": "Binary Search Trees",
+      "topic": "Binary Search Trees"
+    }
+  ],
+  "correct_index": 0,
+  "num_alternatives": 4,
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true
+}

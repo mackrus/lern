@@ -1,0 +1,46 @@
+{
+  "question_type": "python_code",
+  "label": "practice",
+  "difficulty": "easy",
+  "topics": [
+    "Recursion & Complexity"
+  ],
+  "references": [
+    {
+      "book": "Python Programming",
+      "chapter": "Harmonic Series & String Reversal",
+      "topic": "Harmonic Series & String Reversal"
+    }
+  ],
+  "has_prerequisites": true,
+  "has_formulae": true,
+  "has_solution_steps": true,
+  "has_explanation": true,
+  "starter_code": "def harmonic(n: int) -> float:\n    \"\"\"Return 1 + 1/2 + 1/3 + ... + 1/n recursively.\"\"\"\n    pass\n\n\ndef reverse_string(s: str) -> str:\n    \"\"\"Return the reversed string s recursively.\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "label": "harmonic(1) == 1.0",
+      "code": "assert abs(harmonic(1) - 1.0) < 1e-9"
+    },
+    {
+      "label": "harmonic(2) == 1.5",
+      "code": "assert abs(harmonic(2) - 1.5) < 1e-9"
+    },
+    {
+      "label": "harmonic(4) == 1 + 1/2 + 1/3 + 1/4",
+      "code": "assert abs(harmonic(4) - (1 + 0.5 + 1/3 + 0.25)) < 1e-9"
+    },
+    {
+      "label": "reverse_string('') == ''",
+      "code": "assert reverse_string('') == ''"
+    },
+    {
+      "label": "reverse_string('ab') == 'ba'",
+      "code": "assert reverse_string('ab') == 'ba'"
+    },
+    {
+      "label": "reverse_string('python') == 'nohtyp'",
+      "code": "assert reverse_string('python') == 'nohtyp'"
+    }
+  ]
+}
